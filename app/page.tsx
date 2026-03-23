@@ -11,13 +11,11 @@ export default function HomePage() {
       <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-6 py-6">
         <header className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium tracking-[0.2em] text-zinc-400">
+            <p className="text-sm font-medium tracking-[0.2em] text-sky-400">
               WIWI
             </p>
             <p className="text-xs text-zinc-500">
-              {language === "en"
-                ? "Was It Worth It?"
-                : "¿Valió la pena?"}
+              {language === "en" ? "Was It Worth It?" : "¿Valió la pena?"}
             </p>
           </div>
 
@@ -26,8 +24,8 @@ export default function HomePage() {
               onClick={() => setLanguage("en")}
               className={`rounded-xl border px-4 py-2 text-sm transition ${
                 language === "en"
-                  ? "border-white bg-white text-black"
-                  : "border-zinc-700 bg-zinc-900 text-white"
+                  ? "border-sky-400 bg-sky-500 text-black"
+                  : "border-zinc-700 bg-zinc-900 text-white hover:border-sky-500/40"
               }`}
             >
               EN
@@ -36,8 +34,8 @@ export default function HomePage() {
               onClick={() => setLanguage("es")}
               className={`rounded-xl border px-4 py-2 text-sm transition ${
                 language === "es"
-                  ? "border-white bg-white text-black"
-                  : "border-zinc-700 bg-zinc-900 text-white"
+                  ? "border-sky-400 bg-sky-500 text-black"
+                  : "border-zinc-700 bg-zinc-900 text-white hover:border-sky-500/40"
               }`}
             >
               ES
@@ -48,7 +46,7 @@ export default function HomePage() {
         <section className="flex flex-1 items-center py-12">
           <div className="grid w-full gap-10 lg:grid-cols-2 lg:items-center">
             <div>
-              <div className="mb-4 inline-flex rounded-full border border-zinc-800 bg-zinc-900 px-4 py-2 text-sm text-zinc-300">
+              <div className="mb-4 inline-flex rounded-full border border-sky-500/30 bg-sky-500/10 px-4 py-2 text-sm text-sky-300">
                 {language === "en"
                   ? "Gig work, but with the real numbers"
                   : "Trabajo gig, pero con números reales"}
@@ -58,14 +56,12 @@ export default function HomePage() {
                 {language === "en" ? (
                   <>
                     Know what you
-                    <span className="block text-zinc-400">
-                      actually made.
-                    </span>
+                    <span className="block text-sky-400">actually made.</span>
                   </>
                 ) : (
                   <>
                     Mira lo que
-                    <span className="block text-zinc-400">
+                    <span className="block text-sky-400">
                       realmente ganaste.
                     </span>
                   </>
@@ -81,14 +77,14 @@ export default function HomePage() {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link
                   href="/signup"
-                  className="inline-flex items-center justify-center rounded-2xl bg-white px-6 py-3 text-base font-medium text-black transition hover:opacity-90"
+                  className="inline-flex items-center justify-center rounded-2xl bg-sky-500 px-6 py-3 text-base font-medium text-black transition hover:bg-sky-400"
                 >
                   {language === "en" ? "Start tracking" : "Comenzar"}
                 </Link>
 
                 <Link
                   href="/login"
-                  className="inline-flex items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-950 px-6 py-3 text-base font-medium text-white transition hover:border-zinc-500"
+                  className="inline-flex items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-950 px-6 py-3 text-base font-medium text-white transition hover:border-sky-500/40 hover:text-sky-300"
                 >
                   {language === "en" ? "Sign in" : "Iniciar sesión"}
                 </Link>
@@ -96,7 +92,7 @@ export default function HomePage() {
 
               <div className="mt-8 grid gap-4 sm:grid-cols-3">
                 <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
-                  <p className="text-sm font-medium">
+                  <p className="text-sm font-medium text-sky-400">
                     {language === "en"
                       ? "Real hourly pay"
                       : "Pago real por hora"}
@@ -109,7 +105,7 @@ export default function HomePage() {
                 </div>
 
                 <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
-                  <p className="text-sm font-medium">
+                  <p className="text-sm font-medium text-sky-400">
                     {language === "en"
                       ? "After expenses"
                       : "Después de gastos"}
@@ -122,7 +118,7 @@ export default function HomePage() {
                 </div>
 
                 <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
-                  <p className="text-sm font-medium">
+                  <p className="text-sm font-medium text-sky-400">
                     {language === "en"
                       ? "Worth-it check"
                       : "Vale la pena"}
@@ -137,11 +133,11 @@ export default function HomePage() {
             </div>
 
             <div className="lg:pl-8">
-              <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 shadow-2xl">
+              <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 shadow-2xl shadow-sky-950/20">
                 <div className="rounded-[24px] border border-zinc-800 bg-black p-5">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
+                      <p className="text-xs uppercase tracking-[0.2em] text-sky-400">
                         WIWI
                       </p>
                       <h2 className="mt-2 text-xl font-semibold">
@@ -150,7 +146,7 @@ export default function HomePage() {
                           : "Resumen del turno"}
                       </h2>
                     </div>
-                    <div className="rounded-full border border-emerald-800 bg-emerald-950 px-3 py-1 text-sm text-emerald-300">
+                    <div className="rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1 text-sm text-sky-300">
                       {language === "en" ? "Worth it" : "Valió la pena"}
                     </div>
                   </div>
@@ -174,13 +170,15 @@ export default function HomePage() {
                       <p className="mt-2 text-2xl font-semibold">$92.14</p>
                     </div>
 
-                    <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
-                      <p className="text-xs text-zinc-500">
+                    <div className="rounded-2xl border border-sky-500/20 bg-sky-500/5 p-4">
+                      <p className="text-xs text-sky-300">
                         {language === "en"
                           ? "Real hourly pay"
                           : "Pago real por hora"}
                       </p>
-                      <p className="mt-2 text-2xl font-semibold">$23.04</p>
+                      <p className="mt-2 text-2xl font-semibold text-sky-400">
+                        $23.04
+                      </p>
                     </div>
 
                     <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
@@ -198,10 +196,10 @@ export default function HomePage() {
                           ? "Weekly goal progress"
                           : "Progreso de meta semanal"}
                       </span>
-                      <span className="font-medium">72%</span>
+                      <span className="font-medium text-sky-400">72%</span>
                     </div>
                     <div className="mt-3 h-3 w-full rounded-full bg-zinc-800">
-                      <div className="h-3 w-[72%] rounded-full bg-white" />
+                      <div className="h-3 w-[72%] rounded-full bg-sky-500" />
                     </div>
                   </div>
 
