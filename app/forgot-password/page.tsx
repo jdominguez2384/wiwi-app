@@ -46,14 +46,16 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <main className="min-h-screen bg-zinc-50 flex items-center justify-center p-6">
-      <div className="max-w-md w-full rounded-3xl border border-zinc-200 bg-white p-8 shadow-sm">
+    <main className="min-h-screen bg-black text-white flex items-center justify-center p-6">
+      <div className="max-w-md w-full rounded-3xl border border-zinc-800 bg-zinc-950 p-8 shadow-2xl shadow-sky-950/20">
         <div className="flex justify-end gap-2 mb-6">
           <button
             onClick={() => setLanguage("en")}
             disabled={isSending}
-            className={`rounded-xl border px-4 py-2 ${
-              language === "en" ? "bg-black text-white" : "bg-white"
+            className={`rounded-xl border px-4 py-2 text-sm transition ${
+              language === "en"
+                ? "border-sky-400 bg-sky-500 text-black"
+                : "border-zinc-700 bg-zinc-900 text-white hover:border-sky-500/40"
             } disabled:opacity-60`}
           >
             EN
@@ -61,19 +63,21 @@ export default function ForgotPasswordPage() {
           <button
             onClick={() => setLanguage("es")}
             disabled={isSending}
-            className={`rounded-xl border px-4 py-2 ${
-              language === "es" ? "bg-black text-white" : "bg-white"
+            className={`rounded-xl border px-4 py-2 text-sm transition ${
+              language === "es"
+                ? "border-sky-400 bg-sky-500 text-black"
+                : "border-zinc-700 bg-zinc-900 text-white hover:border-sky-500/40"
             } disabled:opacity-60`}
           >
             ES
           </button>
         </div>
 
-        <p className="text-sm text-zinc-500">RealRate</p>
+        <p className="text-sm font-medium tracking-[0.2em] text-sky-400">WIWI</p>
         <h1 className="text-3xl font-semibold mt-2">
           {language === "en" ? "Forgot password" : "Olvidé mi contraseña"}
         </h1>
-        <p className="text-zinc-600 mt-3">
+        <p className="text-zinc-400 mt-3">
           {language === "en"
             ? "Enter the email you signed up with and we’ll send you a reset link."
             : "Ingresa el correo con el que te registraste y te enviaremos un enlace para restablecerla."}
@@ -81,7 +85,7 @@ export default function ForgotPasswordPage() {
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-zinc-700">
+            <label className="block text-sm font-medium text-zinc-300">
               Email
             </label>
             <input
@@ -89,14 +93,14 @@ export default function ForgotPasswordPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isSending}
-              className="block w-full min-w-0 rounded-xl border border-zinc-300 px-4 py-3 disabled:opacity-60"
+              className="block w-full rounded-xl border border-zinc-700 bg-black px-4 py-3 text-white outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 disabled:opacity-60"
             />
           </div>
 
           <button
             type="submit"
             disabled={isSending}
-            className="w-full rounded-xl bg-black text-white px-4 py-3 disabled:opacity-60"
+            className="w-full rounded-xl bg-sky-500 text-black px-4 py-3 font-medium transition hover:bg-sky-400 disabled:opacity-60"
           >
             {isSending
               ? language === "en"
@@ -109,11 +113,14 @@ export default function ForgotPasswordPage() {
         </form>
 
         {message ? (
-          <p className="text-sm text-zinc-600 mt-4">{message}</p>
+          <p className="text-sm text-zinc-300 mt-4">{message}</p>
         ) : null}
 
-        <p className="text-sm text-zinc-600 mt-6">
-          <Link href="/login" className="underline">
+        <p className="text-sm text-zinc-400 mt-6">
+          <Link
+            href="/login"
+            className="underline transition hover:text-sky-300"
+          >
             {language === "en" ? "Back to sign in" : "Volver a iniciar sesión"}
           </Link>
         </p>
