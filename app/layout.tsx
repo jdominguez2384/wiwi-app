@@ -4,8 +4,8 @@ import { ShiftProvider } from "../components/ShiftProvider";
 import { SettingsProvider } from "../components/SettingsProvider";
 
 export const metadata = {
-  title: "RealRate",
-  description: "See your real pay after miles, fuel, and taxes.",
+  title: "WIWI | Was It Worth It?",
+  description: "Track your real hourly pay after miles, fuel, and taxes.",
 };
 
 export default function RootLayout({
