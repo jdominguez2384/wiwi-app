@@ -7,67 +7,214 @@ export default function HomePage() {
   const { language, setLanguage } = useLanguage();
 
   return (
-    <main className="min-h-screen bg-black flex items-center justify-center p-6">
-      <div className="max-w-md w-full rounded-3xl border border-zinc-800 bg-zinc-950 p-8 shadow-xl">
+    <main className="min-h-screen bg-black text-white">
+      <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-6 py-6">
+        <header className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium tracking-[0.2em] text-zinc-400">
+              WIWI
+            </p>
+            <p className="text-xs text-zinc-500">
+              {language === "en"
+                ? "Was It Worth It?"
+                : "¿Valió la pena?"}
+            </p>
+          </div>
 
-        {/* Language Toggle */}
-        <div className="flex justify-end gap-2 mb-6">
-          <button
-            onClick={() => setLanguage("en")}
-            className={`rounded-xl border px-4 py-2 ${
-              language === "en" ? "bg-white text-black" : "bg-transparent text-white"
-            }`}
-          >
-            EN
-          </button>
-          <button
-            onClick={() => setLanguage("es")}
-            className={`rounded-xl border px-4 py-2 ${
-              language === "es" ? "bg-white text-black" : "bg-transparent text-white"
-            }`}
-          >
-            ES
-          </button>
-        </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setLanguage("en")}
+              className={`rounded-xl border px-4 py-2 text-sm transition ${
+                language === "en"
+                  ? "border-white bg-white text-black"
+                  : "border-zinc-700 bg-zinc-900 text-white"
+              }`}
+            >
+              EN
+            </button>
+            <button
+              onClick={() => setLanguage("es")}
+              className={`rounded-xl border px-4 py-2 text-sm transition ${
+                language === "es"
+                  ? "border-white bg-white text-black"
+                  : "border-zinc-700 bg-zinc-900 text-white"
+              }`}
+            >
+              ES
+            </button>
+          </div>
+        </header>
 
-        {/* Branding */}
-        <p className="text-sm text-zinc-400">WIWI</p>
+        <section className="flex flex-1 items-center py-12">
+          <div className="grid w-full gap-10 lg:grid-cols-2 lg:items-center">
+            <div>
+              <div className="mb-4 inline-flex rounded-full border border-zinc-800 bg-zinc-900 px-4 py-2 text-sm text-zinc-300">
+                {language === "en"
+                  ? "Gig work, but with the real numbers"
+                  : "Trabajo gig, pero con números reales"}
+              </div>
 
-        <h1 className="text-3xl font-semibold mt-2 text-white leading-tight">
-          {language === "en"
-            ? "Was it worth it?"
-            : "¿Valió la pena?"}
-        </h1>
+              <h1 className="max-w-xl text-5xl font-semibold leading-tight tracking-tight sm:text-6xl">
+                {language === "en" ? (
+                  <>
+                    Know what you
+                    <span className="block text-zinc-400">
+                      actually made.
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    Mira lo que
+                    <span className="block text-zinc-400">
+                      realmente ganaste.
+                    </span>
+                  </>
+                )}
+              </h1>
 
-        <p className="text-zinc-400 mt-3">
-          {language === "en"
-            ? "Track your real hourly pay after gas, miles, and taxes."
-            : "Calcula tu ganancia real después de gasolina, millas e impuestos."}
-        </p>
+              <p className="mt-6 max-w-xl text-lg leading-8 text-zinc-400">
+                {language === "en"
+                  ? "WIWI helps delivery and rideshare drivers track real hourly pay after miles, gas, and tax set-aside—so you know if a shift was actually worth it."
+                  : "WIWI ayuda a conductores de delivery y rideshare a calcular su pago real por hora después de millas, gasolina y separación para impuestos, para saber si un turno realmente valió la pena."}
+              </p>
 
-        {/* Value Props */}
-        <div className="mt-6 space-y-2 text-sm text-zinc-400">
-          <p>• {language === "en" ? "Real hourly pay" : "Pago real por hora"}</p>
-          <p>• {language === "en" ? "After expenses & taxes" : "Después de gastos e impuestos"}</p>
-          <p>• {language === "en" ? "Know if a shift was worth it" : "Saber si valió la pena trabajar"}</p>
-        </div>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <Link
+                  href="/signup"
+                  className="inline-flex items-center justify-center rounded-2xl bg-white px-6 py-3 text-base font-medium text-black transition hover:opacity-90"
+                >
+                  {language === "en" ? "Start tracking" : "Comenzar"}
+                </Link>
 
-        {/* CTA */}
-        <div className="mt-8 space-y-3">
-          <Link
-            href="/signup"
-            className="block w-full rounded-xl bg-white text-black px-4 py-3 text-center font-medium"
-          >
-            {language === "en" ? "Start tracking" : "Comenzar"}
-          </Link>
+                <Link
+                  href="/login"
+                  className="inline-flex items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-950 px-6 py-3 text-base font-medium text-white transition hover:border-zinc-500"
+                >
+                  {language === "en" ? "Sign in" : "Iniciar sesión"}
+                </Link>
+              </div>
 
-          <Link
-            href="/login"
-            className="block w-full rounded-xl border border-zinc-700 text-white px-4 py-3 text-center"
-          >
-            {language === "en" ? "Sign in" : "Iniciar sesión"}
-          </Link>
-        </div>
+              <div className="mt-8 grid gap-4 sm:grid-cols-3">
+                <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
+                  <p className="text-sm font-medium">
+                    {language === "en"
+                      ? "Real hourly pay"
+                      : "Pago real por hora"}
+                  </p>
+                  <p className="mt-2 text-sm text-zinc-400">
+                    {language === "en"
+                      ? "Not just gross earnings."
+                      : "No solo ganancias brutas."}
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
+                  <p className="text-sm font-medium">
+                    {language === "en"
+                      ? "After expenses"
+                      : "Después de gastos"}
+                  </p>
+                  <p className="mt-2 text-sm text-zinc-400">
+                    {language === "en"
+                      ? "Miles, fuel, and taxes included."
+                      : "Incluye millas, gasolina e impuestos."}
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
+                  <p className="text-sm font-medium">
+                    {language === "en"
+                      ? "Worth-it check"
+                      : "Vale la pena"}
+                  </p>
+                  <p className="mt-2 text-sm text-zinc-400">
+                    {language === "en"
+                      ? "See whether a shift made sense."
+                      : "Mira si el turno realmente convino."}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:pl-8">
+              <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 shadow-2xl">
+                <div className="rounded-[24px] border border-zinc-800 bg-black p-5">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
+                        WIWI
+                      </p>
+                      <h2 className="mt-2 text-xl font-semibold">
+                        {language === "en"
+                          ? "Shift summary"
+                          : "Resumen del turno"}
+                      </h2>
+                    </div>
+                    <div className="rounded-full border border-emerald-800 bg-emerald-950 px-3 py-1 text-sm text-emerald-300">
+                      {language === "en" ? "Worth it" : "Valió la pena"}
+                    </div>
+                  </div>
+
+                  <div className="mt-6 grid grid-cols-2 gap-3">
+                    <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
+                      <p className="text-xs text-zinc-500">
+                        {language === "en"
+                          ? "Gross earnings"
+                          : "Ganancia bruta"}
+                      </p>
+                      <p className="mt-2 text-2xl font-semibold">$126.50</p>
+                    </div>
+
+                    <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
+                      <p className="text-xs text-zinc-500">
+                        {language === "en"
+                          ? "Net earnings"
+                          : "Ganancia neta"}
+                      </p>
+                      <p className="mt-2 text-2xl font-semibold">$92.14</p>
+                    </div>
+
+                    <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
+                      <p className="text-xs text-zinc-500">
+                        {language === "en"
+                          ? "Real hourly pay"
+                          : "Pago real por hora"}
+                      </p>
+                      <p className="mt-2 text-2xl font-semibold">$23.04</p>
+                    </div>
+
+                    <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
+                      <p className="text-xs text-zinc-500">
+                        {language === "en" ? "Miles driven" : "Millas"}
+                      </p>
+                      <p className="mt-2 text-2xl font-semibold">41.2</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-zinc-400">
+                        {language === "en"
+                          ? "Weekly goal progress"
+                          : "Progreso de meta semanal"}
+                      </span>
+                      <span className="font-medium">72%</span>
+                    </div>
+                    <div className="mt-3 h-3 w-full rounded-full bg-zinc-800">
+                      <div className="h-3 w-[72%] rounded-full bg-white" />
+                    </div>
+                  </div>
+
+                  <p className="mt-4 text-sm text-zinc-500">
+                    {language === "en"
+                      ? "Track each shift. Know your real pay. Stop guessing."
+                      : "Registra cada turno. Mira tu pago real. Deja de adivinar."}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </main>
   );
