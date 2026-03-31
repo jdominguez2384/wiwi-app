@@ -1,219 +1,370 @@
 "use client";
 
 import Link from "next/link";
+import {
+  DollarSign,
+  TrendingUp,
+  Clock,
+  Shield,
+  Menu,
+  X,
+} from "lucide-react";
 import { useLanguage } from "../components/LanguageProvider";
+import { useState } from "react";
 
 export default function HomePage() {
   const { language, setLanguage } = useLanguage();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <main className="min-h-screen bg-black text-white">
-      <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-6 py-6">
-        <header className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium tracking-[0.2em] text-sky-400">
-              WIWI
-            </p>
-            <p className="text-xs text-zinc-500">
-              {language === "en" ? "Was It Worth It?" : "¿Valió la pena?"}
-            </p>
-          </div>
-
-          <div className="flex gap-2">
-            <button
-              onClick={() => setLanguage("en")}
-              className={`rounded-xl border px-4 py-2 text-sm transition ${
-                language === "en"
-                  ? "border-sky-400 bg-sky-500 text-black"
-                  : "border-zinc-700 bg-zinc-900 text-white hover:border-sky-500/40"
-              }`}
-            >
-              EN
-            </button>
-            <button
-              onClick={() => setLanguage("es")}
-              className={`rounded-xl border px-4 py-2 text-sm transition ${
-                language === "es"
-                  ? "border-sky-400 bg-sky-500 text-black"
-                  : "border-zinc-700 bg-zinc-900 text-white hover:border-sky-500/40"
-              }`}
-            >
-              ES
-            </button>
-          </div>
-        </header>
-
-        <section className="flex flex-1 items-center py-12">
-          <div className="grid w-full gap-10 lg:grid-cols-2 lg:items-center">
-            <div>
-              <div className="mb-4 inline-flex rounded-full border border-sky-500/30 bg-sky-500/10 px-4 py-2 text-sm text-sky-300">
-                {language === "en"
-                  ? "Gig work, but with the real numbers"
-                  : "Trabajo gig, pero con números reales"}
-              </div>
-
-              <h1 className="max-w-xl text-5xl font-semibold leading-tight tracking-tight sm:text-6xl">
-                {language === "en" ? (
-                  <>
-                    Know what you
-                    <span className="block text-sky-400">actually made.</span>
-                  </>
-                ) : (
-                  <>
-                    Mira lo que
-                    <span className="block text-sky-400">
-                      realmente ganaste.
-                    </span>
-                  </>
-                )}
-              </h1>
-
-              <p className="mt-6 max-w-xl text-lg leading-8 text-zinc-400">
-                {language === "en"
-                  ? "WIWI helps delivery and rideshare drivers track real hourly pay after miles, gas, and tax set-aside—so you know if a shift was actually worth it."
-                  : "WIWI ayuda a conductores de delivery y rideshare a calcular su pago real por hora después de millas, gasolina y separación para impuestos, para saber si un turno realmente valió la pena."}
+    <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white">
+      <nav className="sticky top-0 z-50 border-b border-slate-800/50 bg-slate-950/80 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-sky-400 to-sky-600 shadow-lg shadow-sky-500/20">
+              <span className="text-sm font-black text-white">W</span>
+            </div>
+            <div className="leading-tight">
+              <p className="text-2xl font-black tracking-tight text-white">WIWI</p>
+              <p className="text-xs text-slate-400">
+                {language === "en" ? "Was It Worth It?" : "¿Valió la pena?"}
               </p>
+            </div>
+          </div>
 
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Link
-                  href="/signup"
-                  className="inline-flex items-center justify-center rounded-2xl bg-sky-500 px-6 py-3 text-base font-medium text-black transition hover:bg-sky-400"
-                >
-                  {language === "en" ? "Start tracking" : "Comenzar"}
-                </Link>
+          <div className="hidden items-center gap-3 md:flex">
+            <Link
+              href="/dashboard"
+              className="rounded-lg px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white"
+            >
+              {language === "en" ? "Dashboard" : "Panel"}
+            </Link>
 
-                <Link
-                  href="/login"
-                  className="inline-flex items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-950 px-6 py-3 text-base font-medium text-white transition hover:border-sky-500/40 hover:text-sky-300"
-                >
-                  {language === "en" ? "Sign in" : "Iniciar sesión"}
-                </Link>
-              </div>
-
-              <div className="mt-8 grid gap-4 sm:grid-cols-3">
-                <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
-                  <p className="text-sm font-medium text-sky-400">
-                    {language === "en"
-                      ? "Real hourly pay"
-                      : "Pago real por hora"}
-                  </p>
-                  <p className="mt-2 text-sm text-zinc-400">
-                    {language === "en"
-                      ? "Not just gross earnings."
-                      : "No solo ganancias brutas."}
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
-                  <p className="text-sm font-medium text-sky-400">
-                    {language === "en"
-                      ? "After expenses"
-                      : "Después de gastos"}
-                  </p>
-                  <p className="mt-2 text-sm text-zinc-400">
-                    {language === "en"
-                      ? "Miles, fuel, and taxes included."
-                      : "Incluye millas, gasolina e impuestos."}
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
-                  <p className="text-sm font-medium text-sky-400">
-                    {language === "en"
-                      ? "Worth-it check"
-                      : "Vale la pena"}
-                  </p>
-                  <p className="mt-2 text-sm text-zinc-400">
-                    {language === "en"
-                      ? "See whether a shift made sense."
-                      : "Mira si el turno realmente convino."}
-                  </p>
-                </div>
-              </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setLanguage("en")}
+                className={`rounded-xl border px-4 py-2 text-sm transition ${
+                  language === "en"
+                    ? "border-sky-400 bg-sky-500 text-black"
+                    : "border-slate-700 bg-slate-900 text-white hover:border-sky-500/40"
+                }`}
+              >
+                EN
+              </button>
+              <button
+                onClick={() => setLanguage("es")}
+                className={`rounded-xl border px-4 py-2 text-sm transition ${
+                  language === "es"
+                    ? "border-sky-400 bg-sky-500 text-black"
+                    : "border-slate-700 bg-slate-900 text-white hover:border-sky-500/40"
+                }`}
+              >
+                ES
+              </button>
             </div>
 
-            <div className="lg:pl-8">
-              <div className="rounded-[28px] border border-zinc-800 bg-zinc-950 p-5 shadow-2xl shadow-sky-950/20">
-                <div className="rounded-[24px] border border-zinc-800 bg-black p-5">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.2em] text-sky-400">
-                        WIWI
-                      </p>
-                      <h2 className="mt-2 text-xl font-semibold">
-                        {language === "en"
-                          ? "Shift summary"
-                          : "Resumen del turno"}
-                      </h2>
+            <Link
+              href="/login"
+              className="rounded-xl bg-sky-500 px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-sky-400"
+            >
+              {language === "en" ? "Sign In" : "Entrar"}
+            </Link>
+          </div>
+
+          <button
+            onClick={() => setMenuOpen((prev) => !prev)}
+            className="inline-flex items-center justify-center rounded-lg border border-slate-700 bg-slate-900 p-2 text-slate-300 transition hover:border-sky-500/40 hover:text-white md:hidden"
+            aria-label="Toggle menu"
+          >
+            {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
+
+        {menuOpen ? (
+          <div className="border-t border-slate-800/50 bg-slate-950/95 px-4 py-4 md:hidden">
+            <div className="flex flex-col gap-3">
+              <Link
+                href="/dashboard"
+                className="rounded-lg px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white"
+                onClick={() => setMenuOpen(false)}
+              >
+                {language === "en" ? "Dashboard" : "Panel"}
+              </Link>
+
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setLanguage("en")}
+                  className={`rounded-xl border px-4 py-2 text-sm transition ${
+                    language === "en"
+                      ? "border-sky-400 bg-sky-500 text-black"
+                      : "border-slate-700 bg-slate-900 text-white"
+                  }`}
+                >
+                  EN
+                </button>
+                <button
+                  onClick={() => setLanguage("es")}
+                  className={`rounded-xl border px-4 py-2 text-sm transition ${
+                    language === "es"
+                      ? "border-sky-400 bg-sky-500 text-black"
+                      : "border-slate-700 bg-slate-900 text-white"
+                  }`}
+                >
+                  ES
+                </button>
+              </div>
+
+              <Link
+                href="/login"
+                className="rounded-xl bg-sky-500 px-5 py-3 text-center text-sm font-semibold text-black transition hover:bg-sky-400"
+                onClick={() => setMenuOpen(false)}
+              >
+                {language === "en" ? "Sign In" : "Entrar"}
+              </Link>
+            </div>
+          </div>
+        ) : null}
+      </nav>
+
+      <section className="relative overflow-hidden py-20 sm:py-28 lg:py-32">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-20 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
+
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-4xl text-center">
+            <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-sky-500/20 bg-sky-500/10 px-4 py-2">
+              <span className="text-sm font-medium text-sky-400">
+                {language === "en"
+                  ? "Track Your True Earnings"
+                  : "Calcula tus ganancias reales"}
+              </span>
+            </div>
+
+            <h1 className="mb-6 text-5xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl">
+              {language === "en" ? (
+                <>
+                  Know What You{" "}
+                  <span className="bg-gradient-to-r from-sky-400 to-blue-600 bg-clip-text text-transparent">
+                    Really Made
+                  </span>
+                </>
+              ) : (
+                <>
+                  Mira Lo Que{" "}
+                  <span className="bg-gradient-to-r from-sky-400 to-blue-600 bg-clip-text text-transparent">
+                    Realmente Ganaste
+                  </span>
+                </>
+              )}
+            </h1>
+
+            <p className="mx-auto mb-10 max-w-2xl text-xl leading-relaxed text-slate-400">
+              {language === "en"
+                ? "Calculate your real earnings after gas, taxes, and expenses. See if your gig work shifts are truly worth it."
+                : "Calcula tus ganancias reales después de gasolina, impuestos y gastos. Mira si tus turnos de trabajo gig realmente valieron la pena."}
+            </p>
+
+            <div className="flex flex-col justify-center gap-4 sm:flex-row">
+              <Link
+                href="/signup"
+                className="rounded-xl bg-sky-500 px-8 py-4 text-lg font-semibold text-black shadow-lg shadow-sky-500/20 transition hover:bg-sky-400"
+              >
+                {language === "en" ? "Get Started Free" : "Comienza Gratis"}
+              </Link>
+
+              <Link
+                href="/login"
+                className="rounded-xl border border-slate-700 px-8 py-4 text-lg font-semibold text-slate-300 transition hover:bg-slate-800 hover:text-white"
+              >
+                {language === "en" ? "Sign In" : "Entrar"}
+              </Link>
+            </div>
+          </div>
+
+          <div className="mx-auto mt-20 max-w-5xl">
+            <div className="rounded-2xl border border-slate-800/50 bg-slate-900/50 p-8 shadow-2xl backdrop-blur-sm">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                <div className="rounded-xl border border-slate-700/50 bg-gradient-to-br from-slate-800/50 to-slate-900/50 p-6">
+                  <div className="mb-3 flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10">
+                      <DollarSign className="h-5 w-5 text-emerald-400" />
                     </div>
-                    <div className="rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1 text-sm text-sky-300">
-                      {language === "en" ? "Worth it" : "Valió la pena"}
-                    </div>
+                    <span className="text-sm text-slate-400">
+                      {language === "en" ? "Net Earnings" : "Ganancia Neta"}
+                    </span>
                   </div>
-
-                  <div className="mt-6 grid grid-cols-2 gap-3">
-                    <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
-                      <p className="text-xs text-zinc-500">
-                        {language === "en"
-                          ? "Gross earnings"
-                          : "Ganancia bruta"}
-                      </p>
-                      <p className="mt-2 text-2xl font-semibold">$126.50</p>
-                    </div>
-
-                    <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
-                      <p className="text-xs text-zinc-500">
-                        {language === "en"
-                          ? "Net earnings"
-                          : "Ganancia neta"}
-                      </p>
-                      <p className="mt-2 text-2xl font-semibold">$92.14</p>
-                    </div>
-
-                    <div className="rounded-2xl border border-sky-500/20 bg-sky-500/5 p-4">
-                      <p className="text-xs text-sky-300">
-                        {language === "en"
-                          ? "Real hourly pay"
-                          : "Pago real por hora"}
-                      </p>
-                      <p className="mt-2 text-2xl font-semibold text-sky-400">
-                        $23.04
-                      </p>
-                    </div>
-
-                    <div className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
-                      <p className="text-xs text-zinc-500">
-                        {language === "en" ? "Miles driven" : "Millas"}
-                      </p>
-                      <p className="mt-2 text-2xl font-semibold">41.2</p>
-                    </div>
+                  <div className="text-3xl font-bold text-white">$1,847</div>
+                  <div className="mt-2 text-sm text-emerald-400">
+                    {language === "en" ? "+12% this week" : "+12% esta semana"}
                   </div>
+                </div>
 
-                  <div className="mt-4 rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-zinc-400">
-                        {language === "en"
-                          ? "Weekly goal progress"
-                          : "Progreso de meta semanal"}
-                      </span>
-                      <span className="font-medium text-sky-400">72%</span>
+                <div className="rounded-xl border border-slate-700/50 bg-gradient-to-br from-slate-800/50 to-slate-900/50 p-6">
+                  <div className="mb-3 flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-500/10">
+                      <Clock className="h-5 w-5 text-sky-400" />
                     </div>
-                    <div className="mt-3 h-3 w-full rounded-full bg-zinc-800">
-                      <div className="h-3 w-[72%] rounded-full bg-sky-500" />
-                    </div>
+                    <span className="text-sm text-slate-400">
+                      {language === "en" ? "Real Hourly Pay" : "Pago Real por Hora"}
+                    </span>
                   </div>
-
-                  <p className="mt-4 text-sm text-zinc-500">
+                  <div className="text-3xl font-bold text-white">$24.50</div>
+                  <div className="mt-2 text-sm text-slate-400">
                     {language === "en"
-                      ? "Track each shift. Know your real pay. Stop guessing."
-                      : "Registra cada turno. Mira tu pago real. Deja de adivinar."}
-                  </p>
+                      ? "After all expenses"
+                      : "Después de todos los gastos"}
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-slate-700/50 bg-gradient-to-br from-slate-800/50 to-slate-900/50 p-6">
+                  <div className="mb-3 flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/10">
+                      <TrendingUp className="h-5 w-5 text-purple-400" />
+                    </div>
+                    <span className="text-sm text-slate-400">
+                      {language === "en" ? "This Week" : "Esta Semana"}
+                    </span>
+                  </div>
+                  <div className="text-3xl font-bold text-white">32 hrs</div>
+                  <div className="mt-2 text-sm text-purple-400">
+                    {language === "en"
+                      ? "8 shifts completed"
+                      : "8 turnos completados"}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
+
+      <section className="bg-slate-900/50 py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-16 text-center">
+            <h2 className="mb-4 text-4xl font-bold text-white">
+              {language === "en"
+                ? "Everything You Need to Track Your Gig Work"
+                : "Todo lo que necesitas para seguir tu trabajo gig"}
+            </h2>
+            <p className="mx-auto max-w-2xl text-xl text-slate-400">
+              {language === "en"
+                ? "Simple, powerful tools to understand your real earnings"
+                : "Herramientas simples y potentes para entender tus ganancias reales"}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+            <div className="group">
+              <div className="h-full rounded-xl border border-slate-700/50 bg-slate-800/30 p-6 transition-all hover:border-sky-500/30 hover:bg-slate-800/50">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-sky-500/10 transition-colors group-hover:bg-sky-500/20">
+                  <DollarSign className="h-6 w-6 text-sky-400" />
+                </div>
+                <h3 className="mb-2 text-xl font-semibold text-white">
+                  {language === "en" ? "Real Earnings" : "Ganancias Reales"}
+                </h3>
+                <p className="text-slate-400">
+                  {language === "en"
+                    ? "Calculate net earnings after gas, taxes, and all expenses automatically."
+                    : "Calcula automáticamente tus ganancias netas después de gasolina, impuestos y todos los gastos."}
+                </p>
+              </div>
+            </div>
+
+            <div className="group">
+              <div className="h-full rounded-xl border border-slate-700/50 bg-slate-800/30 p-6 transition-all hover:border-sky-500/30 hover:bg-slate-800/50">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-500/10 transition-colors group-hover:bg-emerald-500/20">
+                  <TrendingUp className="h-6 w-6 text-emerald-400" />
+                </div>
+                <h3 className="mb-2 text-xl font-semibold text-white">
+                  {language === "en" ? "Smart Analytics" : "Analítica Inteligente"}
+                </h3>
+                <p className="text-slate-400">
+                  {language === "en"
+                    ? "Track your performance over time and see which shifts are most profitable."
+                    : "Sigue tu rendimiento con el tiempo y mira cuáles turnos son más rentables."}
+                </p>
+              </div>
+            </div>
+
+            <div className="group">
+              <div className="h-full rounded-xl border border-slate-700/50 bg-slate-800/30 p-6 transition-all hover:border-sky-500/30 hover:bg-slate-800/50">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-500/10 transition-colors group-hover:bg-purple-500/20">
+                  <Clock className="h-6 w-6 text-purple-400" />
+                </div>
+                <h3 className="mb-2 text-xl font-semibold text-white">
+                  {language === "en" ? "Time Tracking" : "Seguimiento de Tiempo"}
+                </h3>
+                <p className="text-slate-400">
+                  {language === "en"
+                    ? "See your true hourly rate including all time spent working and driving."
+                    : "Mira tu tarifa real por hora incluyendo todo el tiempo trabajando y manejando."}
+                </p>
+              </div>
+            </div>
+
+            <div className="group">
+              <div className="h-full rounded-xl border border-slate-700/50 bg-slate-800/30 p-6 transition-all hover:border-sky-500/30 hover:bg-slate-800/50">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-orange-500/10 transition-colors group-hover:bg-orange-500/20">
+                  <Shield className="h-6 w-6 text-orange-400" />
+                </div>
+                <h3 className="mb-2 text-xl font-semibold text-white">
+                  {language === "en" ? "Tax Ready" : "Listo para Impuestos"}
+                </h3>
+                <p className="text-slate-400">
+                  {language === "en"
+                    ? "Automatic tax set-aside calculations so you're always prepared."
+                    : "Cálculos automáticos para separar impuestos y estar siempre preparado."}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20">
+        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+          <div className="rounded-2xl border border-sky-500/20 bg-gradient-to-r from-sky-500/10 to-blue-500/10 p-12">
+            <h2 className="mb-4 text-4xl font-bold text-white">
+              {language === "en"
+                ? "Start Tracking Your Real Earnings Today"
+                : "Empieza a seguir tus ganancias reales hoy"}
+            </h2>
+            <p className="mb-8 text-xl text-slate-400">
+              {language === "en"
+                ? "Join thousands of gig workers who know exactly what they're making."
+                : "Únete a miles de trabajadores gig que saben exactamente cuánto están ganando."}
+            </p>
+            <Link
+              href="/signup"
+              className="inline-flex rounded-xl bg-sky-500 px-10 py-4 text-lg font-semibold text-black shadow-lg shadow-sky-500/20 transition hover:bg-sky-400"
+            >
+              {language === "en" ? "Get Started Free" : "Comienza Gratis"}
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <footer className="border-t border-slate-800/50 py-8">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 sm:px-6 lg:flex-row lg:px-8">
+          <div className="flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-sky-400 to-sky-600">
+              <span className="text-sm font-bold text-white">W</span>
+            </div>
+            <span className="text-slate-400">© 2026 WIWI. All rights reserved.</span>
+          </div>
+
+          <div className="flex gap-6 text-slate-400">
+            <a href="#" className="transition-colors hover:text-white">
+              {language === "en" ? "Privacy" : "Privacidad"}
+            </a>
+            <a href="#" className="transition-colors hover:text-white">
+              {language === "en" ? "Terms" : "Términos"}
+            </a>
+            <a href="#" className="transition-colors hover:text-white">
+              {language === "en" ? "Support" : "Soporte"}
+            </a>
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }
