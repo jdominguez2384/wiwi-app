@@ -360,27 +360,10 @@ export default function HomePage() {
         </section>
 
         <footer className="border-t border-slate-800/50 py-8">
-          <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 sm:px-6 lg:flex-row lg:px-8">
-            <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-sky-400 to-sky-600">
-                <span className="text-sm font-bold text-white">W</span>
-              </div>
-              <span className="text-slate-400">
-                © 2026 WIWI. All rights reserved.
-              </span>
-            </div>
-
-            <div className="flex gap-6 text-slate-400">
-              <a href="#" className="transition-colors hover:text-white">
-                {language === "en" ? "Privacy" : "Privacidad"}
-              </a>
-              <a href="#" className="transition-colors hover:text-white">
-                {language === "en" ? "Terms" : "Términos"}
-              </a>
-              <a href="#" className="transition-colors hover:text-white">
-                {language === "en" ? "Support" : "Soporte"}
-              </a>
-            </div>
+          <div className="mx-auto flex max-w-7xl items-center justify-center px-4 sm:px-6 lg:px-8">
+            <p className="text-sm text-slate-400">
+              © 2026 WIWI. All rights reserved.
+            </p>
           </div>
         </footer>
       </div>
