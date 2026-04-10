@@ -8,6 +8,14 @@ export async function getUserShifts(userId: string) {
     .order("shift_date", { ascending: false });
 }
 
+export async function getUserShift(shiftId: string) {
+  return supabase
+    .from("shifts")
+    .select("*")
+    .eq("id", shiftId)
+    .maybeSingle();
+}
+
 export async function createUserShift(input: {
   user_id: string;
   shift_date: string;

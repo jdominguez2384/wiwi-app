@@ -2,12 +2,15 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { Mail, RotateCcw } from "lucide-react";
+import { AuthShell } from "../../components/AuthShell";
 import { useLanguage } from "../../components/LanguageProvider";
 import { sendPasswordResetEmail } from "../../lib/auth";
 import { getFriendlyAuthError } from "../../lib/auth-messages";
 
 export default function ForgotPasswordPage() {
   const { language, setLanguage } = useLanguage();
+  const isSpanish = language === "es";
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
@@ -18,9 +21,9 @@ export default function ForgotPasswordPage() {
 
     if (!email) {
       setMessage(
-        language === "en"
-          ? "Please enter your email."
-          : "Por favor ingresa tu correo."
+        isSpanish
+          ? "Por favor ingresa tu correo."
+          : "Please enter your email."
       );
       return;
     }
@@ -36,9 +39,9 @@ export default function ForgotPasswordPage() {
       }
 
       setMessage(
-        language === "en"
-          ? "Password reset email sent. Check your inbox."
-          : "Correo de restablecimiento enviado. Revisa tu bandeja de entrada."
+        isSpanish
+          ? "Correo de restablecimiento enviado. Revisa tu bandeja de entrada."
+          : "Password reset email sent. Check your inbox."
       );
     } finally {
       setIsSending(false);
@@ -46,85 +49,122 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-white flex items-center justify-center p-6">
-      <div className="max-w-md w-full rounded-3xl border border-zinc-800 bg-zinc-950 p-8 shadow-2xl shadow-sky-950/20">
-        <div className="flex justify-end gap-2 mb-6">
-          <button
-            onClick={() => setLanguage("en")}
-            disabled={isSending}
-            className={`rounded-xl border px-4 py-2 text-sm transition ${
-              language === "en"
-                ? "border-sky-400 bg-sky-500 text-black"
-                : "border-zinc-700 bg-zinc-900 text-white hover:border-sky-500/40"
-            } disabled:opacity-60`}
-          >
-            EN
-          </button>
-          <button
-            onClick={() => setLanguage("es")}
-            disabled={isSending}
-            className={`rounded-xl border px-4 py-2 text-sm transition ${
-              language === "es"
-                ? "border-sky-400 bg-sky-500 text-black"
-                : "border-zinc-700 bg-zinc-900 text-white hover:border-sky-500/40"
-            } disabled:opacity-60`}
-          >
-            ES
-          </button>
+    <AuthShell
+      language={language}
+      setLanguage={setLanguage}
+      disabled={isSending}
+      eyebrow={isSpanish ? "Restablecer acceso" : "Reset access"}
+      title={
+        isSpanish ? (
+          <>
+            Recupera tu cuenta y vuelve a ver si{" "}
+            <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
+              valió la pena
+            </span>
+            .
+          </>
+        ) : (
+          <>
+            Recover your account and get back to seeing if it{" "}
+            <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
+              was worth it
+            </span>
+            .
+          </>
+        )
+      }
+      description={
+        isSpanish
+          ? "Ingresa el correo con el que te registraste y te enviaremos un enlace para restablecer tu contraseña."
+          : "Enter the email you signed up with and we will send a link to reset your password."
+      }
+      sideEyebrow={isSpanish ? "Recupera el ritmo" : "Get back in rhythm"}
+      sideTitle={
+        isSpanish ? (
+          <>
+            Tu historial de turnos sigue{" "}
+            <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
+              listo para ti
+            </span>
+            .
+          </>
+        ) : (
+          <>
+            Your shift history is still{" "}
+            <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
+              waiting for you
+            </span>
+            .
+          </>
+        )
+      }
+      sideDescription={
+        isSpanish
+          ? "En unos minutos podrás volver a tu panel para revisar tus mejores turnos, tu meta semanal y tus cálculos reales."
+          : "In a few minutes you can be back in your dashboard reviewing your best shifts, weekly goal, and real earnings."
+      }
+      sideActionHref="/login"
+      sideActionLabel={isSpanish ? "Volver a iniciar sesión" : "Back to sign in"}
+      footer={
+        <div className="space-y-3">
+          <p>
+            <Link
+              href="/login"
+              className="font-semibold text-sky-300 transition hover:text-sky-200"
+            >
+              {isSpanish ? "Volver a iniciar sesión" : "Back to sign in"}
+            </Link>
+          </p>
+          <p>
+            <Link
+              href="/"
+              className="text-slate-500 transition hover:text-sky-300"
+            >
+              {isSpanish ? "Volver al inicio" : "Back to home"}
+            </Link>
+          </p>
         </div>
-
-        <p className="text-sm font-medium tracking-[0.2em] text-sky-400">WIWI</p>
-        <h1 className="text-3xl font-semibold mt-2">
-          {language === "en" ? "Forgot password" : "Olvidé mi contraseña"}
-        </h1>
-        <p className="text-zinc-400 mt-3">
-          {language === "en"
-            ? "Enter the email you signed up with and we’ll send you a reset link."
-            : "Ingresa el correo con el que te registraste y te enviaremos un enlace para restablecerla."}
-        </p>
-
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-zinc-300">
-              Email
-            </label>
+      }
+    >
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-slate-300">Email</label>
+          <div className="relative">
+            <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isSending}
-              className="block w-full rounded-xl border border-zinc-700 bg-black px-4 py-3 text-white outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 disabled:opacity-60"
+              className="block w-full rounded-2xl border border-slate-700 bg-slate-950 px-12 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-sky-500 disabled:opacity-60"
+              placeholder={isSpanish ? "tu@correo.com" : "you@example.com"}
             />
           </div>
+        </div>
 
-          <button
-            type="submit"
-            disabled={isSending}
-            className="w-full rounded-xl bg-sky-500 text-black px-4 py-3 font-medium transition hover:bg-sky-400 disabled:opacity-60"
-          >
+        <button
+          type="submit"
+          disabled={isSending}
+          className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-sky-500 px-5 py-3 text-sm font-semibold text-black shadow-lg shadow-sky-500/20 transition hover:bg-sky-400 disabled:opacity-60"
+        >
+          <span>
             {isSending
-              ? language === "en"
-                ? "Sending..."
-                : "Enviando..."
-              : language === "en"
-              ? "Send reset email"
-              : "Enviar correo de restablecimiento"}
-          </button>
-        </form>
+              ? isSpanish
+                ? "Enviando..."
+                : "Sending..."
+              : isSpanish
+                ? "Enviar enlace de restablecimiento"
+                : "Send reset link"}
+          </span>
+          <RotateCcw className="h-4 w-4" />
+        </button>
+      </form>
 
-        {message ? (
-          <p className="text-sm text-zinc-300 mt-4">{message}</p>
-        ) : null}
-
-        <p className="text-sm text-zinc-400 mt-6">
-          <Link
-            href="/login"
-            className="underline transition hover:text-sky-300"
-          >
-            {language === "en" ? "Back to sign in" : "Volver a iniciar sesión"}
-          </Link>
-        </p>
-      </div>
-    </main>
+      {message ? (
+        <div className="mt-4 rounded-2xl border border-sky-500/20 bg-sky-500/10 px-4 py-3 text-sm text-sky-100">
+          {message}
+        </div>
+      ) : null}
+    </AuthShell>
   );
 }

@@ -2,12 +2,15 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { ArrowRight, KeyRound, Mail, UserRound } from "lucide-react";
+import { AuthShell } from "../../components/AuthShell";
 import { useLanguage } from "../../components/LanguageProvider";
 import { signUp } from "../../lib/auth";
 import { getFriendlyAuthError } from "../../lib/auth-messages";
 
 export default function SignupPage() {
   const { language, setLanguage } = useLanguage();
+  const isSpanish = language === "es";
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -21,9 +24,9 @@ export default function SignupPage() {
 
     if (!name || !email || !password) {
       setMessage(
-        language === "en"
-          ? "Please fill out all fields."
-          : "Por favor completa todos los campos."
+        isSpanish
+          ? "Por favor completa todos los campos."
+          : "Please fill out all fields."
       );
       return;
     }
@@ -42,9 +45,9 @@ export default function SignupPage() {
       }
 
       setMessage(
-        language === "en"
-          ? "Account created. Check your email to confirm your account."
-          : "Cuenta creada. Revisa tu correo para confirmar tu cuenta."
+        isSpanish
+          ? "Cuenta creada. Revisa tu correo para confirmar tu cuenta."
+          : "Account created. Check your email to confirm your account."
       );
     } finally {
       setIsSubmitting(false);
@@ -52,120 +55,157 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-white flex items-center justify-center p-6">
-      <div className="max-w-md w-full rounded-3xl border border-zinc-800 bg-zinc-950 p-8 shadow-2xl shadow-sky-950/20">
-        <div className="flex justify-end gap-2 mb-6">
-          <button
-            onClick={() => setLanguage("en")}
-            disabled={isSubmitting}
-            className={`rounded-xl border px-4 py-2 text-sm transition ${
-              language === "en"
-                ? "border-sky-400 bg-sky-500 text-black"
-                : "border-zinc-700 bg-zinc-900 text-white hover:border-sky-500/40"
-            } disabled:opacity-60`}
-          >
-            EN
-          </button>
-          <button
-            onClick={() => setLanguage("es")}
-            disabled={isSubmitting}
-            className={`rounded-xl border px-4 py-2 text-sm transition ${
-              language === "es"
-                ? "border-sky-400 bg-sky-500 text-black"
-                : "border-zinc-700 bg-zinc-900 text-white hover:border-sky-500/40"
-            } disabled:opacity-60`}
-          >
-            ES
-          </button>
+    <AuthShell
+      language={language}
+      setLanguage={setLanguage}
+      disabled={isSubmitting}
+      eyebrow={isSpanish ? "Crear cuenta" : "Create account"}
+      title={
+        isSpanish ? (
+          <>
+            Crea tu cuenta y empieza a ver si{" "}
+            <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
+              valió la pena
+            </span>
+            .
+          </>
+        ) : (
+          <>
+            Create your account and see if it{" "}
+            <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
+              was worth it
+            </span>
+            .
+          </>
+        )
+      }
+      description={
+        isSpanish
+          ? "Empieza a guardar turnos, comparar apps y entender tu ingreso real después de gasolina e impuestos."
+          : "Start saving shifts, comparing apps, and understanding your real pay after gas and taxes."
+      }
+      sideEyebrow={isSpanish ? "Arranca con ventaja" : "Start with an edge"}
+      sideTitle={
+        isSpanish ? (
+          <>
+            Convierte cada turno en{" "}
+            <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
+              mejores decisiones
+            </span>
+            .
+          </>
+        ) : (
+          <>
+            Turn every shift into{" "}
+            <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
+              better decisions
+            </span>
+            .
+          </>
+        )
+      }
+      sideDescription={
+        isSpanish
+          ? "WIWI te ayuda a detectar qué apps, horarios y turnos realmente te convienen para crecer con más claridad."
+          : "WIWI helps you spot which apps, hours, and shifts are actually helping you earn more."
+      }
+      sideActionHref="/login"
+      sideActionLabel={isSpanish ? "Ya tengo cuenta" : "I already have an account"}
+      footer={
+        <div className="space-y-3">
+          <p>
+            {isSpanish ? "¿Ya tienes una cuenta?" : "Already have an account?"}{" "}
+            <Link
+              href="/login"
+              className="font-semibold text-sky-300 transition hover:text-sky-200"
+            >
+              {isSpanish ? "Inicia sesión" : "Sign in"}
+            </Link>
+          </p>
+          <p>
+            <Link
+              href="/"
+              className="text-slate-500 transition hover:text-sky-300"
+            >
+              {isSpanish ? "Volver al inicio" : "Back to home"}
+            </Link>
+          </p>
         </div>
-
-        <p className="text-sm font-medium tracking-[0.2em] text-sky-400">WIWI</p>
-        <h1 className="text-3xl font-semibold mt-2">
-          {language === "en" ? "Create account" : "Crear cuenta"}
-        </h1>
-        <p className="text-zinc-400 mt-3">
-          {language === "en"
-            ? "Start tracking your real pay after miles, fuel, and taxes."
-            : "Empieza a registrar tu pago real después de millas, gasolina e impuestos."}
-        </p>
-
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-zinc-300">
-              {language === "en" ? "Name" : "Nombre"}
-            </label>
+      }
+    >
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-slate-300">
+            {isSpanish ? "Nombre" : "Name"}
+          </label>
+          <div className="relative">
+            <UserRound className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               disabled={isSubmitting}
-              className="block w-full rounded-xl border border-zinc-700 bg-black px-4 py-3 text-white outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 disabled:opacity-60"
+              className="block w-full rounded-2xl border border-slate-700 bg-slate-950 px-12 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-sky-500 disabled:opacity-60"
+              placeholder={isSpanish ? "Tu nombre" : "Your name"}
             />
           </div>
+        </div>
 
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-zinc-300">
-              Email
-            </label>
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-slate-300">Email</label>
+          <div className="relative">
+            <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isSubmitting}
-              className="block w-full rounded-xl border border-zinc-700 bg-black px-4 py-3 text-white outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 disabled:opacity-60"
+              className="block w-full rounded-2xl border border-slate-700 bg-slate-950 px-12 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-sky-500 disabled:opacity-60"
+              placeholder={isSpanish ? "tu@correo.com" : "you@example.com"}
             />
           </div>
+        </div>
 
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-zinc-300">
-              {language === "en" ? "Password" : "Contraseña"}
-            </label>
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-slate-300">
+            {isSpanish ? "Contraseña" : "Password"}
+          </label>
+          <div className="relative">
+            <KeyRound className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={isSubmitting}
-              className="block w-full rounded-xl border border-zinc-700 bg-black px-4 py-3 text-white outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 disabled:opacity-60"
+              className="block w-full rounded-2xl border border-slate-700 bg-slate-950 px-12 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-sky-500 disabled:opacity-60"
+              placeholder={isSpanish ? "Crea una contraseña" : "Create a password"}
             />
           </div>
+        </div>
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full rounded-xl bg-sky-500 text-black px-4 py-3 font-medium transition hover:bg-sky-400 disabled:opacity-60"
-          >
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-sky-500 px-5 py-3 text-sm font-semibold text-black shadow-lg shadow-sky-500/20 transition hover:bg-sky-400 disabled:opacity-60"
+        >
+          <span>
             {isSubmitting
-              ? language === "en"
-                ? "Creating account..."
-                : "Creando cuenta..."
-              : language === "en"
-              ? "Create account"
-              : "Crear cuenta"}
-          </button>
-        </form>
+              ? isSpanish
+                ? "Creando cuenta..."
+                : "Creating account..."
+              : isSpanish
+                ? "Crear cuenta en WIWI"
+                : "Create WIWI account"}
+          </span>
+          <ArrowRight className="h-4 w-4" />
+        </button>
+      </form>
 
-        {message ? (
-          <p className="text-sm text-zinc-300 mt-4">{message}</p>
-        ) : null}
-
-        <p className="text-sm text-zinc-400 mt-6">
-          {language === "en"
-            ? "Already have an account?"
-            : "¿Ya tienes una cuenta?"}{" "}
-          <Link
-            href="/login"
-            className="font-medium text-sky-300 underline hover:text-sky-200"
-          >
-            {language === "en" ? "Sign in" : "Iniciar sesión"}
-          </Link>
-        </p>
-
-        <p className="text-sm text-zinc-500 mt-2">
-          <Link href="/" className="underline hover:text-sky-300">
-            {language === "en" ? "Back to home" : "Volver al inicio"}
-          </Link>
-        </p>
-      </div>
-    </main>
+      {message ? (
+        <div className="mt-4 rounded-2xl border border-sky-500/20 bg-sky-500/10 px-4 py-3 text-sm text-sky-100">
+          {message}
+        </div>
+      ) : null}
+    </AuthShell>
   );
 }

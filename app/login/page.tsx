@@ -3,12 +3,16 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { ArrowRight, KeyRound, Mail } from "lucide-react";
+import { AuthShell } from "../../components/AuthShell";
 import { useLanguage } from "../../components/LanguageProvider";
 import { signIn } from "../../lib/auth";
+import { getFriendlyAuthError } from "../../lib/auth-messages";
 
 export default function LoginPage() {
   const { language, setLanguage } = useLanguage();
   const router = useRouter();
+  const isSpanish = language === "es";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,139 +25,173 @@ export default function LoginPage() {
 
     if (!email || !password) {
       setMessage(
-        language === "en"
-          ? "Please fill out all fields."
-          : "Por favor completa todos los campos."
+        isSpanish
+          ? "Por favor completa todos los campos."
+          : "Please fill out all fields."
       );
       return;
     }
 
     setIsLoading(true);
 
-    const { error } = await signIn(email, password);
+    try {
+      const { error } = await signIn(email, password);
 
-    if (error) {
-      setMessage(error.message);
+      if (error) {
+        setMessage(getFriendlyAuthError(error.message, language));
+        return;
+      }
+
+      router.push("/dashboard");
+    } finally {
       setIsLoading(false);
-      return;
     }
-
-    router.push("/dashboard");
   }
 
   return (
-    <main className="min-h-screen bg-black text-white flex items-center justify-center p-6">
-      <div className="max-w-md w-full rounded-3xl border border-zinc-800 bg-zinc-950 p-8 shadow-2xl shadow-sky-950/20">
-        <div className="flex justify-end gap-2 mb-6">
-          <button
-            onClick={() => setLanguage("en")}
-            disabled={isLoading}
-            className={`rounded-xl border px-4 py-2 text-sm transition ${
-              language === "en"
-                ? "border-sky-400 bg-sky-500 text-black"
-                : "border-zinc-700 bg-zinc-900 text-white hover:border-sky-500/40"
-            } disabled:opacity-60`}
-          >
-            EN
-          </button>
-          <button
-            onClick={() => setLanguage("es")}
-            disabled={isLoading}
-            className={`rounded-xl border px-4 py-2 text-sm transition ${
-              language === "es"
-                ? "border-sky-400 bg-sky-500 text-black"
-                : "border-zinc-700 bg-zinc-900 text-white hover:border-sky-500/40"
-            } disabled:opacity-60`}
-          >
-            ES
-          </button>
+    <AuthShell
+      language={language}
+      setLanguage={setLanguage}
+      disabled={isLoading}
+      eyebrow={isSpanish ? "Iniciar sesión" : "Sign in"}
+      title={
+        isSpanish ? (
+          <>
+            Entra y descubre si{" "}
+            <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
+              valió la pena
+            </span>
+            .
+          </>
+        ) : (
+          <>
+            Sign in and see if it{" "}
+            <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
+              was worth it
+            </span>
+            .
+          </>
+        )
+      }
+      description={
+        isSpanish
+          ? "Accede a tu cuenta para revisar tus turnos, tu meta semanal y tu pago real por hora."
+          : "Access your account to review shifts, weekly goals, and your true hourly pay."
+      }
+      sideEyebrow={isSpanish ? "Vuelve a tu panel" : "Back to your dashboard"}
+      sideTitle={
+        isSpanish ? (
+          <>
+            Todo tu trabajo gig,{" "}
+            <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
+              explicado con claridad
+            </span>
+            .
+          </>
+        ) : (
+          <>
+            All your gig work,{" "}
+            <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
+              made easier to read
+            </span>
+            .
+          </>
+        )
+      }
+      sideDescription={
+        isSpanish
+          ? "WIWI reúne millas, gasolina, impuestos y tiempo en una vista simple para que sepas exactamente cómo te fue."
+          : "WIWI brings miles, fuel, taxes, and time into one simple view so you know exactly how your shift went."
+      }
+      sideActionHref="/signup"
+      sideActionLabel={isSpanish ? "Crear una cuenta nueva" : "Create a new account"}
+      footer={
+        <div className="space-y-3">
+          <p>
+            {isSpanish ? "¿Necesitas una cuenta?" : "Need an account?"}{" "}
+            <Link
+              href="/signup"
+              className="font-semibold text-sky-300 transition hover:text-sky-200"
+            >
+              {isSpanish ? "Créala aquí" : "Create one here"}
+            </Link>
+          </p>
+          <p>
+            <Link
+              href="/"
+              className="text-slate-500 transition hover:text-sky-300"
+            >
+              {isSpanish ? "Volver al inicio" : "Back to home"}
+            </Link>
+          </p>
         </div>
-
-        <p className="text-sm font-medium tracking-[0.2em] text-sky-400">WIWI</p>
-        <h1 className="text-3xl font-semibold mt-2">
-          {language === "en" ? "Sign in" : "Iniciar sesión"}
-        </h1>
-        <p className="text-zinc-400 mt-3">
-          {language === "en"
-            ? "Access your account and track your real pay."
-            : "Entra a tu cuenta y sigue tu pago real."}
-        </p>
-
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-zinc-300">
-              Email
-            </label>
+      }
+    >
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-slate-300">Email</label>
+          <div className="relative">
+            <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isLoading}
-              className="block w-full min-w-0 rounded-xl border border-zinc-700 bg-black px-4 py-3 text-white outline-none transition placeholder:text-zinc-500 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 disabled:opacity-60"
+              className="block w-full rounded-2xl border border-slate-700 bg-slate-950 px-12 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-sky-500 disabled:opacity-60"
+              placeholder={isSpanish ? "tu@correo.com" : "you@example.com"}
             />
           </div>
+        </div>
 
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-zinc-300">
-              {language === "en" ? "Password" : "Contraseña"}
-            </label>
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-slate-300">
+            {isSpanish ? "Contraseña" : "Password"}
+          </label>
+          <div className="relative">
+            <KeyRound className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={isLoading}
-              className="block w-full min-w-0 rounded-xl border border-zinc-700 bg-black px-4 py-3 text-white outline-none transition placeholder:text-zinc-500 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 disabled:opacity-60"
+              className="block w-full rounded-2xl border border-slate-700 bg-slate-950 px-12 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-sky-500 disabled:opacity-60"
+              placeholder={isSpanish ? "Tu contraseña" : "Your password"}
             />
           </div>
+        </div>
 
-          <div className="flex justify-end">
-            <Link
-              href="/forgot-password"
-              className="text-sm text-zinc-400 underline transition hover:text-sky-300"
-            >
-              {language === "en"
-                ? "Forgot password?"
-                : "¿Olvidaste tu contraseña?"}
-            </Link>
-          </div>
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full rounded-xl bg-sky-500 text-black px-4 py-3 font-medium transition hover:bg-sky-400 disabled:opacity-60"
-          >
-            {isLoading
-              ? language === "en"
-                ? "Signing in..."
-                : "Entrando..."
-              : language === "en"
-              ? "Sign in"
-              : "Entrar"}
-          </button>
-        </form>
-
-        {message ? (
-          <p className="text-sm text-red-300 mt-4">{message}</p>
-        ) : null}
-
-        <p className="text-sm text-zinc-400 mt-6">
-          {language === "en"
-            ? "Need an account?"
-            : "¿Necesitas una cuenta?"}{" "}
+        <div className="flex justify-end">
           <Link
-            href="/signup"
-            className="font-medium text-sky-300 underline transition hover:text-sky-200"
+            href="/forgot-password"
+            className="text-sm font-medium text-slate-400 transition hover:text-sky-300"
           >
-            {language === "en" ? "Create one" : "Crea una"}
+            {isSpanish ? "¿Olvidaste tu contraseña?" : "Forgot password?"}
           </Link>
-        </p>
+        </div>
 
-        <p className="text-sm text-zinc-500 mt-2">
-          <Link href="/" className="underline transition hover:text-sky-300">
-            {language === "en" ? "Back to home" : "Volver al inicio"}
-          </Link>
-        </p>
-      </div>
-    </main>
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-sky-500 px-5 py-3 text-sm font-semibold text-black shadow-lg shadow-sky-500/20 transition hover:bg-sky-400 disabled:opacity-60"
+        >
+          <span>
+            {isLoading
+              ? isSpanish
+                ? "Entrando..."
+                : "Signing in..."
+              : isSpanish
+                ? "Entrar a WIWI"
+                : "Sign in to WIWI"}
+          </span>
+          <ArrowRight className="h-4 w-4" />
+        </button>
+      </form>
+
+      {message ? (
+        <div className="mt-4 rounded-2xl border border-sky-500/20 bg-sky-500/10 px-4 py-3 text-sm text-sky-100">
+          {message}
+        </div>
+      ) : null}
+    </AuthShell>
   );
 }

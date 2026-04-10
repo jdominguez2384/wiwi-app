@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ArrowRight, KeyRound, ShieldCheck } from "lucide-react";
+import { AuthShell } from "../../components/AuthShell";
 import { useLanguage } from "../../components/LanguageProvider";
 import { updatePassword } from "../../lib/auth";
 import { supabase } from "../../lib/supabase/client";
@@ -10,6 +12,7 @@ import { supabase } from "../../lib/supabase/client";
 export default function ResetPasswordPage() {
   const { language, setLanguage } = useLanguage();
   const router = useRouter();
+  const isSpanish = language === "es";
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -42,7 +45,7 @@ export default function ResetPasswordPage() {
       }
     }
 
-    handleRecovery();
+    void handleRecovery();
   }, []);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -51,18 +54,18 @@ export default function ResetPasswordPage() {
 
     if (!password || !confirmPassword) {
       setMessage(
-        language === "en"
-          ? "Please fill out all fields."
-          : "Por favor completa todos los campos."
+        isSpanish
+          ? "Por favor completa todos los campos."
+          : "Please fill out all fields."
       );
       return;
     }
 
     if (password !== confirmPassword) {
       setMessage(
-        language === "en"
-          ? "Passwords do not match."
-          : "Las contraseñas no coinciden."
+        isSpanish
+          ? "Las contraseñas no coinciden."
+          : "Passwords do not match."
       );
       return;
     }
@@ -78,9 +81,9 @@ export default function ResetPasswordPage() {
       }
 
       setMessage(
-        language === "en"
-          ? "Password updated. Redirecting..."
-          : "Contraseña actualizada. Redirigiendo..."
+        isSpanish
+          ? "Contraseña actualizada. Redirigiendo..."
+          : "Password updated. Redirecting..."
       );
 
       setTimeout(() => {
@@ -92,110 +95,165 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-white flex items-center justify-center p-6">
-      <div className="max-w-md w-full rounded-3xl border border-zinc-800 bg-zinc-950 p-8 shadow-2xl shadow-sky-950/20">
-        <div className="flex justify-end gap-2 mb-6">
-          <button
-            onClick={() => setLanguage("en")}
-            disabled={isUpdating}
-            className={`rounded-xl border px-4 py-2 text-sm transition ${
-              language === "en"
-                ? "border-sky-400 bg-sky-500 text-black"
-                : "border-zinc-700 bg-zinc-900 text-white hover:border-sky-500/40"
-            } disabled:opacity-60`}
-          >
-            EN
-          </button>
-          <button
-            onClick={() => setLanguage("es")}
-            disabled={isUpdating}
-            className={`rounded-xl border px-4 py-2 text-sm transition ${
-              language === "es"
-                ? "border-sky-400 bg-sky-500 text-black"
-                : "border-zinc-700 bg-zinc-900 text-white hover:border-sky-500/40"
-            } disabled:opacity-60`}
-          >
-            ES
-          </button>
-        </div>
-
-        <p className="text-sm font-medium tracking-[0.2em] text-sky-400">WIWI</p>
-        <h1 className="text-3xl font-semibold mt-2">
-          {language === "en" ? "Reset password" : "Restablecer contraseña"}
-        </h1>
-        <p className="text-zinc-400 mt-3">
-          {language === "en"
-            ? "Enter your new password below."
-            : "Ingresa tu nueva contraseña abajo."}
-        </p>
-
-        {!ready ? (
-          <p className="text-sm text-red-300 mt-6">
-            {language === "en"
-              ? "Invalid or expired reset link."
-              : "Enlace inválido o expirado."}
-          </p>
+    <AuthShell
+      language={language}
+      setLanguage={setLanguage}
+      disabled={isUpdating}
+      eyebrow={isSpanish ? "Nueva contraseña" : "New password"}
+      title={
+        isSpanish ? (
+          <>
+            Protege tu cuenta y vuelve a ver si{" "}
+            <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
+              valió la pena
+            </span>
+            .
+          </>
         ) : (
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+          <>
+            Protect your account and get back to seeing if it{" "}
+            <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
+              was worth it
+            </span>
+            .
+          </>
+        )
+      }
+      description={
+        isSpanish
+          ? "Elige una contraseña nueva para volver a entrar a tu panel de WIWI."
+          : "Choose a new password to get back into your WIWI dashboard."
+      }
+      sideEyebrow={isSpanish ? "Seguridad simple" : "Simple security"}
+      sideTitle={
+        isSpanish ? (
+          <>
+            Vuelve rápido a tus{" "}
+            <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
+              métricas reales
+            </span>
+            .
+          </>
+        ) : (
+          <>
+            Get back quickly to your{" "}
+            <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
+              real earnings view
+            </span>
+            .
+          </>
+        )
+      }
+      sideDescription={
+        isSpanish
+          ? "Una vez actualices tu contraseña, podrás revisar otra vez tus turnos, tu progreso semanal y tus mejores resultados."
+          : "Once your password is updated, you can jump back into your shifts, weekly progress, and best results."
+      }
+      sideActionHref="/login"
+      sideActionLabel={isSpanish ? "Ir a iniciar sesión" : "Go to sign in"}
+      footer={
+        <div className="space-y-3">
+          <p>
+            <Link
+              href="/login"
+              className="font-semibold text-sky-300 transition hover:text-sky-200"
+            >
+              {isSpanish ? "Volver a iniciar sesión" : "Back to sign in"}
+            </Link>
+          </p>
+          <p>
+            <Link
+              href="/"
+              className="text-slate-500 transition hover:text-sky-300"
+            >
+              {isSpanish ? "Volver al inicio" : "Back to home"}
+            </Link>
+          </p>
+        </div>
+      }
+    >
+      {!ready ? (
+        <div className="space-y-4">
+          <div className="rounded-2xl border border-orange-500/20 bg-orange-500/10 px-4 py-4 text-sm text-orange-100">
+            {isSpanish
+              ? "El enlace para restablecer la contraseña es inválido o ha expirado."
+              : "The password reset link is invalid or has expired."}
+          </div>
+
+          <Link
+            href="/forgot-password"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-sky-300 transition hover:text-sky-200"
+          >
+            <ArrowRight className="h-4 w-4" />
+            <span>
+              {isSpanish
+                ? "Solicitar un nuevo enlace"
+                : "Request a new reset link"}
+            </span>
+          </Link>
+        </div>
+      ) : (
+        <>
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-zinc-300">
-                {language === "en" ? "New password" : "Nueva contraseña"}
+              <label className="block text-sm font-medium text-slate-300">
+                {isSpanish ? "Nueva contraseña" : "New password"}
               </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={isUpdating}
-                className="block w-full rounded-xl border border-zinc-700 bg-black px-4 py-3 text-white outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 disabled:opacity-60"
-              />
+              <div className="relative">
+                <KeyRound className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={isUpdating}
+                  className="block w-full rounded-2xl border border-slate-700 bg-slate-950 px-12 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-sky-500 disabled:opacity-60"
+                  placeholder={isSpanish ? "Crea una contraseña nueva" : "Create a new password"}
+                />
+              </div>
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-zinc-300">
-                {language === "en"
-                  ? "Confirm new password"
-                  : "Confirmar nueva contraseña"}
+              <label className="block text-sm font-medium text-slate-300">
+                {isSpanish ? "Confirmar contraseña" : "Confirm password"}
               </label>
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                disabled={isUpdating}
-                className="block w-full rounded-xl border border-zinc-700 bg-black px-4 py-3 text-white outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 disabled:opacity-60"
-              />
+              <div className="relative">
+                <ShieldCheck className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  disabled={isUpdating}
+                  className="block w-full rounded-2xl border border-slate-700 bg-slate-950 px-12 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-sky-500 disabled:opacity-60"
+                  placeholder={isSpanish ? "Confirma tu contraseña" : "Confirm your password"}
+                />
+              </div>
             </div>
 
             <button
               type="submit"
               disabled={isUpdating}
-              className="w-full rounded-xl bg-sky-500 text-black px-4 py-3 font-medium transition hover:bg-sky-400 disabled:opacity-60"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-sky-500 px-5 py-3 text-sm font-semibold text-black shadow-lg shadow-sky-500/20 transition hover:bg-sky-400 disabled:opacity-60"
             >
-              {isUpdating
-                ? language === "en"
-                  ? "Updating..."
-                  : "Actualizando..."
-                : language === "en"
-                ? "Update password"
-                : "Actualizar contraseña"}
+              <span>
+                {isUpdating
+                  ? isSpanish
+                    ? "Actualizando..."
+                    : "Updating..."
+                  : isSpanish
+                    ? "Actualizar contraseña"
+                    : "Update password"}
+              </span>
+              <ArrowRight className="h-4 w-4" />
             </button>
           </form>
-        )}
 
-        {message ? (
-          <p className="text-sm text-zinc-300 mt-4">{message}</p>
-        ) : null}
-
-        <p className="text-sm text-zinc-400 mt-6">
-          <Link
-            href="/login"
-            className="underline transition hover:text-sky-300"
-          >
-            {language === "en"
-              ? "Back to sign in"
-              : "Volver a iniciar sesión"}
-          </Link>
-        </p>
-      </div>
-    </main>
+          {message ? (
+            <div className="mt-4 rounded-2xl border border-sky-500/20 bg-sky-500/10 px-4 py-3 text-sm text-sky-100">
+              {message}
+            </div>
+          ) : null}
+        </>
+      )}
+    </AuthShell>
   );
 }

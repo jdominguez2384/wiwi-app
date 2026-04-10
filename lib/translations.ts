@@ -11,16 +11,16 @@ export type TranslationStrings = {
 
 export const translations: Record<Language, TranslationStrings> = {
   en: {
-    welcome: "Welcome to RealRate",
-    tagline: "See what you really made after miles, fuel, and taxes.",
+    welcome: "Welcome to WIWI",
+    tagline: "See if the shift was worth it after miles, fuel, and taxes.",
     dashboard: "Dashboard",
     addShift: "Add Shift",
     settings: "Settings",
     language: "Language",
   },
   es: {
-    welcome: "Bienvenido a RealRate",
-    tagline: "Mira lo que realmente ganaste después de millas, gasolina e impuestos.",
+    welcome: "Bienvenido a WIWI",
+    tagline: "Mira si el turno valio la pena despues de millas, gasolina e impuestos.",
     dashboard: "Panel",
     addShift: "Agregar turno",
     settings: "Ajustes",
