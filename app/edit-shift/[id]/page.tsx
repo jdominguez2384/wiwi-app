@@ -28,6 +28,11 @@ import { useShifts } from "../../../components/ShiftProvider";
 import { useSettings } from "../../../components/SettingsProvider";
 import { AuthGuard } from "../../../components/AuthGuard";
 import { getUserShift, updateUserShift } from "../../../lib/data/shifts";
+import {
+  getNonNegativeNumber,
+  getPositiveNumber,
+  isNonNegativeDecimalInput,
+} from "../../../lib/shiftForm";
 import { cx, formatMoney } from "../../../lib/ui";
 
 const APP_OPTIONS = [
@@ -118,6 +123,15 @@ export default function EditShiftPage() {
   const netEarnings = grossAmount - fuelCost - taxSetAside;
   const realHourlyRate = hoursAmount > 0 ? netEarnings / hoursAmount : 0;
 
+  function updateDecimalValue(
+    value: string,
+    setter: (nextValue: string) => void
+  ) {
+    if (isNonNegativeDecimalInput(value)) {
+      setter(value);
+    }
+  }
+
   async function handleSave() {
     setMessage("");
 
@@ -130,11 +144,15 @@ export default function EditShiftPage() {
       return;
     }
 
-    if (!appName || !grossEarnings || !hoursWorked || !milesDriven) {
+    const grossValue = getNonNegativeNumber(grossEarnings);
+    const hoursValue = getPositiveNumber(hoursWorked);
+    const milesValue = getNonNegativeNumber(milesDriven);
+
+    if (!date || !appName || grossValue === null || hoursValue === null || milesValue === null) {
       setMessage(
         isSpanish
-          ? "Por favor completa todos los campos."
-          : "Please fill out all fields."
+          ? "Usa valores validos: ganancias y millas no pueden ser negativas, y las horas deben ser mayores que cero."
+          : "Use valid values: earnings and miles cannot be negative, and hours must be greater than zero."
       );
       return;
     }
@@ -145,9 +163,9 @@ export default function EditShiftPage() {
       const { data, error } = await updateUserShift(shiftId, {
         shift_date: date,
         app_name: appName,
-        gross_earnings: Number(grossEarnings),
-        hours_worked: Number(hoursWorked),
-        miles_driven: Number(milesDriven),
+        gross_earnings: grossValue,
+        hours_worked: hoursValue,
+        miles_driven: milesValue,
       });
 
       if (error || !data) {
@@ -292,20 +310,22 @@ export default function EditShiftPage() {
               </div>
 
               <div className="mt-6 grid gap-5 md:grid-cols-2">
-                <div className="space-y-2">
+                <div className="min-w-0 space-y-2">
                   <InputLabel icon={<Calendar className="h-4 w-4 text-sky-300" />}>
                     {isSpanish ? "Fecha" : "Date"}
                   </InputLabel>
-                  <input
-                    type="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    disabled={isSaving}
-                    className="block w-full min-w-0 rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-sky-500 disabled:opacity-60"
-                  />
+                  <div className="w-full min-w-0 overflow-hidden rounded-2xl">
+                    <input
+                      type="date"
+                      value={date}
+                      onChange={(e) => setDate(e.target.value)}
+                      disabled={isSaving}
+                      className="block w-full max-w-full min-w-0 rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-sky-500 disabled:opacity-60"
+                    />
+                  </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="min-w-0 space-y-2">
                   <InputLabel icon={<Route className="h-4 w-4 text-emerald-300" />}>
                     {isSpanish ? "App usada" : "App used"}
                   </InputLabel>
@@ -328,7 +348,7 @@ export default function EditShiftPage() {
               </div>
 
               <div className="mt-8 grid gap-5 md:grid-cols-3">
-                <div className="space-y-2">
+                <div className="min-w-0 space-y-2">
                   <InputLabel icon={<DollarSign className="h-4 w-4 text-emerald-300" />}>
                     {isSpanish ? "Ganancias brutas" : "Gross earnings"}
                   </InputLabel>
@@ -336,15 +356,16 @@ export default function EditShiftPage() {
                     type="number"
                     inputMode="decimal"
                     step="0.01"
+                    min="0"
                     value={grossEarnings}
-                    onChange={(e) => setGrossEarnings(e.target.value)}
+                    onChange={(e) => updateDecimalValue(e.target.value, setGrossEarnings)}
                     disabled={isSaving}
                     placeholder="125.50"
                     className="block w-full min-w-0 rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-sky-500 disabled:opacity-60"
                   />
                 </div>
 
-                <div className="space-y-2">
+                <div className="min-w-0 space-y-2">
                   <InputLabel icon={<Clock3 className="h-4 w-4 text-purple-300" />}>
                     {isSpanish ? "Horas trabajadas" : "Hours worked"}
                   </InputLabel>
@@ -352,15 +373,21 @@ export default function EditShiftPage() {
                     type="number"
                     inputMode="decimal"
                     step="0.1"
+                    min="0.1"
                     value={hoursWorked}
-                    onChange={(e) => setHoursWorked(e.target.value)}
+                    onChange={(e) => updateDecimalValue(e.target.value, setHoursWorked)}
                     disabled={isSaving}
                     placeholder="4.5"
                     className="block w-full min-w-0 rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-sky-500 disabled:opacity-60"
                   />
+                  <p className="text-xs leading-5 text-slate-500">
+                    {isSpanish
+                      ? "Usa decimales para minutos, como 0.5 para 30 minutos."
+                      : "Use decimals for minutes, like 0.5 for 30 minutes."}
+                  </p>
                 </div>
 
-                <div className="space-y-2">
+                <div className="min-w-0 space-y-2">
                   <InputLabel icon={<Fuel className="h-4 w-4 text-orange-300" />}>
                     {isSpanish ? "Millas recorridas" : "Miles driven"}
                   </InputLabel>
@@ -368,8 +395,9 @@ export default function EditShiftPage() {
                     type="number"
                     inputMode="decimal"
                     step="0.1"
+                    min="0"
                     value={milesDriven}
-                    onChange={(e) => setMilesDriven(e.target.value)}
+                    onChange={(e) => updateDecimalValue(e.target.value, setMilesDriven)}
                     disabled={isSaving}
                     placeholder="42"
                     className="block w-full min-w-0 rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-sky-500 disabled:opacity-60"
