@@ -52,8 +52,8 @@ export function AuthShell({
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(59,130,246,0.14),transparent_30%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(14,165,233,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(14,165,233,0.03)_1px,transparent_1px)] bg-[size:5rem_5rem] opacity-60 [mask-image:radial-gradient(circle_at_top,#000_30%,transparent_80%)]" />
 
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col px-4 py-5 sm:px-6 lg:px-8">
-        <header className="flex flex-wrap items-center justify-between gap-4 rounded-[28px] border border-slate-800/70 bg-slate-950/65 px-4 py-4 backdrop-blur-xl sm:px-6">
+      <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col px-4 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-[calc(1.25rem+env(safe-area-inset-top))] sm:px-6 lg:px-8">
+        <header className="flex flex-wrap items-center justify-between gap-3 rounded-[28px] border border-slate-800/70 bg-slate-950/65 px-4 py-4 backdrop-blur-xl sm:gap-4 sm:px-6">
           <Link href="/" className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400 to-sky-600 shadow-lg shadow-sky-500/20">
               <span className="text-base font-black text-white">W</span>
@@ -66,7 +66,7 @@ export function AuthShell({
             </div>
           </Link>
 
-          <div className="flex flex-wrap items-center justify-end gap-2">
+          <div className="flex flex-wrap items-center justify-end gap-2 max-sm:w-full max-sm:justify-start">
             <div className="hidden items-center gap-2 rounded-full border border-slate-800 bg-slate-950/70 px-3 py-2 text-xs text-slate-400 sm:inline-flex">
               <Globe className="h-3.5 w-3.5" />
               <span>{isSpanish ? "Idioma" : "Language"}</span>

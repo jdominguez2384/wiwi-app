@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="WIWI app icon">
+  <defs>
+    <linearGradient id="bg" x1="72" x2="440" y1="48" y2="464" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#38bdf8"/>
+      <stop offset="0.5" stop-color="#0ea5e9"/>
+      <stop offset="1" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <radialGradient id="shine" cx="0" cy="0" r="1" gradientTransform="matrix(230 280 -280 230 132 80)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff" stop-opacity="0.44"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" fill="#020617"/>
+  <rect x="34" y="34" width="444" height="444" fill="url(#bg)" rx="122"/>
+  <rect x="34" y="34" width="444" height="444" fill="url(#shine)" rx="122"/>
+  <path fill="#fff" d="M124 160h56l34 163 40-163h49l41 163 33-163h56l-59 238h-60l-36-143-37 143h-59L124 160Z"/>
+</svg>

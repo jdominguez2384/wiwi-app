@@ -30,8 +30,8 @@ export function WiwiShell({
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(14,165,233,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(14,165,233,0.03)_1px,transparent_1px)] bg-[size:5rem_5rem] opacity-60 [mask-image:radial-gradient(circle_at_top,#000_30%,transparent_80%)]" />
 
       <div className="relative z-10">
-        <nav className="sticky top-0 z-50 border-b border-slate-800/60 bg-slate-950/80 backdrop-blur-xl">
-          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+        <nav className="sticky top-0 z-50 border-b border-slate-800/60 bg-slate-950/80 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
+          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-4 sm:gap-4 sm:px-6 lg:px-8">
             <Link href="/" className="flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400 to-sky-600 shadow-lg shadow-sky-500/20">
                 <span className="text-base font-black text-white">W</span>
@@ -39,12 +39,12 @@ export function WiwiShell({
               <div className="leading-tight">
                 <p className="text-2xl font-black tracking-tight text-white">WIWI</p>
                 <p className="text-xs text-slate-400">
-                  {isSpanish ? "¿Valió la pena?" : "Was It Worth It?"}
+                  {isSpanish ? "Valio la pena?" : "Was It Worth It?"}
                 </p>
               </div>
             </Link>
 
-            <div className="flex flex-wrap items-center justify-end gap-2">
+            <div className="flex flex-wrap items-center justify-end gap-2 max-sm:w-full max-sm:justify-start">
               <div className="hidden items-center gap-2 rounded-full border border-slate-800 bg-slate-950/70 px-3 py-2 text-xs text-slate-400 sm:inline-flex">
                 <Globe className="h-3.5 w-3.5" />
                 <span>{isSpanish ? "Idioma" : "Language"}</span>
@@ -84,7 +84,7 @@ export function WiwiShell({
 
         <div
           className={cx(
-            "mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8",
+            "mx-auto max-w-7xl px-4 py-8 pb-[calc(2rem+env(safe-area-inset-bottom))] sm:px-6 lg:px-8",
             contentClassName
           )}
         >

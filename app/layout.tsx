@@ -1,11 +1,66 @@
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { LanguageProvider } from "../components/LanguageProvider";
 import { ShiftProvider } from "../components/ShiftProvider";
 import { SettingsProvider } from "../components/SettingsProvider";
 
-export const metadata = {
-  title: "WIWI | Was It Worth It?",
-  description: "Track your real hourly pay after miles, fuel, and taxes.",
+const appName = "WIWI";
+const appDescription =
+  "Track gig work shifts and see your real hourly pay after miles, fuel, and taxes.";
+
+export const metadata: Metadata = {
+  metadataBase: new URL("https://getwiwi.com"),
+  applicationName: appName,
+  title: {
+    default: "WIWI | Was It Worth It?",
+    template: "%s | WIWI",
+  },
+  description: appDescription,
+  manifest: "/manifest.webmanifest",
+  keywords: [
+    "WIWI",
+    "Was It Worth It",
+    "gig worker income",
+    "DoorDash income",
+    "Uber driver pay",
+    "real hourly pay",
+    "mileage and fuel tracking",
+  ],
+  openGraph: {
+    type: "website",
+    url: "https://getwiwi.com",
+    siteName: appName,
+    title: "WIWI | Was It Worth It?",
+    description: appDescription,
+  },
+  twitter: {
+    card: "summary",
+    title: "WIWI | Was It Worth It?",
+    description: appDescription,
+  },
+  icons: {
+    icon: [
+      { url: "/wiwi-icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico" },
+    ],
+    apple: [{ url: "/wiwi-icon.svg", type: "image/svg+xml" }],
+  },
+  appleWebApp: {
+    capable: true,
+    title: appName,
+    statusBarStyle: "black-translucent",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#020617",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({
