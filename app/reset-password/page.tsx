@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { ArrowRight, KeyRound, ShieldCheck } from "lucide-react";
 import { AuthShell } from "../../components/AuthShell";
 import { useLanguage } from "../../components/LanguageProvider";
-import { updatePassword } from "../../lib/auth";
+import { signOut, updatePassword } from "../../lib/auth";
 import { supabase } from "../../lib/supabase/client";
 
 export default function ResetPasswordPage() {
@@ -18,10 +18,48 @@ export default function ResetPasswordPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const [ready, setReady] = useState(false);
+  const [isCheckingRecovery, setIsCheckingRecovery] = useState(true);
+  const [recoveryError, setRecoveryError] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
+    let isActive = true;
+
+    function finishChecking(nextReady: boolean, errorMessage = "") {
+      if (!isActive) return;
+      setReady(nextReady);
+      setRecoveryError(errorMessage);
+      setIsCheckingRecovery(false);
+    }
+
+    function clearRecoveryUrl() {
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
     async function handleRecovery() {
+      setIsCheckingRecovery(true);
+
+      const url = new URL(window.location.href);
+      const code = url.searchParams.get("code");
+
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+        if (!error) {
+          clearRecoveryUrl();
+          finishChecking(true);
+          return;
+        }
+
+        finishChecking(
+          false,
+          isSpanish
+            ? "No pudimos verificar este enlace. Solicita uno nuevo."
+            : "We could not verify this link. Request a new one."
+        );
+        return;
+      }
+
       const hash = window.location.hash;
 
       if (hash) {
@@ -30,23 +68,51 @@ export default function ResetPasswordPage() {
         const refresh_token = params.get("refresh_token");
 
         if (access_token && refresh_token) {
-          await supabase.auth.setSession({
+          const { error } = await supabase.auth.setSession({
             access_token,
             refresh_token,
           });
-          setReady(true);
+
+          if (!error) {
+            clearRecoveryUrl();
+            finishChecking(true);
+            return;
+          }
+
+          finishChecking(
+            false,
+            isSpanish
+              ? "No pudimos abrir este enlace. Solicita uno nuevo."
+              : "We could not open this link. Request a new one."
+          );
           return;
         }
       }
 
       const { data } = await supabase.auth.getSession();
       if (data.session) {
-        setReady(true);
+        finishChecking(true);
+        return;
       }
+
+      finishChecking(false);
     }
 
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY") {
+        finishChecking(true);
+      }
+    });
+
     void handleRecovery();
-  }, []);
+
+    return () => {
+      isActive = false;
+      subscription.unsubscribe();
+    };
+  }, [isSpanish]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -87,6 +153,7 @@ export default function ResetPasswordPage() {
       );
 
       setTimeout(() => {
+        void signOut();
         router.push("/login");
       }, 1500);
     } finally {
@@ -172,12 +239,18 @@ export default function ResetPasswordPage() {
         </div>
       }
     >
-      {!ready ? (
+      {isCheckingRecovery ? (
+        <div className="rounded-2xl border border-sky-500/20 bg-sky-500/10 px-4 py-4 text-sm text-sky-100">
+          {isSpanish
+            ? "Verificando tu enlace de restablecimiento..."
+            : "Verifying your reset link..."}
+        </div>
+      ) : !ready ? (
         <div className="space-y-4">
           <div className="rounded-2xl border border-orange-500/20 bg-orange-500/10 px-4 py-4 text-sm text-orange-100">
-            {isSpanish
+            {recoveryError || (isSpanish
               ? "El enlace para restablecer la contraseña es inválido o ha expirado."
-              : "The password reset link is invalid or has expired."}
+              : "The password reset link is invalid or has expired.")}
           </div>
 
           <Link

@@ -1,7 +1,12 @@
 import { supabase } from "./supabase/client";
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+function getSiteUrl() {
+  if (typeof window !== "undefined" && window.location.origin) {
+    return window.location.origin;
+  }
+
+  return process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+}
 
 export async function signUp(
   email: string,
@@ -13,7 +18,7 @@ export async function signUp(
     password,
     options: {
       data: metadata || {},
-      emailRedirectTo: `${siteUrl}/auth/confirmed`,
+      emailRedirectTo: `${getSiteUrl()}/auth/confirmed`,
     },
   });
 }
@@ -36,7 +41,7 @@ export async function getCurrentUser() {
 
 export async function sendPasswordResetEmail(email: string) {
   return supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${siteUrl}/reset-password`,
+    redirectTo: `${getSiteUrl()}/reset-password`,
   });
 }
 
