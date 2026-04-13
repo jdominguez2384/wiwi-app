@@ -12,6 +12,7 @@ export function WiwiShell({
   children,
   navActions,
   languageDisabled = false,
+  showLanguageControls = true,
   contentClassName,
 }: {
   language: Language;
@@ -19,6 +20,7 @@ export function WiwiShell({
   children: ReactNode;
   navActions?: ReactNode;
   languageDisabled?: boolean;
+  showLanguageControls?: boolean;
   contentClassName?: string;
 }) {
   const isSpanish = language === "es";
@@ -31,7 +33,7 @@ export function WiwiShell({
 
       <div className="relative z-10">
         <nav className="sticky top-0 z-50 border-b border-slate-800/60 bg-slate-950/80 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
-          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-4 sm:gap-4 sm:px-6 lg:px-8">
+          <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-4 sm:gap-4 sm:px-6 lg:px-8">
             <Link href="/" className="flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400 to-sky-600 shadow-lg shadow-sky-500/20">
                 <span className="text-base font-black text-white">W</span>
@@ -44,38 +46,42 @@ export function WiwiShell({
               </div>
             </Link>
 
-            <div className="flex flex-wrap items-center justify-end gap-2 max-sm:w-full max-sm:justify-start">
-              <div className="hidden items-center gap-2 rounded-full border border-slate-800 bg-slate-950/70 px-3 py-2 text-xs text-slate-400 sm:inline-flex">
-                <Globe className="h-3.5 w-3.5" />
-                <span>{isSpanish ? "Idioma" : "Language"}</span>
-              </div>
+            <div className="flex min-w-0 items-center justify-end gap-2">
+              {showLanguageControls ? (
+                <>
+                  <div className="hidden items-center gap-2 rounded-full border border-slate-800 bg-slate-950/70 px-3 py-2 text-xs text-slate-400 sm:inline-flex">
+                    <Globe className="h-3.5 w-3.5" />
+                    <span>{isSpanish ? "Idioma" : "Language"}</span>
+                  </div>
 
-              <button
-                type="button"
-                onClick={() => setLanguage("en")}
-                disabled={languageDisabled}
-                className={cx(
-                  "rounded-xl border px-4 py-2 text-sm transition disabled:opacity-60",
-                  language === "en"
-                    ? "border-sky-400 bg-sky-500 text-black"
-                    : "border-slate-700 bg-slate-950 text-white hover:border-sky-500/40"
-                )}
-              >
-                EN
-              </button>
-              <button
-                type="button"
-                onClick={() => setLanguage("es")}
-                disabled={languageDisabled}
-                className={cx(
-                  "rounded-xl border px-4 py-2 text-sm transition disabled:opacity-60",
-                  language === "es"
-                    ? "border-sky-400 bg-sky-500 text-black"
-                    : "border-slate-700 bg-slate-950 text-white hover:border-sky-500/40"
-                )}
-              >
-                ES
-              </button>
+                  <button
+                    type="button"
+                    onClick={() => setLanguage("en")}
+                    disabled={languageDisabled}
+                    className={cx(
+                      "rounded-xl border px-4 py-2 text-sm transition disabled:opacity-60",
+                      language === "en"
+                        ? "border-sky-400 bg-sky-500 text-black"
+                        : "border-slate-700 bg-slate-950 text-white hover:border-sky-500/40"
+                    )}
+                  >
+                    EN
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setLanguage("es")}
+                    disabled={languageDisabled}
+                    className={cx(
+                      "rounded-xl border px-4 py-2 text-sm transition disabled:opacity-60",
+                      language === "es"
+                        ? "border-sky-400 bg-sky-500 text-black"
+                        : "border-slate-700 bg-slate-950 text-white hover:border-sky-500/40"
+                    )}
+                  >
+                    ES
+                  </button>
+                </>
+              ) : null}
 
               {navActions}
             </div>

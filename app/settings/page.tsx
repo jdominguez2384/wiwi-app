@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   Fuel,
+  Globe,
   Percent,
   Settings as SettingsIcon,
   Sparkles,
@@ -24,7 +25,7 @@ import { useSettings } from "../../components/SettingsProvider";
 import { AuthGuard } from "../../components/AuthGuard";
 import { getCurrentUser } from "../../lib/auth";
 import { updateUserSettings } from "../../lib/data/settings";
-import { formatMoney } from "../../lib/ui";
+import { cx, formatMoney } from "../../lib/ui";
 
 export default function SettingsPage() {
   const { language, setLanguage } = useLanguage();
@@ -157,6 +158,7 @@ export default function SettingsPage() {
         language={language}
         setLanguage={setLanguage}
         languageDisabled={isSaving}
+        showLanguageControls={false}
         navActions={<WiwiAppNav language={language} disabled={isSaving} />}
       >
         <PageHero
@@ -370,6 +372,48 @@ export default function SettingsPage() {
           </Panel>
 
           <div className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+            <Panel>
+              <div className="flex items-center gap-2 text-sm text-slate-400">
+                <Globe className="h-4 w-4 text-sky-400" />
+                <span>{isSpanish ? "Idioma" : "Language"}</span>
+              </div>
+
+              <p className="mt-4 text-sm leading-6 text-slate-400">
+                {isSpanish
+                  ? "Cambia el idioma de WIWI. Se guarda automaticamente en tu perfil."
+                  : "Change WIWI's language. This saves automatically to your profile."}
+              </p>
+
+              <div className="mt-5 grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setLanguage("en")}
+                  disabled={isSaving}
+                  className={cx(
+                    "rounded-2xl border px-4 py-3 text-sm font-semibold transition disabled:opacity-60",
+                    language === "en"
+                      ? "border-sky-400 bg-sky-500 text-black"
+                      : "border-slate-700 bg-slate-950 text-white hover:border-sky-500/40"
+                  )}
+                >
+                  English
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setLanguage("es")}
+                  disabled={isSaving}
+                  className={cx(
+                    "rounded-2xl border px-4 py-3 text-sm font-semibold transition disabled:opacity-60",
+                    language === "es"
+                      ? "border-sky-400 bg-sky-500 text-black"
+                      : "border-slate-700 bg-slate-950 text-white hover:border-sky-500/40"
+                  )}
+                >
+                  Espanol
+                </button>
+              </div>
+            </Panel>
+
             <Panel>
               <div className="flex items-center gap-2 text-sm text-slate-400">
                 <TrendingUp className="h-4 w-4 text-sky-400" />

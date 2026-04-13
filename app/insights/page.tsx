@@ -101,6 +101,7 @@ export default function InsightsPage() {
       <WiwiShell
         language={language}
         setLanguage={setLanguage}
+        showLanguageControls={false}
         navActions={<WiwiAppNav language={language} />}
       >
         <PageHero

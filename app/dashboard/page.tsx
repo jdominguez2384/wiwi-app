@@ -124,6 +124,7 @@ export default function DashboardPage() {
       <WiwiShell
         language={language}
         setLanguage={setLanguage}
+        showLanguageControls={false}
         navActions={<WiwiAppNav language={language} />}
       >
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(340px,0.85fr)]">

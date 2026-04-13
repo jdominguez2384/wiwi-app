@@ -114,6 +114,7 @@ export default function HistoryPage() {
       <WiwiShell
         language={language}
         setLanguage={setLanguage}
+        showLanguageControls={false}
         navActions={<WiwiAppNav language={language} disabled={isDeleting} />}
       >
         <PageHero

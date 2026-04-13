@@ -183,6 +183,7 @@ export default function EditShiftPage() {
         language={language}
         setLanguage={setLanguage}
         languageDisabled={isSaving}
+        showLanguageControls={false}
         navActions={<WiwiAppNav language={language} disabled={isSaving} />}
       >
         <PageHero

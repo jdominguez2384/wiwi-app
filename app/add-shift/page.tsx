@@ -134,6 +134,7 @@ export default function AddShiftPage() {
         language={language}
         setLanguage={setLanguage}
         languageDisabled={isSaving}
+        showLanguageControls={false}
         navActions={<WiwiAppNav language={language} disabled={isSaving} />}
       >
         <PageHero
