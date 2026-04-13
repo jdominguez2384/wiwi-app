@@ -18,6 +18,7 @@ import {
   PageHero,
   Panel,
 } from "../../components/WiwiSurface";
+import { WiwiAppNav } from "../../components/WiwiAppNav";
 import { useLanguage } from "../../components/LanguageProvider";
 import { useSettings } from "../../components/SettingsProvider";
 import { AuthGuard } from "../../components/AuthGuard";
@@ -156,6 +157,7 @@ export default function SettingsPage() {
         language={language}
         setLanguage={setLanguage}
         languageDisabled={isSaving}
+        navActions={<WiwiAppNav language={language} disabled={isSaving} />}
       >
         <PageHero
           eyebrowContent={
