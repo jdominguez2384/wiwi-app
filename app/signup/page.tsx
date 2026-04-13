@@ -16,11 +16,13 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setMessage("");
+    setIsSuccess(false);
 
     if (!name || !email || !password) {
       setMessage(
@@ -40,14 +42,16 @@ export default function SignupPage() {
       });
 
       if (error) {
+        setIsSuccess(false);
         setMessage(getFriendlyAuthError(error.message, language));
         return;
       }
 
+      setIsSuccess(true);
       setMessage(
         isSpanish
-          ? "Cuenta creada. Revisa tu correo para confirmar tu cuenta."
-          : "Account created. Check your email to confirm your account."
+          ? "Si este correo puede crear una cuenta nueva, te enviaremos un enlace de confirmacion. Si ya tienes cuenta, intenta iniciar sesion o restablecer tu contrasena."
+          : "If this email can create a new account, we will send a confirmation link. If you already have an account, try signing in or resetting your password."
       );
     } finally {
       setIsSubmitting(false);
@@ -202,8 +206,25 @@ export default function SignupPage() {
       </form>
 
       {message ? (
-        <div className="mt-4 rounded-2xl border border-sky-500/20 bg-sky-500/10 px-4 py-3 text-sm text-sky-100">
-          {message}
+        <div className="mt-4 rounded-2xl border border-sky-500/20 bg-sky-500/10 px-4 py-4 text-sm text-sky-100">
+          <p>{message}</p>
+
+          {isSuccess ? (
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <Link
+                href="/login"
+                className="inline-flex items-center justify-center rounded-2xl bg-sky-500 px-4 py-3 text-sm font-semibold text-black transition hover:bg-sky-400"
+              >
+                {isSpanish ? "Ir a iniciar sesion" : "Go to sign in"}
+              </Link>
+              <Link
+                href="/forgot-password"
+                className="inline-flex items-center justify-center rounded-2xl border border-sky-500/20 bg-slate-950/70 px-4 py-3 text-sm font-semibold text-sky-100 transition hover:border-sky-400/40"
+              >
+                {isSpanish ? "Restablecer contrasena" : "Reset password"}
+              </Link>
+            </div>
+          ) : null}
         </div>
       ) : null}
     </AuthShell>
