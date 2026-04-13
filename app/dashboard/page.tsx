@@ -41,6 +41,22 @@ function formatDateLabel(date: string, locale: string) {
   });
 }
 
+function getMonthKey(date: string) {
+  const [year, month] = date.split("-");
+  if (!year || !month) return date;
+  return `${year}-${month}`;
+}
+
+function formatMonthLabel(monthKey: string, locale: string) {
+  const [year, month] = monthKey.split("-");
+  const parsedDate = new Date(Number(year), Number(month) - 1, 1);
+  if (Number.isNaN(parsedDate.getTime())) return monthKey;
+  return parsedDate.toLocaleDateString(locale, {
+    month: "long",
+    year: "numeric",
+  });
+}
+
 function getStartOfWeek(date: Date) {
   const result = new Date(date);
   const day = result.getDay();
@@ -104,6 +120,7 @@ export default function DashboardPage() {
 
   const [message, setMessage] = useState("");
   const [selectedApp, setSelectedApp] = useState("all");
+  const [selectedMonth, setSelectedMonth] = useState("all");
   const [shiftToDelete, setShiftToDelete] = useState<{
     id: string;
     appName: string;
@@ -128,10 +145,31 @@ export default function DashboardPage() {
     return uniqueApps.sort((a, b) => a.localeCompare(b));
   }, [computedShifts]);
 
+  const monthOptions = useMemo(() => {
+    const monthCounts = new Map<string, number>();
+    computedShifts.forEach((shift) => {
+      const monthKey = getMonthKey(shift.date);
+      monthCounts.set(monthKey, (monthCounts.get(monthKey) ?? 0) + 1);
+    });
+
+    return Array.from(monthCounts.entries())
+      .sort(([a], [b]) => b.localeCompare(a))
+      .map(([key, count]) => ({
+        key,
+        label: formatMonthLabel(key, locale),
+        count,
+      }));
+  }, [computedShifts, locale]);
+
   const filteredShifts = useMemo(() => {
-    if (selectedApp === "all") return computedShifts;
-    return computedShifts.filter((shift) => shift.appName === selectedApp);
-  }, [computedShifts, selectedApp]);
+    return computedShifts.filter((shift) => {
+      const matchesApp = selectedApp === "all" || shift.appName === selectedApp;
+      const matchesMonth = selectedMonth === "all" || getMonthKey(shift.date) === selectedMonth;
+      return matchesApp && matchesMonth;
+    });
+  }, [computedShifts, selectedApp, selectedMonth]);
+
+  const hasActiveFilters = selectedApp !== "all" || selectedMonth !== "all";
 
   const totals = useMemo(() => {
     const gross = computedShifts.reduce((sum, shift) => sum + shift.grossEarnings, 0);
@@ -319,22 +357,45 @@ export default function DashboardPage() {
             <div>
               <div className="flex items-center gap-2 text-sm text-slate-400"><Calendar className="h-4 w-4 text-sky-400" /><span>{isSpanish ? "Turnos recientes" : "Recent shifts"}</span></div>
               <h2 className="mt-3 text-2xl font-black tracking-tight text-white">{isSpanish ? "Tu historial mas reciente" : "Your most recent shift history"}</h2>
-              <p className="mt-2 text-sm text-slate-400">{isSpanish ? "Filtra tus turnos por app y editalos cuando necesites." : "Filter your shifts by app and jump into edits whenever you need to."}</p>
+              <p className="mt-2 text-sm text-slate-400">
+                {computedShifts.length === 0
+                  ? isSpanish ? "Agrega turnos para empezar a crear tu historial." : "Add shifts to start building your history."
+                  : isSpanish ? `Mostrando ${filteredShifts.length} de ${computedShifts.length} turnos.` : `Showing ${filteredShifts.length} of ${computedShifts.length} shifts.`}
+              </p>
             </div>
-            <div className="w-full md:w-72">
-              <label className="mb-2 block text-sm font-medium text-slate-300">{isSpanish ? "Filtrar por app" : "Filter by app"}</label>
-              <div className="relative">
-                <select value={selectedApp} onChange={(e) => setSelectedApp(e.target.value)} className="block w-full appearance-none rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 pr-12 text-sm text-white outline-none transition focus:border-sky-500">
-                  <option value="all">{isSpanish ? "Todas las apps" : "All apps"}</option>
-                  {appOptions.map((app) => <option key={app} value={app}>{app}</option>)}
-                </select>
-                <Filter className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+            <div className="w-full md:w-[34rem]">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-300">{isSpanish ? "Filtrar por mes" : "Filter by month"}</label>
+                  <div className="relative">
+                    <select value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)} className="block w-full appearance-none rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 pr-12 text-sm text-white outline-none transition focus:border-sky-500">
+                      <option value="all">{isSpanish ? "Todos los meses" : "All months"}</option>
+                      {monthOptions.map((month) => <option key={month.key} value={month.key}>{month.label} ({month.count})</option>)}
+                    </select>
+                    <Calendar className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                  </div>
+                </div>
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-300">{isSpanish ? "Filtrar por app" : "Filter by app"}</label>
+                  <div className="relative">
+                    <select value={selectedApp} onChange={(e) => setSelectedApp(e.target.value)} className="block w-full appearance-none rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 pr-12 text-sm text-white outline-none transition focus:border-sky-500">
+                      <option value="all">{isSpanish ? "Todas las apps" : "All apps"}</option>
+                      {appOptions.map((app) => <option key={app} value={app}>{app}</option>)}
+                    </select>
+                    <Filter className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                  </div>
+                </div>
               </div>
+              {hasActiveFilters ? (
+                <button onClick={() => { setSelectedMonth("all"); setSelectedApp("all"); }} className="mt-3 text-sm font-medium text-sky-300 transition hover:text-sky-200">
+                  {isSpanish ? "Limpiar filtros" : "Clear filters"}
+                </button>
+              ) : null}
             </div>
           </div>
           {filteredShifts.length === 0 ? (
             <div className="mt-6 rounded-3xl border border-dashed border-slate-800 bg-slate-950/60 p-8 text-center">
-              <p className="text-base text-slate-300">{selectedApp === "all" ? (isSpanish ? "Todavia no hay turnos. Agrega el primero para empezar a medir si realmente valieron la pena." : "No shifts yet. Add your first one to start measuring whether your work was actually worth it.") : (isSpanish ? "No encontramos turnos para esa app." : "No shifts found for that app.")}</p>
+              <p className="text-base text-slate-300">{hasActiveFilters ? (isSpanish ? "No encontramos turnos para esos filtros." : "No shifts match those filters.") : (isSpanish ? "Todavia no hay turnos. Agrega el primero para empezar a medir si realmente valieron la pena." : "No shifts yet. Add your first one to start measuring whether your work was actually worth it.")}</p>
               <Link href="/add-shift" className="mt-5 inline-flex items-center justify-center gap-2 rounded-2xl bg-sky-500 px-5 py-3 text-sm font-semibold text-black transition hover:bg-sky-400"><Plus className="h-4 w-4" /><span>{isSpanish ? "Agregar turno" : "Add shift"}</span></Link>
             </div>
           ) : (
