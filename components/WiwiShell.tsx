@@ -11,6 +11,7 @@ export function WiwiShell({
   setLanguage,
   children,
   navActions,
+  mobileNavigation,
   languageDisabled = false,
   showLanguageControls = true,
   contentClassName,
@@ -19,6 +20,7 @@ export function WiwiShell({
   setLanguage: (lang: Language) => void;
   children: ReactNode;
   navActions?: ReactNode;
+  mobileNavigation?: ReactNode;
   languageDisabled?: boolean;
   showLanguageControls?: boolean;
   contentClassName?: string;
@@ -87,6 +89,8 @@ export function WiwiShell({
             </div>
           </div>
         </nav>
+
+        {mobileNavigation}
 
         <div
           className={cx(

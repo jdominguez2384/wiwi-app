@@ -16,7 +16,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { AuthGuard } from "../../components/AuthGuard";
-import { WiwiAppNav } from "../../components/WiwiAppNav";
+import { WiwiAppNav, WiwiMobileTabs } from "../../components/WiwiAppNav";
 import { WiwiShell } from "../../components/WiwiShell";
 import { PageHero, Panel } from "../../components/WiwiSurface";
 import { useLanguage } from "../../components/LanguageProvider";
@@ -103,6 +103,7 @@ export default function InsightsPage() {
         setLanguage={setLanguage}
         showLanguageControls={false}
         navActions={<WiwiAppNav language={language} />}
+        mobileNavigation={<WiwiMobileTabs language={language} />}
       >
         <PageHero
           eyebrowContent={

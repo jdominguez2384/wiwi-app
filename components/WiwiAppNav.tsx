@@ -98,8 +98,15 @@ export function WiwiAppNav({
         <LogOut className="h-4 w-4" />
         <span>{isSpanish ? "Salir" : "Sign out"}</span>
       </button>
+    </>
+  );
+}
 
-      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-slate-800/80 bg-slate-950/95 px-2 pb-[calc(0.45rem+env(safe-area-inset-bottom))] pt-2 shadow-[0_-18px_60px_rgba(2,6,23,0.65)] backdrop-blur-xl md:hidden">
+export function WiwiMobileTabs({ language }: { language: Language }) {
+  const pathname = usePathname();
+
+  return (
+    <div className="fixed inset-x-0 bottom-0 z-[60] border-t border-slate-800/80 bg-slate-950/95 px-2 pb-[calc(0.45rem+env(safe-area-inset-bottom))] pt-2 shadow-[0_-18px_60px_rgba(2,6,23,0.65)] backdrop-blur-xl md:hidden">
         <div className="mx-auto grid max-w-md grid-cols-5 gap-1">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -131,6 +138,5 @@ export function WiwiAppNav({
           })}
         </div>
       </div>
-    </>
   );
 }

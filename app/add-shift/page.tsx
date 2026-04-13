@@ -21,7 +21,7 @@ import {
   PageHero,
   Panel,
 } from "../../components/WiwiSurface";
-import { WiwiAppNav } from "../../components/WiwiAppNav";
+import { WiwiAppNav, WiwiMobileTabs } from "../../components/WiwiAppNav";
 import { useLanguage } from "../../components/LanguageProvider";
 import { useShifts } from "../../components/ShiftProvider";
 import { useSettings } from "../../components/SettingsProvider";
@@ -136,6 +136,7 @@ export default function AddShiftPage() {
         languageDisabled={isSaving}
         showLanguageControls={false}
         navActions={<WiwiAppNav language={language} disabled={isSaving} />}
+        mobileNavigation={<WiwiMobileTabs language={language} />}
       >
         <PageHero
           eyebrowContent={
