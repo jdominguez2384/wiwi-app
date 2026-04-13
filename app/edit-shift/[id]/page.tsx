@@ -314,15 +314,13 @@ export default function EditShiftPage() {
                   <InputLabel icon={<Calendar className="h-4 w-4 text-sky-300" />}>
                     {isSpanish ? "Fecha" : "Date"}
                   </InputLabel>
-                  <div className="w-full min-w-0 overflow-hidden rounded-2xl">
-                    <input
-                      type="date"
-                      value={date}
-                      onChange={(e) => setDate(e.target.value)}
-                      disabled={isSaving}
-                      className="block w-full max-w-full min-w-0 rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-sky-500 disabled:opacity-60"
-                    />
-                  </div>
+                  <input
+                    type="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    disabled={isSaving}
+                    className="block h-[50px] w-full max-w-full min-w-0 appearance-none rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-left text-white outline-none transition [color-scheme:dark] focus:border-sky-500 disabled:opacity-60 [&::-webkit-date-and-time-value]:m-0 [&::-webkit-date-and-time-value]:min-w-0 [&::-webkit-date-and-time-value]:text-left"
+                  />
                 </div>
 
                 <div className="min-w-0 space-y-2">
