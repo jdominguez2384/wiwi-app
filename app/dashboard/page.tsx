@@ -118,6 +118,53 @@ export default function DashboardPage() {
   const hasShifts = computedShifts.length > 0;
   const isGoalReached =
     settings.weeklyGoal > 0 && weeklyTotals.net >= settings.weeklyGoal;
+  const verdict = (() => {
+    if (!hasShifts) {
+      return {
+        label: isSpanish ? "Todavia no" : "Not yet",
+        kicker: isSpanish ? "Agrega un turno" : "Add a shift",
+        description: isSpanish
+          ? "Registra tu primer turno para que WIWI te diga si realmente valio la pena."
+          : "Log your first shift so WIWI can tell you whether it was actually worth it.",
+        textClass: "text-slate-100",
+        glowClass: "from-slate-500/20 via-sky-500/10 to-transparent",
+      };
+    }
+
+    if (weeklyHourly >= 20) {
+      return {
+        label: isSpanish ? "Valio la pena" : "Worth it",
+        kicker: isSpanish ? "Buen ritmo" : "Strong pace",
+        description: isSpanish
+          ? "Tu pago real por hora esta fuerte esta semana. Si tomas otro turno, estas jugando desde una buena posicion."
+          : "Your real hourly pay is strong this week. If you take another shift, you are doing it from a good position.",
+        textClass: "text-emerald-300",
+        glowClass: "from-emerald-500/25 via-sky-500/10 to-transparent",
+      };
+    }
+
+    if (weeklyHourly >= 14) {
+      return {
+        label: isSpanish ? "Casi" : "Close call",
+        kicker: isSpanish ? "Mira el proximo turno" : "Watch the next shift",
+        description: isSpanish
+          ? "La semana va decente, pero el siguiente turno todavia puede cambiar si realmente conviene."
+          : "The week is decent, but the next shift can still decide whether the work really makes sense.",
+        textClass: "text-sky-300",
+        glowClass: "from-sky-500/25 via-blue-500/10 to-transparent",
+      };
+    }
+
+    return {
+      label: isSpanish ? "Cuestionable" : "Needs work",
+      kicker: isSpanish ? "Protege tu tiempo" : "Protect your time",
+      description: isSpanish
+        ? "Tu pago real por hora esta bajo esta semana. Revisa horarios, apps o zonas antes de seguir manejando."
+        : "Your real hourly pay is low this week. Check your timing, apps, or zones before stacking more miles.",
+      textClass: "text-orange-300",
+      glowClass: "from-orange-500/25 via-sky-500/10 to-transparent",
+    };
+  })();
 
   return (
     <AuthGuard>
@@ -227,56 +274,64 @@ export default function DashboardPage() {
             </div>
           </PageHero>
 
-          <Panel>
-            <div className="flex items-center gap-2 text-sm text-slate-400">
-              <Target className="h-4 w-4 text-sky-400" />
-              <span>{isSpanish ? "Enfoque de hoy" : "Today focus"}</span>
-            </div>
-            <h2 className="mt-5 text-3xl font-black tracking-tight text-white">
-              {hasShifts
-                ? isGoalReached
-                  ? isSpanish
-                    ? "La semana va fuerte."
-                    : "The week is looking strong."
-                  : isSpanish
-                    ? "Todavia hay espacio."
-                    : "There is still room."
-                : isSpanish
-                  ? "Empieza con un turno."
-                  : "Start with one shift."}
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-slate-400">
-              {hasShifts
-                ? isGoalReached
-                  ? isSpanish
-                    ? "Ya alcanzaste tu meta neta. Si trabajas mas, que sea porque vale tu tiempo."
-                    : "You have hit your net goal. If you work more, make sure it is worth your time."
-                  : isSpanish
-                    ? "Usa esta vista para decidir si necesitas otro turno o si conviene cerrar el dia."
-                    : "Use this view to decide whether another shift makes sense or whether you can call it."
-                : isSpanish
-                  ? "Cuando agregues un turno, esta tarjeta se convierte en tu decision rapida."
-                  : "Once you add a shift, this card becomes your quick decision center."}
-            </p>
+          <Panel className="relative overflow-hidden">
+            <div
+              className={cx(
+                "pointer-events-none absolute inset-0 bg-gradient-to-br",
+                verdict.glowClass
+              )}
+            />
+            <div className="relative">
+              <div className="flex items-center gap-2 text-sm text-slate-400">
+                <Target className="h-4 w-4 text-sky-400" />
+                <span>{isSpanish ? "Veredicto WIWI" : "WIWI verdict"}</span>
+              </div>
+              <p className="mt-5 text-xs uppercase tracking-[0.24em] text-slate-500">
+                {isSpanish ? "Valio la pena?" : "Was it worth it?"}
+              </p>
+              <h2 className={cx("mt-3 text-5xl font-black tracking-tight", verdict.textClass)}>
+                {verdict.label}
+              </h2>
+              <div className="mt-4 inline-flex rounded-full border border-slate-700 bg-slate-950/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-300">
+                {verdict.kicker}
+              </div>
+              <p className="mt-5 text-sm leading-6 text-slate-300">
+                {verdict.description}
+              </p>
 
-            <div className="mt-6 overflow-hidden rounded-full bg-slate-800">
-              <div
-                className={cx(
-                  "h-4 rounded-full bg-gradient-to-r",
-                  isGoalReached
-                    ? "from-emerald-400 via-sky-400 to-blue-500"
-                    : "from-sky-400 to-blue-500"
-                )}
-                style={{ width: `${weeklyTotals.progress}%` }}
-              />
-            </div>
-            <div className="mt-3 flex items-center justify-between gap-3 text-sm">
-              <span className="text-slate-300">
-                {formatMoney(weeklyTotals.net)}
-              </span>
-              <span className="text-slate-500">
-                {formatMoney(settings.weeklyGoal)}
-              </span>
+              <div className="mt-6 rounded-3xl border border-slate-800 bg-slate-950/75 p-5">
+                <p className="text-sm text-slate-400">
+                  {isSpanish ? "Pago real esta semana" : "Real hourly this week"}
+                </p>
+                <p className="mt-2 text-4xl font-black tracking-tight text-white">
+                  {formatMoney(weeklyHourly)}
+                </p>
+                <p className="mt-2 text-sm text-slate-500">
+                  {isSpanish
+                    ? `${weeklyTotals.totalHours.toFixed(1)} horas, ${weeklyTotals.shiftCount} turnos`
+                    : `${weeklyTotals.totalHours.toFixed(1)} hours, ${weeklyTotals.shiftCount} shifts`}
+                </p>
+              </div>
+
+              <div className="mt-6 overflow-hidden rounded-full bg-slate-800">
+                <div
+                  className={cx(
+                    "h-4 rounded-full bg-gradient-to-r",
+                    isGoalReached
+                      ? "from-emerald-400 via-sky-400 to-blue-500"
+                      : "from-sky-400 to-blue-500"
+                  )}
+                  style={{ width: `${weeklyTotals.progress}%` }}
+                />
+              </div>
+              <div className="mt-3 flex items-center justify-between gap-3 text-sm">
+                <span className="text-slate-300">
+                  {formatMoney(weeklyTotals.net)}
+                </span>
+                <span className="text-slate-500">
+                  {formatMoney(settings.weeklyGoal)}
+                </span>
+              </div>
             </div>
           </Panel>
         </div>

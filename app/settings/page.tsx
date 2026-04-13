@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   Fuel,
   Globe,
+  LogOut,
   Percent,
   Settings as SettingsIcon,
   Sparkles,
@@ -23,13 +25,14 @@ import { WiwiAppNav } from "../../components/WiwiAppNav";
 import { useLanguage } from "../../components/LanguageProvider";
 import { useSettings } from "../../components/SettingsProvider";
 import { AuthGuard } from "../../components/AuthGuard";
-import { getCurrentUser } from "../../lib/auth";
+import { getCurrentUser, signOut } from "../../lib/auth";
 import { updateUserSettings } from "../../lib/data/settings";
 import { cx, formatMoney } from "../../lib/ui";
 
 export default function SettingsPage() {
   const { language, setLanguage } = useLanguage();
   const { settings, updateSettings } = useSettings();
+  const router = useRouter();
   const isSpanish = language === "es";
 
   const [userId, setUserId] = useState<string | null>(null);
@@ -39,6 +42,7 @@ export default function SettingsPage() {
   const [weeklyGoal, setWeeklyGoal] = useState("");
   const [message, setMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
 
   useEffect(() => {
     async function loadUser() {
@@ -150,6 +154,12 @@ export default function SettingsPage() {
     } finally {
       setIsSaving(false);
     }
+  }
+
+  async function handleSignOut() {
+    setIsSigningOut(true);
+    await signOut();
+    router.push("/login");
   }
 
   return (
@@ -412,6 +422,37 @@ export default function SettingsPage() {
                   Espanol
                 </button>
               </div>
+            </Panel>
+
+            <Panel>
+              <div className="flex items-center gap-2 text-sm text-slate-400">
+                <LogOut className="h-4 w-4 text-sky-400" />
+                <span>{isSpanish ? "Cuenta" : "Account"}</span>
+              </div>
+
+              <p className="mt-4 text-sm leading-6 text-slate-400">
+                {isSpanish
+                  ? "Cierra sesion desde aqui cuando uses WIWI en un telefono compartido."
+                  : "Sign out here when you are using WIWI on a shared phone."}
+              </p>
+
+              <button
+                type="button"
+                onClick={handleSignOut}
+                disabled={isSaving || isSigningOut}
+                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-950 px-5 py-3 text-sm font-semibold text-slate-200 transition hover:border-sky-500/40 hover:text-white disabled:opacity-60"
+              >
+                <LogOut className="h-4 w-4" />
+                <span>
+                  {isSigningOut
+                    ? isSpanish
+                      ? "Saliendo..."
+                      : "Signing out..."
+                    : isSpanish
+                      ? "Cerrar sesion"
+                      : "Sign out"}
+                </span>
+              </button>
             </Panel>
 
             <Panel>

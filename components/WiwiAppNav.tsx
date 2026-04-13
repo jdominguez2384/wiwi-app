@@ -2,16 +2,13 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
 import {
   BarChart3,
   History,
   Home,
   LogOut,
-  Menu,
   Plus,
   Settings,
-  X,
 } from "lucide-react";
 import type { Language } from "../lib/translations";
 import { signOut } from "../lib/auth";
@@ -29,14 +26,14 @@ const navItems = [
     label: { en: "History", es: "Historial" },
   },
   {
-    href: "/insights",
-    icon: BarChart3,
-    label: { en: "Insights", es: "Analisis" },
-  },
-  {
     href: "/add-shift",
     icon: Plus,
     label: { en: "Add", es: "Agregar" },
+  },
+  {
+    href: "/insights",
+    icon: BarChart3,
+    label: { en: "Insights", es: "Analisis" },
   },
   {
     href: "/settings",
@@ -60,7 +57,6 @@ export function WiwiAppNav({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [menuOpen, setMenuOpen] = useState(false);
   const isSpanish = language === "es";
 
   async function handleSignOut() {
@@ -103,55 +99,37 @@ export function WiwiAppNav({
         <span>{isSpanish ? "Salir" : "Sign out"}</span>
       </button>
 
-      <div className="relative md:hidden">
-        <button
-          type="button"
-          onClick={() => setMenuOpen((prev) => !prev)}
-          className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm font-medium text-slate-200 transition hover:border-sky-500/40 hover:text-white"
-          aria-expanded={menuOpen}
-          aria-label={isSpanish ? "Abrir menu" : "Open menu"}
-        >
-          {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-          <span>{isSpanish ? "Menu" : "Menu"}</span>
-        </button>
+      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-slate-800/80 bg-slate-950/95 px-2 pb-[calc(0.45rem+env(safe-area-inset-bottom))] pt-2 shadow-[0_-18px_60px_rgba(2,6,23,0.65)] backdrop-blur-xl md:hidden">
+        <div className="mx-auto grid max-w-md grid-cols-5 gap-1">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = isActivePath(pathname, item.href);
+            const isAdd = item.href === "/add-shift";
 
-        {menuOpen ? (
-          <div className="absolute right-0 top-12 z-50 w-72 rounded-3xl border border-slate-800 bg-slate-950/95 p-3 shadow-[0_24px_80px_rgba(2,6,23,0.65)] backdrop-blur-xl">
-            <div className="space-y-1">
-              {navItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = isActivePath(pathname, item.href);
-
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setMenuOpen(false)}
-                    className={cx(
-                      "flex items-center gap-3 rounded-2xl px-4 py-3 text-sm transition",
-                      isActive
-                        ? "bg-sky-500 text-black"
-                        : "text-slate-200 hover:bg-slate-900 hover:text-white"
-                    )}
-                  >
-                    <Icon className="h-4 w-4" />
-                    <span>{item.label[language]}</span>
-                  </Link>
-                );
-              })}
-            </div>
-
-            <button
-              type="button"
-              onClick={handleSignOut}
-              disabled={disabled}
-              className="mt-2 flex w-full items-center gap-3 rounded-2xl border border-slate-800 px-4 py-3 text-sm text-slate-200 transition hover:border-sky-500/40 hover:text-white disabled:opacity-60"
-            >
-              <LogOut className="h-4 w-4" />
-              <span>{isSpanish ? "Salir" : "Sign out"}</span>
-            </button>
-          </div>
-        ) : null}
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cx(
+                  "flex min-w-0 flex-col items-center justify-center gap-1 rounded-2xl px-2 py-2 text-[0.68rem] font-medium transition",
+                  isActive
+                    ? "text-sky-200"
+                    : "text-slate-500 hover:text-slate-200",
+                  isAdd
+                    ? isActive
+                      ? "bg-sky-500 text-black shadow-lg shadow-sky-500/20"
+                      : "bg-sky-500 text-black shadow-lg shadow-sky-500/20 hover:bg-sky-400 hover:text-black"
+                    : isActive
+                      ? "bg-slate-900"
+                      : ""
+                )}
+              >
+                <Icon className={cx("h-5 w-5", isAdd ? "h-6 w-6" : "")} />
+                <span className="truncate">{item.label[language]}</span>
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </>
   );
