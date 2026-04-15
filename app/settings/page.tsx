@@ -4,14 +4,18 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import {
+  AlertTriangle,
   ArrowLeft,
+  FileText,
   Fuel,
   Globe,
   LogOut,
   Percent,
   Settings as SettingsIcon,
+  ShieldCheck,
   Sparkles,
   Target,
+  Trash2,
   TrendingUp,
 } from "lucide-react";
 import { WiwiShell } from "../../components/WiwiShell";
@@ -27,6 +31,7 @@ import { useSettings } from "../../components/SettingsProvider";
 import { AuthGuard } from "../../components/AuthGuard";
 import { getCurrentUser, signOut } from "../../lib/auth";
 import { updateUserSettings } from "../../lib/data/settings";
+import { supabase } from "../../lib/supabase/client";
 import { cx, formatMoney } from "../../lib/ui";
 
 export default function SettingsPage() {
@@ -43,6 +48,8 @@ export default function SettingsPage() {
   const [message, setMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
+  const [deleteConfirmation, setDeleteConfirmation] = useState("");
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
   useEffect(() => {
     async function loadUser() {
@@ -162,14 +169,78 @@ export default function SettingsPage() {
     router.push("/login");
   }
 
+  async function handleDeleteAccount() {
+    setMessage("");
+
+    if (deleteConfirmation.trim().toUpperCase() !== "DELETE") {
+      setMessage(
+        isSpanish
+          ? "Escribe DELETE para confirmar que quieres borrar tu cuenta."
+          : "Type DELETE to confirm you want to delete your account."
+      );
+      return;
+    }
+
+    setIsDeletingAccount(true);
+
+    try {
+      const {
+        data: { session },
+        error: sessionError,
+      } = await supabase.auth.getSession();
+
+      if (sessionError || !session?.access_token) {
+        setMessage(
+          isSpanish
+            ? "Tu sesion expiro. Inicia sesion otra vez e intentalo de nuevo."
+            : "Your session expired. Sign in again and try once more."
+        );
+        return;
+      }
+
+      const response = await fetch("/api/account/delete", {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+      const payload = (await response
+        .json()
+        .catch(() => null)) as { error?: string } | null;
+
+      if (!response.ok) {
+        setMessage(
+          payload?.error ||
+            (isSpanish
+              ? "No pudimos borrar tu cuenta. Intentalo de nuevo."
+              : "We could not delete your account. Please try again.")
+        );
+        return;
+      }
+
+      await signOut();
+      router.replace("/login");
+    } catch {
+      setMessage(
+        isSpanish
+          ? "Algo fallo al borrar tu cuenta. Intentalo de nuevo."
+          : "Something went wrong while deleting your account. Please try again."
+      );
+    } finally {
+      setIsDeletingAccount(false);
+    }
+  }
+
   return (
     <AuthGuard>
       <WiwiShell
         language={language}
         setLanguage={setLanguage}
-        languageDisabled={isSaving}
+        languageDisabled={isSaving || isDeletingAccount}
         showLanguageControls={false}
-        navActions={<WiwiAppNav language={language} disabled={isSaving} />}
+        navActions={
+          <WiwiAppNav language={language} disabled={isSaving || isDeletingAccount} />
+        }
         mobileNavigation={<WiwiMobileTabs language={language} />}
       >
         <PageHero
@@ -440,7 +511,7 @@ export default function SettingsPage() {
               <button
                 type="button"
                 onClick={handleSignOut}
-                disabled={isSaving || isSigningOut}
+                disabled={isSaving || isSigningOut || isDeletingAccount}
                 className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-950 px-5 py-3 text-sm font-semibold text-slate-200 transition hover:border-sky-500/40 hover:text-white disabled:opacity-60"
               >
                 <LogOut className="h-4 w-4" />
@@ -452,6 +523,88 @@ export default function SettingsPage() {
                     : isSpanish
                       ? "Cerrar sesion"
                       : "Sign out"}
+                </span>
+              </button>
+            </Panel>
+
+            <Panel>
+              <div className="flex items-center gap-2 text-sm text-slate-400">
+                <ShieldCheck className="h-4 w-4 text-sky-400" />
+                <span>{isSpanish ? "Legal y privacidad" : "Legal and privacy"}</span>
+              </div>
+
+              <p className="mt-4 text-sm leading-6 text-slate-400">
+                {isSpanish
+                  ? "Revisa como WIWI maneja tus datos y los terminos basicos del servicio."
+                  : "Review how WIWI handles your data and the basic terms for using the service."}
+              </p>
+
+              <div className="mt-5 grid gap-3">
+                <Link
+                  href="/privacy"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-950 px-5 py-3 text-sm font-semibold text-slate-200 transition hover:border-sky-500/40 hover:text-white"
+                >
+                  <ShieldCheck className="h-4 w-4" />
+                  <span>{isSpanish ? "Politica de privacidad" : "Privacy Policy"}</span>
+                </Link>
+                <Link
+                  href="/terms"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-950 px-5 py-3 text-sm font-semibold text-slate-200 transition hover:border-sky-500/40 hover:text-white"
+                >
+                  <FileText className="h-4 w-4" />
+                  <span>{isSpanish ? "Terminos" : "Terms"}</span>
+                </Link>
+              </div>
+            </Panel>
+
+            <Panel className="border-orange-500/25 bg-orange-950/10">
+              <div className="flex items-center gap-2 text-sm text-orange-200">
+                <AlertTriangle className="h-4 w-4" />
+                <span>{isSpanish ? "Zona de riesgo" : "Danger zone"}</span>
+              </div>
+
+              <h2 className="mt-4 text-xl font-black tracking-tight text-white">
+                {isSpanish ? "Borrar cuenta" : "Delete account"}
+              </h2>
+
+              <p className="mt-3 text-sm leading-6 text-slate-400">
+                {isSpanish
+                  ? "Esto borra tu cuenta WIWI, turnos guardados, perfil y ajustes. No se puede deshacer."
+                  : "This deletes your WIWI account, saved shifts, profile, and settings. This cannot be undone."}
+              </p>
+
+              <label className="mt-5 block text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                {isSpanish ? "Escribe DELETE" : "Type DELETE"}
+              </label>
+              <input
+                type="text"
+                value={deleteConfirmation}
+                onChange={(e) => setDeleteConfirmation(e.target.value)}
+                disabled={isSaving || isSigningOut || isDeletingAccount}
+                className="mt-2 block w-full min-w-0 rounded-2xl border border-orange-500/30 bg-slate-950 px-4 py-3 text-white outline-none transition placeholder:text-slate-600 focus:border-orange-300 disabled:opacity-60"
+                placeholder="DELETE"
+              />
+
+              <button
+                type="button"
+                onClick={handleDeleteAccount}
+                disabled={
+                  isSaving ||
+                  isSigningOut ||
+                  isDeletingAccount ||
+                  deleteConfirmation.trim().toUpperCase() !== "DELETE"
+                }
+                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-orange-500/40 bg-orange-500/10 px-5 py-3 text-sm font-semibold text-orange-100 transition hover:border-orange-300/70 hover:bg-orange-500/20 disabled:opacity-50"
+              >
+                <Trash2 className="h-4 w-4" />
+                <span>
+                  {isDeletingAccount
+                    ? isSpanish
+                      ? "Borrando..."
+                      : "Deleting..."
+                    : isSpanish
+                      ? "Borrar mi cuenta"
+                      : "Delete my account"}
                 </span>
               </button>
             </Panel>

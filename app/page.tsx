@@ -360,10 +360,24 @@ export default function HomePage() {
         </section>
 
         <footer className="border-t border-slate-800/50 py-8">
-          <div className="mx-auto flex max-w-7xl items-center justify-center px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto flex max-w-7xl flex-col items-center justify-center gap-4 px-4 text-center sm:flex-row sm:justify-between sm:px-6 lg:px-8">
             <p className="text-sm text-slate-400">
               © 2026 WIWI. All rights reserved.
             </p>
+            <div className="flex items-center gap-4 text-sm">
+              <Link
+                href="/privacy"
+                className="text-slate-500 transition hover:text-sky-300"
+              >
+                Privacy
+              </Link>
+              <Link
+                href="/terms"
+                className="text-slate-500 transition hover:text-sky-300"
+              >
+                Terms
+              </Link>
+            </div>
           </div>
         </footer>
       </div>

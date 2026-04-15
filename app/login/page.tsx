@@ -124,6 +124,20 @@ export default function LoginPage() {
               {isSpanish ? "Volver al inicio" : "Back to home"}
             </Link>
           </p>
+          <p className="flex flex-wrap justify-center gap-3 text-xs">
+            <Link
+              href="/privacy"
+              className="text-slate-500 transition hover:text-sky-300"
+            >
+              {isSpanish ? "Privacidad" : "Privacy"}
+            </Link>
+            <Link
+              href="/terms"
+              className="text-slate-500 transition hover:text-sky-300"
+            >
+              {isSpanish ? "Terminos" : "Terms"}
+            </Link>
+          </p>
         </div>
       }
     >
