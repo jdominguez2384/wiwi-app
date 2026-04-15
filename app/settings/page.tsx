@@ -6,6 +6,8 @@ import { useEffect, useMemo, useState } from "react";
 import {
   AlertTriangle,
   ArrowLeft,
+  ArrowRight,
+  Crown,
   FileText,
   Fuel,
   Globe,
@@ -27,15 +29,22 @@ import {
 } from "../../components/WiwiSurface";
 import { WiwiAppNav, WiwiMobileTabs } from "../../components/WiwiAppNav";
 import { useLanguage } from "../../components/LanguageProvider";
+import { usePlan } from "../../components/PlanProvider";
 import { useSettings } from "../../components/SettingsProvider";
 import { AuthGuard } from "../../components/AuthGuard";
 import { getCurrentUser, signOut } from "../../lib/auth";
 import { updateUserSettings } from "../../lib/data/settings";
+import {
+  getPlanName,
+  getPlanSummary,
+  getProPreviewFeatures,
+} from "../../lib/plans";
 import { supabase } from "../../lib/supabase/client";
 import { cx, formatMoney } from "../../lib/ui";
 
 export default function SettingsPage() {
   const { language, setLanguage } = useLanguage();
+  const { plan, isLoadingPlan } = usePlan();
   const { settings, updateSettings } = useSettings();
   const router = useRouter();
   const isSpanish = language === "es";
@@ -73,6 +82,10 @@ export default function SettingsPage() {
   const previewMpg = Math.max(0, Number(mpg) || 0);
   const previewGasPrice = Math.max(0, Number(gasPrice) || 0);
   const previewWeeklyGoal = Math.max(0, Number(weeklyGoal) || 0);
+  const proPreviewFeatures = useMemo(
+    () => getProPreviewFeatures(language).slice(0, 3),
+    [language]
+  );
 
   const exampleShift = useMemo(() => {
     const gross = 100;
@@ -493,6 +506,50 @@ export default function SettingsPage() {
                 >
                   Espanol
                 </button>
+              </div>
+            </Panel>
+
+            <Panel className="relative overflow-hidden border-sky-500/20">
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(14,165,233,0.16),transparent_45%)]" />
+              <div className="relative">
+                <div className="flex items-center gap-2 text-sm text-slate-400">
+                  <Crown className="h-4 w-4 text-sky-400" />
+                  <span>{isSpanish ? "Plan" : "Plan"}</span>
+                </div>
+
+                <p className="mt-4 text-xs uppercase tracking-[0.24em] text-sky-300">
+                  {isSpanish ? "Estado actual" : "Current status"}
+                </p>
+                <h2 className="mt-3 text-3xl font-black tracking-tight text-white">
+                  {isLoadingPlan ? "..." : getPlanName(plan)}
+                </h2>
+                <p className="mt-3 text-sm leading-6 text-slate-400">
+                  {getPlanSummary(plan, language)}
+                </p>
+
+                <div className="mt-5 space-y-3">
+                  {proPreviewFeatures.map((feature) => (
+                    <div
+                      key={feature.label}
+                      className="rounded-2xl border border-slate-800 bg-slate-950/70 px-4 py-3"
+                    >
+                      <p className="text-sm font-semibold text-white">
+                        {feature.label}
+                      </p>
+                      <p className="mt-1 text-xs leading-5 text-slate-500">
+                        {feature.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                <Link
+                  href="/pro"
+                  className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-sky-500 px-5 py-3 text-sm font-semibold text-black shadow-lg shadow-sky-500/20 transition hover:bg-sky-400"
+                >
+                  <span>{isSpanish ? "Ver WIWI Pro" : "View WIWI Pro"}</span>
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
               </div>
             </Panel>
 

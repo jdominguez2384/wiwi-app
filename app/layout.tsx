@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { LanguageProvider } from "../components/LanguageProvider";
+import { PlanProvider } from "../components/PlanProvider";
 import { ShiftProvider } from "../components/ShiftProvider";
 import { SettingsProvider } from "../components/SettingsProvider";
 
@@ -72,9 +73,11 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <LanguageProvider>
-          <SettingsProvider>
-            <ShiftProvider>{children}</ShiftProvider>
-          </SettingsProvider>
+          <PlanProvider>
+            <SettingsProvider>
+              <ShiftProvider>{children}</ShiftProvider>
+            </SettingsProvider>
+          </PlanProvider>
         </LanguageProvider>
       </body>
     </html>
