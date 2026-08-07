@@ -18,7 +18,7 @@ Release preparation date: August 7, 2026 (America/New_York)
 ## Application Verification
 
 - `npm run check`: passed
-- Automated tests: 15 passed, 0 failed
+- Automated tests: 17 passed, 0 failed
 - `npm audit`: 0 production or development vulnerabilities
 - `npm run build`: passed with all 22 routes generated
 - `npm run native:sync`: passed for Android and iOS

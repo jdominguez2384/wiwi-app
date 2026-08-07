@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
+import { getAuthVerificationError } from "../lib/auth-session";
 import { supabase } from "../lib/supabase/client";
 
 type AuthContextType = {
@@ -23,7 +24,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { data, error } = await supabase.auth.getUser();
 
     setUser(data.user ?? null);
-    setAuthError(error ? "We could not verify your session." : null);
+    setAuthError(getAuthVerificationError(error));
     setIsLoadingUser(false);
   }
 
@@ -34,7 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (!isActive) return;
 
       setUser(data.user ?? null);
-      setAuthError(error ? "We could not verify your session." : null);
+      setAuthError(getAuthVerificationError(error));
       setIsLoadingUser(false);
     });
 
