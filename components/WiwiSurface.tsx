@@ -24,13 +24,18 @@ export function Panel({
 
 export function InputLabel({
   children,
+  htmlFor,
   icon,
 }: {
   children: ReactNode;
+  htmlFor?: string;
   icon?: ReactNode;
 }) {
   return (
-    <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-300">
+    <label
+      className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-300"
+      htmlFor={htmlFor}
+    >
       {icon}
       <span>{children}</span>
     </label>

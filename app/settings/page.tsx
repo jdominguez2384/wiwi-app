@@ -356,7 +356,10 @@ export default function SettingsPage() {
 
             <div className="mt-6 grid gap-6 md:grid-cols-2">
               <div className="space-y-2">
-                <InputLabel icon={<Percent className="h-4 w-4 text-orange-300" />}>
+                <InputLabel
+                  htmlFor="settings-tax-rate"
+                  icon={<Percent className="h-4 w-4 text-orange-300" />}
+                >
                   {isSpanish
                     ? "¿Cuánto quieres apartar para impuestos?"
                     : "How much do you want to set aside for taxes?"}
@@ -364,6 +367,7 @@ export default function SettingsPage() {
 
                 <div className="relative">
                   <input
+                    id="settings-tax-rate"
                     type="number"
                     step="1"
                     min="0"
@@ -389,10 +393,14 @@ export default function SettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <InputLabel icon={<Fuel className="h-4 w-4 text-sky-300" />}>
+                <InputLabel
+                  htmlFor="settings-mpg"
+                  icon={<Fuel className="h-4 w-4 text-sky-300" />}
+                >
                   {isSpanish ? "Millas por galón" : "Vehicle MPG"}
                 </InputLabel>
                 <input
+                  id="settings-mpg"
                   type="number"
                   step="0.1"
                   min="0.1"
@@ -410,10 +418,14 @@ export default function SettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <InputLabel icon={<Fuel className="h-4 w-4 text-orange-300" />}>
+                <InputLabel
+                  htmlFor="settings-gas-price"
+                  icon={<Fuel className="h-4 w-4 text-orange-300" />}
+                >
                   {isSpanish ? "Precio de gasolina" : "Gas price"}
                 </InputLabel>
                 <input
+                  id="settings-gas-price"
                   type="number"
                   step="0.01"
                   min="0"
@@ -433,10 +445,14 @@ export default function SettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <InputLabel icon={<Target className="h-4 w-4 text-emerald-300" />}>
+                <InputLabel
+                  htmlFor="settings-weekly-goal"
+                  icon={<Target className="h-4 w-4 text-emerald-300" />}
+                >
                   {isSpanish ? "Meta semanal" : "Weekly goal"}
                 </InputLabel>
                 <input
+                  id="settings-weekly-goal"
                   type="number"
                   step="1"
                   min="0"

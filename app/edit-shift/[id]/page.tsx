@@ -338,10 +338,14 @@ export default function EditShiftPage() {
 
               <div className="mt-6 grid gap-5 md:grid-cols-2">
                 <div className="min-w-0 space-y-2">
-                  <InputLabel icon={<Calendar className="h-4 w-4 text-sky-300" />}>
+                  <InputLabel
+                    htmlFor="shift-date"
+                    icon={<Calendar className="h-4 w-4 text-sky-300" />}
+                  >
                     {isSpanish ? "Fecha" : "Date"}
                   </InputLabel>
                   <input
+                    id="shift-date"
                     type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
@@ -351,10 +355,14 @@ export default function EditShiftPage() {
                 </div>
 
                 <div className="min-w-0 space-y-2">
-                  <InputLabel icon={<Route className="h-4 w-4 text-emerald-300" />}>
+                  <InputLabel
+                    htmlFor="shift-app"
+                    icon={<Route className="h-4 w-4 text-emerald-300" />}
+                  >
                     {isSpanish ? "App usada" : "App used"}
                   </InputLabel>
                   <select
+                    id="shift-app"
                     value={appName}
                     onChange={(e) => setAppName(e.target.value)}
                     disabled={isSaving}
@@ -374,10 +382,14 @@ export default function EditShiftPage() {
 
               <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
                 <div className="min-w-0 space-y-2">
-                  <InputLabel icon={<DollarSign className="h-4 w-4 text-emerald-300" />}>
+                  <InputLabel
+                    htmlFor="shift-gross-earnings"
+                    icon={<DollarSign className="h-4 w-4 text-emerald-300" />}
+                  >
                     {isSpanish ? "Ganancias brutas" : "Gross earnings"}
                   </InputLabel>
                   <input
+                    id="shift-gross-earnings"
                     type="number"
                     inputMode="decimal"
                     step="0.01"
@@ -391,10 +403,14 @@ export default function EditShiftPage() {
                 </div>
 
                 <div className="min-w-0 space-y-2">
-                  <InputLabel icon={<Clock3 className="h-4 w-4 text-purple-300" />}>
+                  <InputLabel
+                    htmlFor="shift-hours-worked"
+                    icon={<Clock3 className="h-4 w-4 text-purple-300" />}
+                  >
                     {isSpanish ? "Horas trabajadas" : "Hours worked"}
                   </InputLabel>
                   <input
+                    id="shift-hours-worked"
                     type="number"
                     inputMode="decimal"
                     step="0.1"
@@ -413,10 +429,14 @@ export default function EditShiftPage() {
                 </div>
 
                 <div className="min-w-0 space-y-2">
-                  <InputLabel icon={<Fuel className="h-4 w-4 text-orange-300" />}>
+                  <InputLabel
+                    htmlFor="shift-miles-driven"
+                    icon={<Fuel className="h-4 w-4 text-orange-300" />}
+                  >
                     {isSpanish ? "Millas recorridas" : "Miles driven"}
                   </InputLabel>
                   <input
+                    id="shift-miles-driven"
                     type="number"
                     inputMode="decimal"
                     step="0.1"
@@ -430,10 +450,14 @@ export default function EditShiftPage() {
                 </div>
 
                 <div className="min-w-0 space-y-2">
-                  <InputLabel icon={<Receipt className="h-4 w-4 text-rose-300" />}>
+                  <InputLabel
+                    htmlFor="shift-other-expenses"
+                    icon={<Receipt className="h-4 w-4 text-rose-300" />}
+                  >
                     {isSpanish ? "Otros gastos" : "Other expenses"}
                   </InputLabel>
                   <input
+                    id="shift-other-expenses"
                     type="number"
                     inputMode="decimal"
                     step="0.01"

@@ -1,10 +1,17 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
+  getLocalDateInputValue,
   getNonNegativeNumber,
   getPositiveNumber,
   isNonNegativeDecimalInput,
 } from "../lib/shiftForm.ts";
+
+test("formats a date using local calendar fields", () => {
+  const localLateNight = new Date(2026, 7, 6, 23, 45);
+
+  assert.equal(getLocalDateInputValue(localLateNight), "2026-08-06");
+});
 
 test("accepts ordinary non-negative decimal input", () => {
   assert.equal(isNonNegativeDecimalInput(""), true);
