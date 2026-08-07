@@ -16,6 +16,7 @@ import { useAuth } from "./AuthProvider";
 
 type LanguageContextType = {
   language: Language;
+  isLoadingLanguage: boolean;
   setLanguage: (lang: Language) => void;
   t: TranslationStrings;
 };
@@ -29,15 +30,27 @@ export function LanguageProvider({
 }) {
   const { user } = useAuth();
   const [language, setLanguageState] = useState<Language>("en");
+  const [resolvedUserId, setResolvedUserId] = useState<string | null>(null);
+  const isLoadingLanguage = Boolean(user && resolvedUserId !== user.id);
 
   useEffect(() => {
     if (!user) return;
+
     let isActive = true;
+    const metadataLanguage =
+      user.user_metadata?.preferred_language === "es" ? "es" : "en";
 
     void getUserProfile(user.id).then(({ data, error }) => {
-      if (!isActive || error || !data) return;
+      if (!isActive) return;
 
-      setLanguageState(data.preferred_language === "es" ? "es" : "en");
+      setLanguageState(
+        !error && data
+          ? data.preferred_language === "es"
+            ? "es"
+            : "en"
+          : metadataLanguage
+      );
+      setResolvedUserId(user.id);
     });
 
     return () => {
@@ -61,7 +74,12 @@ export function LanguageProvider({
 
   return (
     <LanguageContext.Provider
-      value={{ language, setLanguage, t: translations[language] }}
+      value={{
+        language,
+        isLoadingLanguage,
+        setLanguage,
+        t: translations[language],
+      }}
     >
       {children}
     </LanguageContext.Provider>

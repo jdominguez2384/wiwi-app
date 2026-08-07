@@ -7,6 +7,9 @@ import {
   AlertTriangle,
   ArrowLeft,
   ArrowRight,
+  BookOpen,
+  ChevronDown,
+  CircleHelp,
   Crown,
   FileText,
   Fuel,
@@ -14,6 +17,7 @@ import {
   LifeBuoy,
   LogOut,
   Percent,
+  PlayCircle,
   Settings as SettingsIcon,
   ShieldCheck,
   Sparkles,
@@ -34,6 +38,7 @@ import { usePlan } from "../../components/PlanProvider";
 import { useSettings } from "../../components/SettingsProvider";
 import { AuthGuard } from "../../components/AuthGuard";
 import { useAuth } from "../../components/AuthProvider";
+import { useTutorial } from "../../components/TutorialProvider";
 import { signOut } from "../../lib/auth";
 import { updateUserSettings } from "../../lib/data/settings";
 import {
@@ -47,6 +52,7 @@ import {
   getProPreviewFeatures,
 } from "../../lib/plans";
 import { supabase } from "../../lib/supabase/client";
+import { tutorialFaqs } from "../../lib/tutorial";
 import { cx, formatMoney } from "../../lib/ui";
 
 export default function SettingsPage() {
@@ -54,6 +60,7 @@ export default function SettingsPage() {
   const { plan, isLoadingPlan } = usePlan();
   const { settings, updateSettings } = useSettings();
   const { user } = useAuth();
+  const { openTutorial } = useTutorial();
   const router = useRouter();
   const isSpanish = language === "es";
   const showProPreview =
@@ -84,6 +91,7 @@ export default function SettingsPage() {
     () => getProPreviewFeatures(language).slice(0, 3),
     [language]
   );
+  const faqItems = tutorialFaqs[language];
 
   const exampleShift = useMemo(() => {
     const gross = 100;
@@ -588,6 +596,70 @@ export default function SettingsPage() {
               </div>
             </Panel>
             ) : null}
+
+            <Panel className="relative overflow-hidden border-sky-500/20">
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(14,165,233,0.14),transparent_48%)]" />
+              <div className="relative">
+                <div className="flex items-center gap-2 text-sm text-slate-400">
+                  <BookOpen className="h-4 w-4 text-sky-400" />
+                  <span>{isSpanish ? "Ayuda y tutorial" : "Help and tutorial"}</span>
+                </div>
+
+                <h2 className="mt-4 text-xl font-black tracking-tight text-white">
+                  {isSpanish ? "¿Necesitas una guía rápida?" : "Need a quick refresher?"}
+                </h2>
+                <p className="mt-3 text-sm leading-6 text-slate-400">
+                  {isSpanish
+                    ? "Repite el recorrido completo de WIWI en cualquier momento. Tu información y tus turnos no cambiarán."
+                    : "Replay the complete WIWI walkthrough anytime. Your settings and saved shifts will not change."}
+                </p>
+
+                <button
+                  type="button"
+                  onClick={openTutorial}
+                  disabled={isSaving || isSigningOut || isDeletingAccount}
+                  className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-sky-500 px-5 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-sky-500/20 transition hover:bg-sky-400 disabled:opacity-60"
+                >
+                  <PlayCircle className="h-4 w-4" />
+                  <span>
+                    {isSpanish ? "Repetir tutorial de WIWI" : "Replay WIWI tutorial"}
+                  </span>
+                </button>
+
+                <div className="mt-7 border-t border-slate-800 pt-6">
+                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                    <CircleHelp className="h-4 w-4 text-sky-400" />
+                    <span>{isSpanish ? "Respuestas rápidas" : "Quick answers"}</span>
+                  </div>
+
+                  <div className="mt-4 space-y-2">
+                    {faqItems.map((item) => (
+                      <details
+                        key={item.question}
+                        className="group rounded-2xl border border-slate-800 bg-slate-950/70 px-4 py-3 open:border-sky-500/25"
+                      >
+                        <summary className="flex cursor-pointer list-none items-start justify-between gap-3 text-sm font-semibold leading-6 text-slate-200 marker:hidden">
+                          <span>{item.question}</span>
+                          <ChevronDown className="mt-1 h-4 w-4 shrink-0 text-slate-500 transition group-open:rotate-180 group-open:text-sky-300" />
+                        </summary>
+                        <p className="mt-3 border-t border-slate-800 pt-3 text-sm leading-6 text-slate-400">
+                          {item.answer}
+                        </p>
+                      </details>
+                    ))}
+                  </div>
+
+                  <Link
+                    href="/support"
+                    className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-sky-300 transition hover:text-sky-200"
+                  >
+                    <LifeBuoy className="h-4 w-4" />
+                    <span>{isSpanish ? "Más ayuda y soporte" : "More help and support"}</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </div>
+              </div>
+            </Panel>
 
             <Panel>
               <div className="flex items-center gap-2 text-sm text-slate-400">

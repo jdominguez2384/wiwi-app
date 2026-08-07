@@ -6,6 +6,7 @@ import { ShiftProvider } from "../components/ShiftProvider";
 import { SettingsProvider } from "../components/SettingsProvider";
 import { AuthProvider } from "../components/AuthProvider";
 import { AppDataNotice } from "../components/AppDataNotice";
+import { TutorialProvider } from "../components/TutorialProvider";
 
 const appName = "WIWI";
 const appDescription =
@@ -76,14 +77,16 @@ export default function RootLayout({
       <body>
         <AuthProvider>
           <LanguageProvider>
-            <PlanProvider>
-              <SettingsProvider>
-                <ShiftProvider>
-                  <AppDataNotice />
-                  {children}
-                </ShiftProvider>
-              </SettingsProvider>
-            </PlanProvider>
+            <TutorialProvider>
+              <PlanProvider>
+                <SettingsProvider>
+                  <ShiftProvider>
+                    <AppDataNotice />
+                    {children}
+                  </ShiftProvider>
+                </SettingsProvider>
+              </PlanProvider>
+            </TutorialProvider>
           </LanguageProvider>
         </AuthProvider>
       </body>

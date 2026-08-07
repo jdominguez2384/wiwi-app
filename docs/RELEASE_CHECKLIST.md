@@ -7,14 +7,15 @@
 - [x] Confirm the migration created calculation snapshot and `other_expenses` columns.
 - [ ] Test two separate accounts and confirm neither can read, update, or delete the other's shifts.
 - [x] Confirm every existing account has both a profile and default settings row.
-- [ ] Delete a test account and verify its auth user, profile, settings, and shifts are removed.
+- [x] Delete a test account and verify its auth user, profile, settings, and shifts are removed.
 - [x] Record the production migration date and operator in the release notes.
 
 ## Product Verification
 
-- [ ] Add a shift with less than one hour worked.
-- [ ] Add a shift with tolls or parking in Other expenses.
-- [ ] Change MPG, gas price, and tax reserve; confirm older shift results do not change.
+- [x] Add a shift with less than one hour worked.
+- [x] Add a shift with tolls or parking in Other expenses.
+- [x] Change MPG, gas price, and tax reserve; confirm older shift results do not change.
+- [x] Verify all seven tutorial steps, language switching, mobile scrolling, and completion controls.
 - [ ] Edit and delete a shift on desktop, iPhone, and Android.
 - [ ] Verify month and app filters with at least 25 shifts.
 - [ ] Confirm English and Spanish legal pages render fully and update the document language.
@@ -24,12 +25,12 @@
 
 - [x] Run `npm run check`.
 - [x] Run `npm run build` outside the sandbox if Windows blocks Next.js workers.
-- [ ] Confirm the GitHub Quality workflow passes.
+- [x] Confirm the GitHub Quality workflow passes.
 - [ ] Verify `support@getwiwi.com` can receive inbound mail, not only send it.
 - [ ] Add production error monitoring before public store launch.
 - [ ] Document database backup and restore procedures.
-- [ ] Verify `/robots.txt`, `/sitemap.xml`, `/support`, and `/delete-account` in production.
-- [ ] Verify `/api/health` returns `status: ok` and the deployed commit version.
+- [x] Verify `/robots.txt`, `/sitemap.xml`, `/support`, and `/delete-account` in production.
+- [x] Verify `/api/health` returns `status: ok` and the deployed commit version.
 
 ## App Store Submission
 

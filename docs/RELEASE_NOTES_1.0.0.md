@@ -1,6 +1,6 @@
 # WIWI 1.0.0 Release Notes
 
-Release preparation date: August 6, 2026 (America/New_York)
+Release preparation date: August 7, 2026 (America/New_York)
 
 ## Production Database
 
@@ -18,7 +18,7 @@ Release preparation date: August 6, 2026 (America/New_York)
 ## Application Verification
 
 - `npm run check`: passed
-- Automated tests: 11 passed, 0 failed
+- Automated tests: 15 passed, 0 failed
 - `npm audit`: 0 production or development vulnerabilities
 - `npm run build`: passed with all 22 routes generated
 - `npm run native:sync`: passed for Android and iOS
@@ -28,6 +28,8 @@ Release preparation date: August 6, 2026 (America/New_York)
 - Stable historical earnings snapshots and user-entered shift expenses
 - Centralized auth, loading, retry, and data-error handling
 - Clear bilingual authentication errors and accessible form labels
+- Account-aware English/Spanish first-run tutorial with seven guided steps
+- Replayable Settings tutorial and bilingual answers to common questions
 - Bilingual privacy, terms, support, and account-deletion pages
 - SEO metadata, sitemap, robots, operational health endpoint, and error pages
 - GitHub quality workflow and automated domain tests
