@@ -10,6 +10,7 @@ import {
   DollarSign,
   Fuel,
   PencilLine,
+  Receipt,
   Route,
   Settings2,
   Sparkles,
@@ -27,6 +28,7 @@ import { useLanguage } from "../../../components/LanguageProvider";
 import { useShifts } from "../../../components/ShiftProvider";
 import { useSettings } from "../../../components/SettingsProvider";
 import { AuthGuard } from "../../../components/AuthGuard";
+import { useAuth } from "../../../components/AuthProvider";
 import { getUserShift, updateUserShift } from "../../../lib/data/shifts";
 import {
   getNonNegativeNumber,
@@ -34,6 +36,7 @@ import {
   isNonNegativeDecimalInput,
 } from "../../../lib/shiftForm";
 import { cx, formatMoney } from "../../../lib/ui";
+import { mapShiftRow, type ShiftRow } from "../../../lib/shiftRecord";
 
 const APP_OPTIONS = [
   "DoorDash",
@@ -53,6 +56,7 @@ export default function EditShiftPage() {
   const { language, setLanguage } = useLanguage();
   const { updateShift } = useShifts();
   const { settings } = useSettings();
+  const { user } = useAuth();
   const router = useRouter();
   const params = useParams();
   const isSpanish = language === "es";
@@ -63,6 +67,10 @@ export default function EditShiftPage() {
   const [grossEarnings, setGrossEarnings] = useState("");
   const [hoursWorked, setHoursWorked] = useState("");
   const [milesDriven, setMilesDriven] = useState("");
+  const [otherExpenses, setOtherExpenses] = useState("");
+  const [taxRateSnapshot, setTaxRateSnapshot] = useState<number | null>(null);
+  const [mpgSnapshot, setMpgSnapshot] = useState<number | null>(null);
+  const [gasPriceSnapshot, setGasPriceSnapshot] = useState<number | null>(null);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isMissing, setIsMissing] = useState(false);
@@ -79,10 +87,12 @@ export default function EditShiftPage() {
         return;
       }
 
+      if (!user) return;
+
       setIsLoading(true);
       setMessage("");
 
-      const { data, error } = await getUserShift(shiftId);
+      const { data, error } = await getUserShift(shiftId, user.id);
 
       if (!isActive) return;
 
@@ -103,6 +113,11 @@ export default function EditShiftPage() {
       setGrossEarnings(String(Number(data.gross_earnings)));
       setHoursWorked(String(Number(data.hours_worked)));
       setMilesDriven(String(Number(data.miles_driven)));
+      const mappedShift = mapShiftRow(data as ShiftRow);
+      setOtherExpenses(String(mappedShift.otherExpenses));
+      setTaxRateSnapshot(mappedShift.taxRateSnapshot);
+      setMpgSnapshot(mappedShift.mpgSnapshot);
+      setGasPriceSnapshot(mappedShift.gasPriceSnapshot);
       setIsMissing(false);
       setIsLoading(false);
     }
@@ -112,15 +127,22 @@ export default function EditShiftPage() {
     return () => {
       isActive = false;
     };
-  }, [isSpanish, shiftId]);
+  }, [isSpanish, shiftId, user]);
 
   const grossAmount = Number(grossEarnings) || 0;
   const hoursAmount = Number(hoursWorked) || 0;
   const milesAmount = Number(milesDriven) || 0;
+  const otherExpensesAmount = Number(otherExpenses) || 0;
+  const calculationMpg = mpgSnapshot ?? settings.mpg;
+  const calculationGasPrice = gasPriceSnapshot ?? settings.gasPrice;
+  const calculationTaxRate = taxRateSnapshot ?? settings.taxRate;
   const fuelCost =
-    settings.mpg > 0 ? (milesAmount / settings.mpg) * settings.gasPrice : 0;
-  const taxSetAside = grossAmount * settings.taxRate;
-  const netEarnings = grossAmount - fuelCost - taxSetAside;
+    calculationMpg > 0
+      ? (milesAmount / calculationMpg) * calculationGasPrice
+      : 0;
+  const taxSetAside = grossAmount * calculationTaxRate;
+  const netEarnings =
+    grossAmount - fuelCost - taxSetAside - otherExpensesAmount;
   const realHourlyRate = hoursAmount > 0 ? netEarnings / hoursAmount : 0;
 
   function updateDecimalValue(
@@ -135,7 +157,7 @@ export default function EditShiftPage() {
   async function handleSave() {
     setMessage("");
 
-    if (!shiftId || isMissing) {
+    if (!shiftId || !user || isMissing) {
       setMessage(
         isSpanish
           ? "No pudimos encontrar ese turno."
@@ -147,12 +169,20 @@ export default function EditShiftPage() {
     const grossValue = getNonNegativeNumber(grossEarnings);
     const hoursValue = getPositiveNumber(hoursWorked);
     const milesValue = getNonNegativeNumber(milesDriven);
+    const otherExpensesValue = getNonNegativeNumber(otherExpenses);
 
-    if (!date || !appName || grossValue === null || hoursValue === null || milesValue === null) {
+    if (
+      !date ||
+      !appName ||
+      grossValue === null ||
+      hoursValue === null ||
+      milesValue === null ||
+      otherExpensesValue === null
+    ) {
       setMessage(
         isSpanish
-          ? "Usa valores validos: ganancias y millas no pueden ser negativas, y las horas deben ser mayores que cero."
-          : "Use valid values: earnings and miles cannot be negative, and hours must be greater than zero."
+          ? "Usa valores validos: ganancias, millas y gastos no pueden ser negativos, y las horas deben ser mayores que cero."
+          : "Use valid values: earnings, miles, and expenses cannot be negative, and hours must be greater than zero."
       );
       return;
     }
@@ -160,12 +190,16 @@ export default function EditShiftPage() {
     setIsSaving(true);
 
     try {
-      const { data, error } = await updateUserShift(shiftId, {
+      const { data, error } = await updateUserShift(shiftId, user.id, {
         shift_date: date,
         app_name: appName,
         gross_earnings: grossValue,
         hours_worked: hoursValue,
         miles_driven: milesValue,
+        other_expenses: otherExpensesValue,
+        tax_rate_snapshot: calculationTaxRate,
+        mpg_snapshot: calculationMpg,
+        gas_price_snapshot: calculationGasPrice,
       });
 
       if (error || !data) {
@@ -173,14 +207,7 @@ export default function EditShiftPage() {
         return;
       }
 
-      updateShift({
-        id: data.id,
-        date: data.shift_date,
-        appName: data.app_name,
-        grossEarnings: Number(data.gross_earnings),
-        hoursWorked: Number(data.hours_worked),
-        milesDriven: Number(data.miles_driven),
-      });
+      updateShift(mapShiftRow(data as ShiftRow));
 
       router.push("/dashboard");
     } finally {
@@ -236,7 +263,7 @@ export default function EditShiftPage() {
           description={
             isSpanish
               ? "Corrige tus números y WIWI volverá a calcular tu pago real usando tus ajustes actuales de gasolina, MPG e impuestos."
-              : "Update the numbers and WIWI will recalculate your real take-home pay using your current gas, MPG, and tax settings."
+              : "Update the shift details while keeping the gas, MPG, and tax assumptions saved with that shift."
           }
           actions={
             <>
@@ -345,7 +372,7 @@ export default function EditShiftPage() {
                 </div>
               </div>
 
-              <div className="mt-8 grid gap-5 md:grid-cols-3">
+              <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
                 <div className="min-w-0 space-y-2">
                   <InputLabel icon={<DollarSign className="h-4 w-4 text-emerald-300" />}>
                     {isSpanish ? "Ganancias brutas" : "Gross earnings"}
@@ -401,13 +428,37 @@ export default function EditShiftPage() {
                     className="block w-full min-w-0 rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-sky-500 disabled:opacity-60"
                   />
                 </div>
+
+                <div className="min-w-0 space-y-2">
+                  <InputLabel icon={<Receipt className="h-4 w-4 text-rose-300" />}>
+                    {isSpanish ? "Otros gastos" : "Other expenses"}
+                  </InputLabel>
+                  <input
+                    type="number"
+                    inputMode="decimal"
+                    step="0.01"
+                    min="0"
+                    value={otherExpenses}
+                    onChange={(e) =>
+                      updateDecimalValue(e.target.value, setOtherExpenses)
+                    }
+                    disabled={isSaving}
+                    placeholder="0.00"
+                    className="block w-full min-w-0 rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-sky-500 disabled:opacity-60"
+                  />
+                  <p className="text-xs leading-5 text-slate-500">
+                    {isSpanish
+                      ? "Incluye peajes, estacionamiento u otros costos de este turno."
+                      : "Include tolls, parking, or other costs from this shift."}
+                  </p>
+                </div>
               </div>
 
               <div className="mt-8 rounded-3xl border border-slate-800 bg-slate-900/70 p-5">
                 <p className="text-sm font-medium text-slate-300">
                   {isSpanish
                     ? "WIWI usará estos ajustes para volver a calcular el turno"
-                    : "WIWI will use these settings to recalculate the shift"}
+                    : "WIWI preserves the assumptions saved with this shift"}
                 </p>
 
                 <div className="mt-4 grid gap-3 sm:grid-cols-3">
@@ -416,7 +467,7 @@ export default function EditShiftPage() {
                       {isSpanish ? "Impuestos" : "Tax rate"}
                     </p>
                     <p className="mt-2 text-lg font-bold text-white">
-                      {(settings.taxRate * 100).toFixed(0)}%
+                      {(calculationTaxRate * 100).toFixed(0)}%
                     </p>
                   </div>
                   <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
@@ -424,7 +475,7 @@ export default function EditShiftPage() {
                       MPG
                     </p>
                     <p className="mt-2 text-lg font-bold text-white">
-                      {settings.mpg.toFixed(1)}
+                      {calculationMpg.toFixed(1)}
                     </p>
                   </div>
                   <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
@@ -432,7 +483,7 @@ export default function EditShiftPage() {
                       {isSpanish ? "Gasolina" : "Gas price"}
                     </p>
                     <p className="mt-2 text-lg font-bold text-white">
-                      {formatMoney(settings.gasPrice)}
+                      {formatMoney(calculationGasPrice)}
                     </p>
                   </div>
                 </div>
@@ -498,6 +549,14 @@ export default function EditShiftPage() {
                     </span>
                     <span className="font-semibold text-white">
                       {formatMoney(grossAmount)}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between gap-4 rounded-2xl border border-slate-800 bg-slate-950/80 px-4 py-3">
+                    <span className="text-slate-400">
+                      {isSpanish ? "Otros gastos" : "Other expenses"}
+                    </span>
+                    <span className="font-semibold text-orange-300">
+                      -{formatMoney(otherExpensesAmount).replace("-", "")}
                     </span>
                   </div>
                   <div className="flex items-center justify-between gap-4 rounded-2xl border border-slate-800 bg-slate-950/80 px-4 py-3">

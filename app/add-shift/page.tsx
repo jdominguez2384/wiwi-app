@@ -9,6 +9,7 @@ import {
   Clock3,
   DollarSign,
   Fuel,
+  Receipt,
   Route,
   Settings2,
   Sparkles,
@@ -26,7 +27,7 @@ import { useLanguage } from "../../components/LanguageProvider";
 import { useShifts } from "../../components/ShiftProvider";
 import { useSettings } from "../../components/SettingsProvider";
 import { AuthGuard } from "../../components/AuthGuard";
-import { getCurrentUser } from "../../lib/auth";
+import { useAuth } from "../../components/AuthProvider";
 import { createUserShift } from "../../lib/data/shifts";
 import {
   getNonNegativeNumber,
@@ -34,6 +35,11 @@ import {
   isNonNegativeDecimalInput,
 } from "../../lib/shiftForm";
 import { cx, formatMoney } from "../../lib/ui";
+import {
+  getCalculationSnapshot,
+  mapShiftRow,
+  type ShiftRow,
+} from "../../lib/shiftRecord";
 
 const APP_OPTIONS = [
   "DoorDash",
@@ -53,6 +59,7 @@ export default function AddShiftPage() {
   const { language, setLanguage } = useLanguage();
   const { addShift } = useShifts();
   const { settings } = useSettings();
+  const { user } = useAuth();
   const router = useRouter();
   const isSpanish = language === "es";
 
@@ -61,16 +68,19 @@ export default function AddShiftPage() {
   const [grossEarnings, setGrossEarnings] = useState("");
   const [hoursWorked, setHoursWorked] = useState("");
   const [milesDriven, setMilesDriven] = useState("");
+  const [otherExpenses, setOtherExpenses] = useState("");
   const [message, setMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
 
   const grossAmount = Number(grossEarnings) || 0;
   const hoursAmount = Number(hoursWorked) || 0;
   const milesAmount = Number(milesDriven) || 0;
+  const otherExpensesAmount = Number(otherExpenses) || 0;
   const fuelCost =
     settings.mpg > 0 ? (milesAmount / settings.mpg) * settings.gasPrice : 0;
   const taxSetAside = grossAmount * settings.taxRate;
-  const netEarnings = grossAmount - fuelCost - taxSetAside;
+  const netEarnings =
+    grossAmount - fuelCost - taxSetAside - otherExpensesAmount;
   const realHourlyRate = hoursAmount > 0 ? netEarnings / hoursAmount : 0;
 
   function updateDecimalValue(
@@ -88,12 +98,20 @@ export default function AddShiftPage() {
     const grossValue = getNonNegativeNumber(grossEarnings);
     const hoursValue = getPositiveNumber(hoursWorked);
     const milesValue = getNonNegativeNumber(milesDriven);
+    const otherExpensesValue = getNonNegativeNumber(otherExpenses);
 
-    if (!date || !appName || grossValue === null || hoursValue === null || milesValue === null) {
+    if (
+      !date ||
+      !appName ||
+      grossValue === null ||
+      hoursValue === null ||
+      milesValue === null ||
+      otherExpensesValue === null
+    ) {
       setMessage(
         isSpanish
-          ? "Usa valores validos: ganancias y millas no pueden ser negativas, y las horas deben ser mayores que cero."
-          : "Use valid values: earnings and miles cannot be negative, and hours must be greater than zero."
+          ? "Usa valores validos: ganancias, millas y gastos no pueden ser negativos, y las horas deben ser mayores que cero."
+          : "Use valid values: earnings, miles, and expenses cannot be negative, and hours must be greater than zero."
       );
       return;
     }
@@ -101,8 +119,6 @@ export default function AddShiftPage() {
     setIsSaving(true);
 
     try {
-      const user = await getCurrentUser();
-
       if (!user) {
         setMessage(
           isSpanish ? "Debes iniciar sesión." : "You must be signed in."
@@ -117,6 +133,8 @@ export default function AddShiftPage() {
         gross_earnings: grossValue,
         hours_worked: hoursValue,
         miles_driven: milesValue,
+        other_expenses: otherExpensesValue,
+        ...getCalculationSnapshot(settings),
       });
 
       if (error || !data) {
@@ -124,14 +142,7 @@ export default function AddShiftPage() {
         return;
       }
 
-      addShift({
-        id: data.id,
-        date: data.shift_date,
-        appName: data.app_name,
-        grossEarnings: Number(data.gross_earnings),
-        hoursWorked: Number(data.hours_worked),
-        milesDriven: Number(data.miles_driven),
-      });
+      addShift(mapShiftRow(data as ShiftRow));
 
       router.push("/dashboard");
     } finally {
@@ -255,7 +266,7 @@ export default function AddShiftPage() {
               </div>
             </div>
 
-            <div className="mt-8 grid gap-5 md:grid-cols-3">
+            <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
               <div className="min-w-0 space-y-2">
                 <InputLabel icon={<DollarSign className="h-4 w-4 text-emerald-300" />}>
                   {isSpanish ? "Ganancias brutas" : "Gross earnings"}
@@ -310,6 +321,30 @@ export default function AddShiftPage() {
                   placeholder="42"
                   className="block w-full min-w-0 rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-sky-500 disabled:opacity-60"
                 />
+              </div>
+
+              <div className="min-w-0 space-y-2">
+                <InputLabel icon={<Receipt className="h-4 w-4 text-rose-300" />}>
+                  {isSpanish ? "Otros gastos" : "Other expenses"}
+                </InputLabel>
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  step="0.01"
+                  min="0"
+                  value={otherExpenses}
+                  onChange={(e) =>
+                    updateDecimalValue(e.target.value, setOtherExpenses)
+                  }
+                  disabled={isSaving}
+                  placeholder="0.00"
+                  className="block w-full min-w-0 rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-sky-500 disabled:opacity-60"
+                />
+                <p className="text-xs leading-5 text-slate-500">
+                  {isSpanish
+                    ? "Incluye peajes, estacionamiento u otros costos de este turno."
+                    : "Include tolls, parking, or other costs from this shift."}
+                </p>
               </div>
             </div>
 
@@ -408,6 +443,14 @@ export default function AddShiftPage() {
                   </span>
                   <span className="font-semibold text-white">
                     {formatMoney(grossAmount)}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-4 rounded-2xl border border-slate-800 bg-slate-950/80 px-4 py-3">
+                  <span className="text-slate-400">
+                    {isSpanish ? "Otros gastos" : "Other expenses"}
+                  </span>
+                  <span className="font-semibold text-orange-300">
+                    -{formatMoney(otherExpensesAmount).replace("-", "")}
                   </span>
                 </div>
                 <div className="flex items-center justify-between gap-4 rounded-2xl border border-slate-800 bg-slate-950/80 px-4 py-3">

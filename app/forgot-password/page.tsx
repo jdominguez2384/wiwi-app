@@ -34,7 +34,7 @@ export default function ForgotPasswordPage() {
       const { error } = await sendPasswordResetEmail(email);
 
       if (error) {
-        setMessage(getFriendlyAuthError(error.message, language));
+        setMessage(getFriendlyAuthError(error, language));
         return;
       }
 
@@ -43,6 +43,8 @@ export default function ForgotPasswordPage() {
           ? "Correo de restablecimiento enviado. Revisa tu bandeja de entrada."
           : "Password reset email sent. Check your inbox."
       );
+    } catch (error) {
+      setMessage(getFriendlyAuthError(error, language));
     } finally {
       setIsSending(false);
     }
@@ -142,11 +144,20 @@ export default function ForgotPasswordPage() {
     >
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-slate-300">Email</label>
+          <label
+            htmlFor="recovery-email"
+            className="block text-sm font-medium text-slate-300"
+          >
+            Email
+          </label>
           <div className="relative">
             <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
             <input
+              id="recovery-email"
+              name="email"
               type="email"
+              autoComplete="email"
+              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isSending}

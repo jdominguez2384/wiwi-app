@@ -14,26 +14,194 @@ import { useLanguage } from "../../components/LanguageProvider";
 import { WiwiShell } from "../../components/WiwiShell";
 import { PageHero, Panel } from "../../components/WiwiSurface";
 
-function LegalSection({
-  title,
-  children,
-}: {
+type TermsCopy = {
+  eyebrow: string;
   title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Panel>
-      <h2 className="text-2xl font-black tracking-tight text-white">{title}</h2>
-      <div className="mt-4 space-y-4 text-sm leading-7 text-slate-300">
-        {children}
-      </div>
-    </Panel>
-  );
-}
+  titleAccent: string;
+  description: string;
+  back: string;
+  estimate: string;
+  estimateBody: string;
+  responsibility: string;
+  responsibilityBody: string;
+  account: string;
+  accountBody: string;
+  warning: string;
+  sections: Array<{ title: string; paragraphs: string[] }>;
+  contact: string;
+  updated: string;
+};
+
+const termsCopy: Record<"en" | "es", TermsCopy> = {
+  en: {
+    eyebrow: "Terms",
+    title: "The rules for using",
+    titleAccent: "WIWI",
+    description:
+      "These terms explain what WIWI provides, what it does not provide, and your responsibilities when using it.",
+    back: "Back home",
+    estimate: "Estimates",
+    estimateBody: "WIWI is a planning tool, not professional advice.",
+    responsibility: "Your responsibility",
+    responsibilityBody: "Review your entries, assumptions, and decisions.",
+    account: "Account control",
+    accountBody: "You can delete your account and WIWI data.",
+    warning:
+      "Verify important earnings, mileage, tax, and business decisions outside WIWI.",
+    sections: [
+      {
+        title: "Acceptance",
+        paragraphs: [
+          "By creating an account or using WIWI, you agree to these terms and our Privacy Policy. If you do not agree, do not use the service.",
+          "You must be legally able to enter into these terms where you live. If you use WIWI for a business, you represent that you have authority to accept these terms for that business.",
+        ],
+      },
+      {
+        title: "What WIWI Provides",
+        paragraphs: [
+          "WIWI helps gig workers record shifts and estimate take-home earnings using user-entered gross earnings, hours, miles, other expenses, fuel assumptions, and a tax-reserve assumption.",
+          "Calculations are estimates. WIWI does not guarantee earnings, employment outcomes, tax results, platform availability, cost accuracy, or any particular financial outcome.",
+        ],
+      },
+      {
+        title: "No Professional Advice",
+        paragraphs: [
+          "WIWI does not provide tax, legal, financial, accounting, employment, or investment advice. A tax reserve is a planning estimate, not a calculation of tax owed.",
+          "You are responsible for maintaining accurate records, checking your assumptions, and consulting a qualified professional when appropriate.",
+        ],
+      },
+      {
+        title: "Accounts and Security",
+        paragraphs: [
+          "Provide accurate account information, protect your credentials, and notify us if you suspect unauthorized use. You are responsible for activity performed through your account.",
+          "You may delete your account from Settings. We may suspend or terminate access when reasonably necessary to protect users, comply with law, prevent abuse, or enforce these terms.",
+        ],
+      },
+      {
+        title: "Acceptable Use",
+        paragraphs: [
+          "Do not misuse WIWI, interfere with the service, probe or bypass security, access another user's data, introduce harmful code, automate abusive traffic, reverse engineer protected portions of the service, or use WIWI unlawfully.",
+          "You retain ownership of information you enter. You grant WIWI permission to process it only as needed to provide, secure, and improve the service as described in the Privacy Policy.",
+        ],
+      },
+      {
+        title: "Paid Features",
+        paragraphs: [
+          "WIWI is currently available without a paid subscription. If paid features are introduced, pricing, billing period, renewal terms, included features, and cancellation options will be shown before purchase.",
+          "Purchases made through an app store will also be governed by that store's billing and refund rules.",
+        ],
+      },
+      {
+        title: "Availability and Changes",
+        paragraphs: [
+          "WIWI is provided as available. We may improve, add, remove, or discontinue features. We do not promise uninterrupted service, permanent storage, or compatibility with every device.",
+          "Keep independent records of information that is important to your work, taxes, or business.",
+        ],
+      },
+      {
+        title: "Disclaimers and Liability",
+        paragraphs: [
+          "To the extent permitted by law, WIWI is provided without warranties of merchantability, fitness for a particular purpose, or non-infringement. We are not responsible for decisions made from estimates, lost profits, lost data, or indirect or consequential damages.",
+          "Some jurisdictions do not allow certain warranty exclusions or liability limits, so portions of this section may not apply to you.",
+        ],
+      },
+      {
+        title: "Changes to These Terms",
+        paragraphs: [
+          "We may update these terms as WIWI evolves. We will revise the date on this page and provide additional notice when required. Continued use after the effective date means you accept the updated terms.",
+        ],
+      },
+    ],
+    contact: "Questions about these terms",
+    updated: "Last updated: August 6, 2026",
+  },
+  es: {
+    eyebrow: "Términos",
+    title: "Las reglas para usar",
+    titleAccent: "WIWI",
+    description:
+      "Estos términos explican qué ofrece WIWI, qué no ofrece y tus responsabilidades al usarlo.",
+    back: "Volver al inicio",
+    estimate: "Estimaciones",
+    estimateBody: "WIWI ayuda a planificar; no es asesoramiento profesional.",
+    responsibility: "Tu responsabilidad",
+    responsibilityBody: "Revisa tus datos, supuestos y decisiones.",
+    account: "Control de cuenta",
+    accountBody: "Puedes borrar tu cuenta y los datos de WIWI.",
+    warning:
+      "Verifica fuera de WIWI las decisiones importantes sobre ingresos, millaje, impuestos y negocio.",
+    sections: [
+      {
+        title: "Aceptación",
+        paragraphs: [
+          "Al crear una cuenta o usar WIWI, aceptas estos términos y nuestra Política de Privacidad. Si no estás de acuerdo, no uses el servicio.",
+          "Debes tener capacidad legal para aceptar estos términos donde vives. Si usas WIWI para un negocio, declaras que tienes autoridad para aceptar estos términos por ese negocio.",
+        ],
+      },
+      {
+        title: "Qué ofrece WIWI",
+        paragraphs: [
+          "WIWI ayuda a trabajadores gig a registrar turnos y estimar ganancias usando ingresos brutos, horas, millas, otros gastos, supuestos de gasolina y una reserva estimada para impuestos.",
+          "Los cálculos son estimaciones. WIWI no garantiza ingresos, resultados laborales o fiscales, disponibilidad de plataformas, precisión de costos ni resultados financieros.",
+        ],
+      },
+      {
+        title: "Sin asesoramiento profesional",
+        paragraphs: [
+          "WIWI no ofrece asesoramiento fiscal, legal, financiero, contable, laboral ni de inversión. La reserva fiscal es una estimación para planificar, no un cálculo del impuesto adeudado.",
+          "Eres responsable de mantener registros correctos, revisar tus supuestos y consultar a un profesional cuando corresponda.",
+        ],
+      },
+      {
+        title: "Cuentas y seguridad",
+        paragraphs: [
+          "Proporciona información correcta, protege tus credenciales y avísanos si sospechas uso no autorizado. Eres responsable de la actividad realizada desde tu cuenta.",
+          "Puedes borrar tu cuenta desde Ajustes. Podemos suspender o terminar el acceso cuando sea razonablemente necesario para proteger usuarios, cumplir la ley, prevenir abuso o aplicar estos términos.",
+        ],
+      },
+      {
+        title: "Uso aceptable",
+        paragraphs: [
+          "No uses WIWI indebidamente, interfieras con el servicio, evadas seguridad, accedas a datos de otra persona, introduzcas código dañino, automatices tráfico abusivo, hagas ingeniería inversa de partes protegidas ni uses WIWI ilegalmente.",
+          "Conservas la propiedad de la información que ingresas. Autorizas a WIWI a procesarla únicamente para ofrecer, proteger y mejorar el servicio según la Política de Privacidad.",
+        ],
+      },
+      {
+        title: "Funciones pagadas",
+        paragraphs: [
+          "WIWI está disponible actualmente sin suscripción pagada. Si añadimos funciones pagadas, mostraremos precio, período, renovación, funciones incluidas y cancelación antes de comprar.",
+          "Las compras realizadas mediante una tienda de apps también estarán sujetas a las reglas de facturación y reembolsos de esa tienda.",
+        ],
+      },
+      {
+        title: "Disponibilidad y cambios",
+        paragraphs: [
+          "WIWI se ofrece según disponibilidad. Podemos mejorar, añadir, retirar o descontinuar funciones. No prometemos servicio ininterrumpido, almacenamiento permanente ni compatibilidad con todo dispositivo.",
+          "Mantén registros independientes de la información importante para tu trabajo, impuestos o negocio.",
+        ],
+      },
+      {
+        title: "Descargos y responsabilidad",
+        paragraphs: [
+          "En la medida permitida por ley, WIWI se ofrece sin garantías de comerciabilidad, idoneidad para un propósito particular o no infracción. No respondemos por decisiones basadas en estimaciones, ganancias perdidas, datos perdidos o daños indirectos.",
+          "Algunas jurisdicciones no permiten ciertas exclusiones o límites, por lo que partes de esta sección podrían no aplicarte.",
+        ],
+      },
+      {
+        title: "Cambios a estos términos",
+        paragraphs: [
+          "Podemos actualizar estos términos cuando WIWI evolucione. Revisaremos la fecha de esta página y daremos aviso adicional cuando sea obligatorio. El uso continuo después de la fecha efectiva significa que aceptas los términos actualizados.",
+        ],
+      },
+    ],
+    contact: "Preguntas sobre estos términos",
+    updated: "Última actualización: 6 de agosto de 2026",
+  },
+};
 
 export default function TermsPage() {
   const { language, setLanguage } = useLanguage();
-  const isSpanish = language === "es";
+  const copy = termsCopy[language];
 
   return (
     <WiwiShell
@@ -45,13 +213,13 @@ export default function TermsPage() {
             href="/privacy"
             className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 transition hover:border-sky-500/40 hover:text-white"
           >
-            {isSpanish ? "Privacidad" : "Privacy"}
+            {language === "es" ? "Privacidad" : "Privacy"}
           </Link>
           <Link
             href="/signup"
             className="rounded-xl bg-sky-500 px-3 py-2 text-sm font-semibold text-black transition hover:bg-sky-400"
           >
-            {isSpanish ? "Crear cuenta" : "Create account"}
+            {language === "es" ? "Crear cuenta" : "Create account"}
           </Link>
         </div>
       }
@@ -61,178 +229,83 @@ export default function TermsPage() {
           <>
             <FileText className="h-4 w-4 text-sky-300" />
             <span className="text-xs font-semibold uppercase tracking-[0.24em] text-sky-300">
-              {isSpanish ? "Terminos" : "Terms"}
+              {copy.eyebrow}
             </span>
           </>
         }
         title={
-          isSpanish ? (
-            <>
-              Las reglas simples para usar{" "}
-              <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
-                WIWI
-              </span>
-              .
-            </>
-          ) : (
-            <>
-              The simple rules for using{" "}
-              <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
-                WIWI
-              </span>
-              .
-            </>
-          )
+          <>
+            {copy.title}{" "}
+            <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
+              {copy.titleAccent}
+            </span>
+            .
+          </>
         }
-        description={
-          isSpanish
-            ? "Estos terminos explican que hace WIWI, que no hace, y como debes usarlo."
-            : "These terms explain what WIWI does, what it does not do, and how you should use it."
-        }
+        description={copy.description}
         actions={
           <Link
             href="/"
             className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-950/80 px-5 py-3 text-sm font-semibold text-slate-200 transition hover:border-sky-500/40 hover:text-white"
           >
             <ArrowLeft className="h-4 w-4" />
-            <span>{isSpanish ? "Volver al inicio" : "Back home"}</span>
+            <span>{copy.back}</span>
           </Link>
         }
       >
         <div className="grid gap-3 sm:grid-cols-3">
           <div className="rounded-3xl border border-slate-800 bg-slate-950/80 p-5">
             <BadgeDollarSign className="h-5 w-5 text-emerald-300" />
-            <p className="mt-3 text-sm font-semibold text-white">
-              {isSpanish ? "Estimaciones" : "Estimates"}
-            </p>
-            <p className="mt-2 text-sm leading-6 text-slate-400">
-              {isSpanish
-                ? "WIWI ayuda a estimar, no reemplaza consejo profesional."
-                : "WIWI helps estimate, but does not replace professional advice."}
-            </p>
+            <p className="mt-3 text-sm font-semibold text-white">{copy.estimate}</p>
+            <p className="mt-2 text-sm leading-6 text-slate-400">{copy.estimateBody}</p>
           </div>
           <div className="rounded-3xl border border-slate-800 bg-slate-950/80 p-5">
             <ShieldCheck className="h-5 w-5 text-sky-300" />
-            <p className="mt-3 text-sm font-semibold text-white">
-              {isSpanish ? "Tu responsabilidad" : "Your responsibility"}
-            </p>
-            <p className="mt-2 text-sm leading-6 text-slate-400">
-              {isSpanish
-                ? "Verifica tus datos, impuestos y decisiones."
-                : "Verify your data, taxes, and decisions."}
-            </p>
+            <p className="mt-3 text-sm font-semibold text-white">{copy.responsibility}</p>
+            <p className="mt-2 text-sm leading-6 text-slate-400">{copy.responsibilityBody}</p>
           </div>
           <div className="rounded-3xl border border-slate-800 bg-slate-950/80 p-5">
             <Trash2 className="h-5 w-5 text-orange-300" />
-            <p className="mt-3 text-sm font-semibold text-white">
-              {isSpanish ? "Control de cuenta" : "Account control"}
-            </p>
-            <p className="mt-2 text-sm leading-6 text-slate-400">
-              {isSpanish
-                ? "Puedes borrar tu cuenta desde Ajustes."
-                : "You can delete your account from Settings."}
-            </p>
+            <p className="mt-3 text-sm font-semibold text-white">{copy.account}</p>
+            <p className="mt-2 text-sm leading-6 text-slate-400">{copy.accountBody}</p>
           </div>
         </div>
       </PageHero>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-        <LegalSection title={isSpanish ? "Aceptacion" : "Acceptance"}>
-          <p>
-            By creating an account or using WIWI, you agree to these terms. If
-            you do not agree, do not use WIWI.
-          </p>
-        </LegalSection>
+      <div className="mt-8 grid gap-6 lg:grid-cols-2">
+        {copy.sections.map((section) => (
+          <Panel key={section.title}>
+            <h2 className="text-2xl font-black tracking-tight text-white">
+              {section.title}
+            </h2>
+            <div className="mt-4 space-y-4 text-sm leading-7 text-slate-300">
+              {section.paragraphs.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
+          </Panel>
+        ))}
 
-        <LegalSection title={isSpanish ? "Que hace WIWI" : "What WIWI Does"}>
-          <p>
-            WIWI helps gig workers estimate real shift income after user-entered
-            earnings, hours, miles, fuel assumptions, tax reserve assumptions, and
-            other settings.
-          </p>
-          <p>
-            WIWI is a planning and tracking tool. It does not guarantee earnings,
-            employment outcomes, tax results, platform availability, or financial
-            outcomes.
-          </p>
-        </LegalSection>
-
-        <LegalSection title={isSpanish ? "No es consejo profesional" : "No Professional Advice"}>
-          <p>
-            WIWI does not provide tax, legal, financial, accounting, or employment
-            advice. Calculations are estimates based on the information and
-            settings you provide.
-          </p>
-          <p>
-            You are responsible for reviewing your own records, choosing accurate
-            settings, and talking with a qualified professional when you need tax,
-            legal, accounting, or financial advice.
-          </p>
-        </LegalSection>
-
-        <LegalSection title={isSpanish ? "Uso aceptable" : "Acceptable Use"}>
-          <p>
-            You agree not to misuse WIWI, attempt to break or bypass security,
-            interfere with the app, upload harmful content, or use WIWI for
-            unlawful purposes.
-          </p>
-          <p>
-            You are responsible for keeping your login credentials safe and for
-            the information entered into your account.
-          </p>
-        </LegalSection>
-
-        <LegalSection title={isSpanish ? "Cuentas y borrado" : "Accounts and Deletion"}>
-          <p>
-            WIWI may require an account to save shift history, settings, and
-            insights. You can delete your account from Settings. Deleting your
-            account removes your WIWI account and associated WIWI data.
-          </p>
-          <p>
-            We may suspend or restrict access if an account is used in a way that
-            harms WIWI, other users, or the security of the service.
-          </p>
-        </LegalSection>
-
-        <LegalSection title={isSpanish ? "Pagos futuros" : "Future Paid Features"}>
-          <p>
-            WIWI is currently preparing for future monetization. If paid features,
-            subscriptions, or app-store purchases are added later, the app will
-            show the price, billing terms, renewal details, and cancellation path
-            before purchase.
-          </p>
-        </LegalSection>
-
-        <LegalSection title={isSpanish ? "Limitaciones" : "Limitations"}>
-          <p>
-            WIWI is provided as-is and as available. We work to make the app
-            useful and reliable, but we do not promise uninterrupted service,
-            perfect accuracy, or that every estimate will match your real-world
-            outcome.
-          </p>
-          <p className="flex items-start gap-2 text-orange-200">
-            <AlertTriangle className="mt-1 h-4 w-4 shrink-0" />
-            <span>
-              Always verify important earnings, mileage, tax, and business
-              decisions outside the app.
-            </span>
-          </p>
-        </LegalSection>
-
-        <LegalSection title={isSpanish ? "Contacto y cambios" : "Contact and Changes"}>
-          <p>
-            We may update these terms as WIWI grows. Continued use of WIWI after
-            an update means the new version applies.
-          </p>
-          <p className="flex items-center gap-2">
-            <Mail className="h-4 w-4 text-sky-300" />
+        <Panel className="border-orange-500/20 bg-orange-950/10">
+          <div className="flex items-start gap-3 text-orange-100">
+            <AlertTriangle className="mt-1 h-5 w-5 shrink-0" />
+            <p className="text-sm leading-7">{copy.warning}</p>
+          </div>
+          <h2 className="mt-6 text-xl font-black tracking-tight text-white">
+            {copy.contact}
+          </h2>
+          <a
+            href="mailto:support@getwiwi.com"
+            className="mt-4 flex items-center gap-2 text-sm font-semibold text-sky-300 transition hover:text-sky-200"
+          >
+            <Mail className="h-4 w-4" />
             <span>support@getwiwi.com</span>
-          </p>
-          <p className="flex items-center gap-2 text-slate-500">
+          </a>
+          <p className="mt-4 flex items-center gap-2 text-sm text-slate-500">
             <FileText className="h-4 w-4" />
-            <span>Last updated: April 15, 2026</span>
+            <span>{copy.updated}</span>
           </p>
-        </LegalSection>
+        </Panel>
       </div>
     </WiwiShell>
   );

@@ -38,11 +38,13 @@ export default function LoginPage() {
       const { error } = await signIn(email, password);
 
       if (error) {
-        setMessage(getFriendlyAuthError(error.message, language));
+        setMessage(getFriendlyAuthError(error, language));
         return;
       }
 
       router.push("/dashboard");
+    } catch (error) {
+      setMessage(getFriendlyAuthError(error, language));
     } finally {
       setIsLoading(false);
     }
@@ -143,11 +145,20 @@ export default function LoginPage() {
     >
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-slate-300">Email</label>
+          <label
+            htmlFor="login-email"
+            className="block text-sm font-medium text-slate-300"
+          >
+            Email
+          </label>
           <div className="relative">
             <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
             <input
+              id="login-email"
+              name="email"
               type="email"
+              autoComplete="email"
+              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isLoading}
@@ -158,13 +169,20 @@ export default function LoginPage() {
         </div>
 
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-slate-300">
+          <label
+            htmlFor="login-password"
+            className="block text-sm font-medium text-slate-300"
+          >
             {isSpanish ? "Contraseña" : "Password"}
           </label>
           <div className="relative">
             <KeyRound className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
             <input
+              id="login-password"
+              name="password"
               type="password"
+              autoComplete="current-password"
+              required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={isLoading}

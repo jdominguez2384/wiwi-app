@@ -11,6 +11,7 @@ import {
   FileText,
   Fuel,
   Globe,
+  LifeBuoy,
   LogOut,
   Percent,
   Settings as SettingsIcon,
@@ -32,8 +33,14 @@ import { useLanguage } from "../../components/LanguageProvider";
 import { usePlan } from "../../components/PlanProvider";
 import { useSettings } from "../../components/SettingsProvider";
 import { AuthGuard } from "../../components/AuthGuard";
-import { getCurrentUser, signOut } from "../../lib/auth";
+import { useAuth } from "../../components/AuthProvider";
+import { signOut } from "../../lib/auth";
 import { updateUserSettings } from "../../lib/data/settings";
+import {
+  getNonNegativeNumber,
+  getPositiveNumber,
+  isNonNegativeDecimalInput,
+} from "../../lib/shiftForm";
 import {
   getPlanName,
   getPlanSummary,
@@ -46,10 +53,12 @@ export default function SettingsPage() {
   const { language, setLanguage } = useLanguage();
   const { plan, isLoadingPlan } = usePlan();
   const { settings, updateSettings } = useSettings();
+  const { user } = useAuth();
   const router = useRouter();
   const isSpanish = language === "es";
+  const showProPreview =
+    process.env.NEXT_PUBLIC_PRO_PREVIEW_ENABLED === "true";
 
-  const [userId, setUserId] = useState<string | null>(null);
   const [taxRatePercent, setTaxRatePercent] = useState("");
   const [mpg, setMpg] = useState("");
   const [gasPrice, setGasPrice] = useState("");
@@ -59,17 +68,6 @@ export default function SettingsPage() {
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [deleteConfirmation, setDeleteConfirmation] = useState("");
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
-
-  useEffect(() => {
-    async function loadUser() {
-      const user = await getCurrentUser();
-      if (user) {
-        setUserId(user.id);
-      }
-    }
-
-    void loadUser();
-  }, []);
 
   useEffect(() => {
     setTaxRatePercent(String(settings.taxRate * 100));
@@ -111,23 +109,35 @@ export default function SettingsPage() {
     };
   }, [previewGasPrice, previewMpg, previewTaxRate, previewWeeklyGoal]);
 
+  function updateDecimalValue(
+    value: string,
+    setter: (nextValue: string) => void
+  ) {
+    if (isNonNegativeDecimalInput(value)) {
+      setter(value);
+    }
+  }
+
   async function handleSave() {
     setMessage("");
 
-    if (!userId) {
+    if (!user) {
       setMessage(
         isSpanish ? "Debes iniciar sesión." : "You must be signed in."
       );
       return;
     }
 
-    const taxPercentNumber = Number(taxRatePercent);
+    const taxPercentNumber = getNonNegativeNumber(taxRatePercent);
+    const mpgNumber = getPositiveNumber(mpg);
+    const gasPriceNumber = getNonNegativeNumber(gasPrice);
+    const weeklyGoalNumber = getNonNegativeNumber(weeklyGoal);
 
     if (
-      Number.isNaN(taxPercentNumber) ||
-      Number.isNaN(Number(mpg)) ||
-      Number.isNaN(Number(gasPrice)) ||
-      Number.isNaN(Number(weeklyGoal))
+      taxPercentNumber === null ||
+      mpgNumber === null ||
+      gasPriceNumber === null ||
+      weeklyGoalNumber === null
     ) {
       setMessage(
         isSpanish
@@ -137,7 +147,7 @@ export default function SettingsPage() {
       return;
     }
 
-    if (taxPercentNumber < 0 || taxPercentNumber > 100) {
+    if (taxPercentNumber > 100) {
       setMessage(
         isSpanish
           ? "El porcentaje para impuestos debe estar entre 0 y 100%."
@@ -151,14 +161,12 @@ export default function SettingsPage() {
     try {
       const nextValues = {
         taxRate: taxPercentNumber / 100,
-        mpg: Number(mpg),
-        gasPrice: Number(gasPrice),
-        weeklyGoal: Number(weeklyGoal),
+        mpg: mpgNumber,
+        gasPrice: gasPriceNumber,
+        weeklyGoal: weeklyGoalNumber,
       };
 
-      updateSettings(nextValues);
-
-      const { error } = await updateUserSettings(userId, {
+      const { error } = await updateUserSettings(user.id, {
         tax_rate: nextValues.taxRate,
         mpg: nextValues.mpg,
         gas_price: nextValues.gasPrice,
@@ -170,6 +178,7 @@ export default function SettingsPage() {
         return;
       }
 
+      updateSettings(nextValues);
       setMessage(isSpanish ? "Ajustes guardados." : "Settings saved.");
     } finally {
       setIsSaving(false);
@@ -361,7 +370,9 @@ export default function SettingsPage() {
                     max="100"
                     inputMode="numeric"
                     value={taxRatePercent}
-                    onChange={(e) => setTaxRatePercent(e.target.value)}
+                    onChange={(e) =>
+                      updateDecimalValue(e.target.value, setTaxRatePercent)
+                    }
                     disabled={isSaving}
                     className="block w-full min-w-0 rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 pr-12 text-white outline-none transition focus:border-sky-500 disabled:opacity-60"
                   />
@@ -384,9 +395,10 @@ export default function SettingsPage() {
                 <input
                   type="number"
                   step="0.1"
+                  min="0.1"
                   inputMode="decimal"
                   value={mpg}
-                  onChange={(e) => setMpg(e.target.value)}
+                  onChange={(e) => updateDecimalValue(e.target.value, setMpg)}
                   disabled={isSaving}
                   className="block w-full min-w-0 rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-sky-500 disabled:opacity-60"
                 />
@@ -404,9 +416,12 @@ export default function SettingsPage() {
                 <input
                   type="number"
                   step="0.01"
+                  min="0"
                   inputMode="decimal"
                   value={gasPrice}
-                  onChange={(e) => setGasPrice(e.target.value)}
+                  onChange={(e) =>
+                    updateDecimalValue(e.target.value, setGasPrice)
+                  }
                   disabled={isSaving}
                   className="block w-full min-w-0 rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-sky-500 disabled:opacity-60"
                 />
@@ -424,9 +439,12 @@ export default function SettingsPage() {
                 <input
                   type="number"
                   step="1"
+                  min="0"
                   inputMode="decimal"
                   value={weeklyGoal}
-                  onChange={(e) => setWeeklyGoal(e.target.value)}
+                  onChange={(e) =>
+                    updateDecimalValue(e.target.value, setWeeklyGoal)
+                  }
                   disabled={isSaving}
                   className="block w-full min-w-0 rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-sky-500 disabled:opacity-60"
                 />
@@ -509,6 +527,7 @@ export default function SettingsPage() {
               </div>
             </Panel>
 
+            {showProPreview ? (
             <Panel className="relative overflow-hidden border-sky-500/20">
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(14,165,233,0.16),transparent_45%)]" />
               <div className="relative">
@@ -552,6 +571,7 @@ export default function SettingsPage() {
                 </Link>
               </div>
             </Panel>
+            ) : null}
 
             <Panel>
               <div className="flex items-center gap-2 text-sm text-slate-400">
@@ -597,6 +617,13 @@ export default function SettingsPage() {
               </p>
 
               <div className="mt-5 grid gap-3">
+                <Link
+                  href="/support"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-950 px-5 py-3 text-sm font-semibold text-slate-200 transition hover:border-sky-500/40 hover:text-white"
+                >
+                  <LifeBuoy className="h-4 w-4" />
+                  <span>{isSpanish ? "Ayuda y soporte" : "Help and support"}</span>
+                </Link>
                 <Link
                   href="/privacy"
                   className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-950 px-5 py-3 text-sm font-semibold text-slate-200 transition hover:border-sky-500/40 hover:text-white"

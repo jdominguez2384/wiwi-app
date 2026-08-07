@@ -12,6 +12,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { AuthGuard } from "../../components/AuthGuard";
+import { useAuth } from "../../components/AuthProvider";
 import { WiwiAppNav, WiwiMobileTabs } from "../../components/WiwiAppNav";
 import { WiwiShell } from "../../components/WiwiShell";
 import { MessageBanner, PageHero, Panel } from "../../components/WiwiSurface";
@@ -29,8 +30,9 @@ import { formatMoney } from "../../lib/ui";
 
 export default function HistoryPage() {
   const { language, setLanguage } = useLanguage();
-  const { shifts, removeShift } = useShifts();
-  const { settings } = useSettings();
+  const { shifts, removeShift, isLoadingShifts } = useShifts();
+  const { settings, isLoadingSettings } = useSettings();
+  const { user } = useAuth();
   const isSpanish = language === "es";
   const locale = isSpanish ? "es-US" : "en-US";
 
@@ -86,13 +88,13 @@ export default function HistoryPage() {
   const hasActiveFilters = selectedApp !== "all" || selectedMonth !== "all";
 
   async function confirmDeleteShift() {
-    if (!shiftToDelete) return;
+    if (!shiftToDelete || !user) return;
 
     setIsDeleting(true);
     setMessage("");
 
     try {
-      const { error } = await deleteUserShift(shiftToDelete.id);
+      const { error } = await deleteUserShift(shiftToDelete.id, user.id);
 
       if (error) {
         setMessage(error.message);
@@ -107,6 +109,29 @@ export default function HistoryPage() {
     } finally {
       setIsDeleting(false);
     }
+  }
+
+  if (isLoadingShifts || isLoadingSettings) {
+    return (
+      <AuthGuard>
+        <WiwiShell
+          language={language}
+          setLanguage={setLanguage}
+          showLanguageControls={false}
+          navActions={<WiwiAppNav language={language} />}
+          mobileNavigation={<WiwiMobileTabs language={language} />}
+        >
+          <Panel>
+            <div className="flex items-center gap-3">
+              <div className="h-3 w-3 animate-pulse rounded-full bg-sky-400" />
+              <p className="text-sm text-slate-300">
+                {isSpanish ? "Cargando tus turnos..." : "Loading your shifts..."}
+              </p>
+            </div>
+          </Panel>
+        </WiwiShell>
+      </AuthGuard>
+    );
   }
 
   return (

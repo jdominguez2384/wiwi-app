@@ -169,8 +169,8 @@ export default function HomePage() {
 
               <p className="mx-auto mb-10 max-w-2xl text-xl leading-relaxed text-slate-300">
                 {language === "en"
-                  ? "Calculate your real earnings after gas, taxes, and expenses. See if your gig work shifts are truly worth it."
-                  : "Calcula tus ganancias reales después de gasolina, impuestos y gastos. Mira si tus turnos de trabajo gig realmente valieron la pena."}
+                  ? "Estimate what you kept after fuel, your tax reserve, and the shift expenses you enter. Then decide whether the work was worth it."
+                  : "Estima lo que conservaste después de gasolina, tu reserva de impuestos y los gastos que ingreses. Luego decide si el turno valió la pena."}
               </p>
 
               <div className="flex flex-col justify-center gap-4 sm:flex-row">
@@ -222,8 +222,8 @@ export default function HomePage() {
                     <div className="text-3xl font-bold text-white">$24.50</div>
                     <div className="mt-2 text-sm text-slate-400">
                       {language === "en"
-                        ? "After all expenses"
-                        : "Después de todos los gastos"}
+                        ? "After estimated costs"
+                        : "Después de costos estimados"}
                     </div>
                   </div>
 
@@ -275,8 +275,8 @@ export default function HomePage() {
                   </h3>
                   <p className="text-slate-400">
                     {language === "en"
-                      ? "Calculate net earnings after gas, taxes, and all expenses automatically."
-                      : "Calcula automáticamente tus ganancias netas después de gasolina, impuestos y todos los gastos."}
+                      ? "Estimate net earnings using miles, saved fuel and tax assumptions, and the expenses you enter."
+                      : "Estima tus ganancias netas usando millas, supuestos guardados de gasolina e impuestos y los gastos que ingreses."}
                   </p>
                 </div>
               </div>
@@ -327,8 +327,8 @@ export default function HomePage() {
                   </h3>
                   <p className="text-slate-400">
                     {language === "en"
-                      ? "Automatic tax set-aside calculations so you're always prepared."
-                      : "Cálculos automáticos para separar impuestos y estar siempre preparado."}
+                      ? "Choose a tax reserve percentage for planning. WIWI does not provide tax advice."
+                      : "Elige un porcentaje de reserva para planificar. WIWI no ofrece asesoramiento fiscal."}
                   </p>
                 </div>
               </div>
@@ -346,8 +346,8 @@ export default function HomePage() {
               </h2>
               <p className="mb-8 text-xl text-slate-400">
                 {language === "en"
-                  ? "Join thousands of gig workers who know exactly what they're making."
-                  : "Únete a miles de trabajadores gig que saben exactamente cuánto están ganando."}
+                  ? "Build a clear shift history and make your next work decision with better numbers."
+                  : "Crea un historial claro de turnos y toma tu próxima decisión con mejores números."}
               </p>
               <Link
                 href="/signup"
@@ -366,16 +366,22 @@ export default function HomePage() {
             </p>
             <div className="flex items-center gap-4 text-sm">
               <Link
+                href="/support"
+                className="text-slate-500 transition hover:text-sky-300"
+              >
+                {language === "en" ? "Support" : "Ayuda"}
+              </Link>
+              <Link
                 href="/privacy"
                 className="text-slate-500 transition hover:text-sky-300"
               >
-                Privacy
+                {language === "en" ? "Privacy" : "Privacidad"}
               </Link>
               <Link
                 href="/terms"
                 className="text-slate-500 transition hover:text-sky-300"
               >
-                Terms
+                {language === "en" ? "Terms" : "Términos"}
               </Link>
             </div>
           </div>

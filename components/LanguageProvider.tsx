@@ -4,7 +4,6 @@ import {
   createContext,
   useContext,
   useEffect,
-  useMemo,
   useState,
 } from "react";
 import {
@@ -12,9 +11,8 @@ import {
   type Language,
   type TranslationStrings,
 } from "../lib/translations";
-import { getCurrentUser } from "../lib/auth";
 import { getUserProfile, updateUserProfile } from "../lib/data/profile";
-import { supabase } from "../lib/supabase/client";
+import { useAuth } from "./AuthProvider";
 
 type LanguageContextType = {
   language: Language;
@@ -29,68 +27,42 @@ export function LanguageProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const { user } = useAuth();
   const [language, setLanguageState] = useState<Language>("en");
 
-  async function loadLanguage() {
-    const user = await getCurrentUser();
-
-    if (!user) {
-      setLanguageState("en");
-      return;
-    }
-
-    const { data, error } = await getUserProfile(user.id);
-
-    if (error || !data) {
-      setLanguageState("en");
-      return;
-    }
-
-    const nextLanguage: Language =
-      data.preferred_language === "es" ? "es" : "en";
-
-    setLanguageState(nextLanguage);
-  }
-
   useEffect(() => {
-    loadLanguage();
+    if (!user) return;
+    let isActive = true;
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(() => {
-      loadLanguage();
+    void getUserProfile(user.id).then(({ data, error }) => {
+      if (!isActive || error || !data) return;
+
+      setLanguageState(data.preferred_language === "es" ? "es" : "en");
     });
 
     return () => {
-      subscription.unsubscribe();
+      isActive = false;
     };
-  }, []);
+  }, [user]);
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
 
   function setLanguage(lang: Language) {
     setLanguageState(lang);
 
-    void (async () => {
-      const user = await getCurrentUser();
-
-      if (!user) return;
-
-      await updateUserProfile(user.id, {
+    if (user) {
+      void updateUserProfile(user.id, {
         preferred_language: lang,
       });
-    })();
+    }
   }
 
-  const value = useMemo(
-    () => ({
-      language,
-      setLanguage,
-      t: translations[language],
-    }),
-    [language]
-  );
-
   return (
-    <LanguageContext.Provider value={value}>
+    <LanguageContext.Provider
+      value={{ language, setLanguage, t: translations[language] }}
+    >
       {children}
     </LanguageContext.Provider>
   );

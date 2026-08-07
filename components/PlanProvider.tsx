@@ -1,16 +1,9 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import { getCurrentUser } from "../lib/auth";
+import { createContext, useContext, useEffect, useState } from "react";
 import { getUserProfile } from "../lib/data/profile";
 import { defaultPlan, resolvePlanKey, type PlanKey } from "../lib/plans";
-import { supabase } from "../lib/supabase/client";
+import { useAuth } from "./AuthProvider";
 
 type PlanContextType = {
   plan: PlanKey;
@@ -22,58 +15,61 @@ type PlanContextType = {
 const PlanContext = createContext<PlanContextType | null>(null);
 
 export function PlanProvider({ children }: { children: React.ReactNode }) {
-  const [plan, setPlan] = useState<PlanKey>(defaultPlan);
-  const [isLoadingPlan, setIsLoadingPlan] = useState(true);
+  const { user, isLoadingUser } = useAuth();
+  const [state, setState] = useState<{
+    ownerId: string | null;
+    plan: PlanKey;
+    isReloading: boolean;
+  }>({ ownerId: null, plan: defaultPlan, isReloading: false });
 
-  async function loadPlan() {
-    setIsLoadingPlan(true);
+  async function reloadPlan() {
+    if (!user) return;
 
-    try {
-      const user = await getCurrentUser();
-
-      if (!user) {
-        setPlan(defaultPlan);
-        return;
-      }
-
-      const { data, error } = await getUserProfile(user.id);
-
-      if (error || !data) {
-        setPlan(defaultPlan);
-        return;
-      }
-
-      setPlan(resolvePlanKey(data));
-    } finally {
-      setIsLoadingPlan(false);
-    }
+    setState((current) => ({ ...current, isReloading: true }));
+    const { data, error } = await getUserProfile(user.id);
+    setState({
+      ownerId: user.id,
+      plan: error || !data ? defaultPlan : resolvePlanKey(data),
+      isReloading: false,
+    });
   }
 
   useEffect(() => {
-    void loadPlan();
+    if (!user) return;
+    let isActive = true;
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(() => {
-      void loadPlan();
+    void getUserProfile(user.id).then(({ data, error }) => {
+      if (!isActive) return;
+
+      setState({
+        ownerId: user.id,
+        plan: error || !data ? defaultPlan : resolvePlanKey(data),
+        isReloading: false,
+      });
     });
 
     return () => {
-      subscription.unsubscribe();
+      isActive = false;
     };
-  }, []);
+  }, [user]);
 
-  const value = useMemo(
-    () => ({
-      plan,
-      isPro: plan === "pro",
-      isLoadingPlan,
-      reloadPlan: loadPlan,
-    }),
-    [isLoadingPlan, plan]
+  const isCurrentUser = Boolean(user && state.ownerId === user.id);
+  const plan = isCurrentUser ? state.plan : defaultPlan;
+  const isLoadingPlan =
+    isLoadingUser || Boolean(user && (!isCurrentUser || state.isReloading));
+
+  return (
+    <PlanContext.Provider
+      value={{
+        plan,
+        isPro: plan === "pro",
+        isLoadingPlan,
+        reloadPlan,
+      }}
+    >
+      {children}
+    </PlanContext.Provider>
   );
-
-  return <PlanContext.Provider value={value}>{children}</PlanContext.Provider>;
 }
 
 export function usePlan() {

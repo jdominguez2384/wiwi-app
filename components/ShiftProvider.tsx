@@ -1,96 +1,136 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { getCurrentUser } from "../lib/auth";
+import { createContext, useContext, useEffect, useState } from "react";
 import { getUserShifts } from "../lib/data/shifts";
-import { supabase } from "../lib/supabase/client";
+import type { Shift } from "../lib/domain";
+import { mapShiftRow, type ShiftRow } from "../lib/shiftRecord";
+import { useAuth } from "./AuthProvider";
 
-export type Shift = {
-  id: string;
-  date: string;
-  appName: string;
-  grossEarnings: number;
-  hoursWorked: number;
-  milesDriven: number;
-};
+export type { Shift } from "../lib/domain";
 
 type ShiftContextType = {
   shifts: Shift[];
   addShift: (shift: Shift) => void;
   updateShift: (shift: Shift) => void;
   removeShift: (shiftId: string) => void;
+  isLoadingShifts: boolean;
+  shiftsError: string | null;
+  reloadShifts: () => Promise<void>;
 };
 
 const ShiftContext = createContext<ShiftContextType | null>(null);
 
 export function ShiftProvider({ children }: { children: React.ReactNode }) {
-  const [shifts, setShifts] = useState<Shift[]>([]);
+  const { user, isLoadingUser } = useAuth();
+  const [state, setState] = useState<{
+    ownerId: string | null;
+    shifts: Shift[];
+    error: string | null;
+    isReloading: boolean;
+  }>({ ownerId: null, shifts: [], error: null, isReloading: false });
 
-  async function loadShifts() {
-    const user = await getCurrentUser();
-
+  async function reloadShifts() {
     if (!user) {
-      setShifts([]);
       return;
     }
 
+    setState((current) => ({ ...current, error: null, isReloading: true }));
     const { data, error } = await getUserShifts(user.id);
 
     if (error || !data) {
-      setShifts([]);
+      console.error("Failed to load shifts", error);
+      setState((current) => ({
+        ...current,
+        ownerId: user.id,
+        error: "We could not load your shifts. Your saved data has not been changed.",
+        isReloading: false,
+      }));
       return;
     }
 
-    setShifts(
-      data.map((shift) => ({
-        id: shift.id,
-        date: shift.shift_date,
-        appName: shift.app_name,
-        grossEarnings: Number(shift.gross_earnings),
-        hoursWorked: Number(shift.hours_worked),
-        milesDriven: Number(shift.miles_driven),
-      }))
-    );
+    setState({
+      ownerId: user.id,
+      shifts: data.map((shift) => mapShiftRow(shift as ShiftRow)),
+      error: null,
+      isReloading: false,
+    });
   }
 
   useEffect(() => {
-    loadShifts();
+    if (!user) return;
+    let isActive = true;
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(() => {
-      loadShifts();
+    void getUserShifts(user.id).then(({ data, error }) => {
+      if (!isActive) return;
+
+      if (error || !data) {
+        console.error("Failed to load shifts", error);
+        setState({
+          ownerId: user.id,
+          shifts: [],
+          error: "We could not load your shifts. Your saved data has not been changed.",
+          isReloading: false,
+        });
+        return;
+      }
+
+      setState({
+        ownerId: user.id,
+        shifts: data.map((shift) => mapShiftRow(shift as ShiftRow)),
+        error: null,
+        isReloading: false,
+      });
     });
 
     return () => {
-      subscription.unsubscribe();
+      isActive = false;
     };
-  }, []);
+  }, [user]);
+
+  const isCurrentUser = Boolean(user && state.ownerId === user.id);
+  const shifts = isCurrentUser ? state.shifts : [];
+  const shiftsError = isCurrentUser ? state.error : null;
+  const isLoadingShifts =
+    isLoadingUser || Boolean(user && (!isCurrentUser || state.isReloading));
 
   function addShift(shift: Shift) {
-    setShifts((prev) => [shift, ...prev]);
+    setState((current) => ({
+      ...current,
+      shifts: [shift, ...current.shifts],
+    }));
   }
 
   function updateShift(updatedShift: Shift) {
-    setShifts((prev) =>
-      prev.map((shift) => (shift.id === updatedShift.id ? updatedShift : shift))
-    );
+    setState((current) => ({
+      ...current,
+      shifts: current.shifts.map((shift) =>
+        shift.id === updatedShift.id ? updatedShift : shift
+      ),
+    }));
   }
 
   function removeShift(shiftId: string) {
-    setShifts((prev) => prev.filter((shift) => shift.id !== shiftId));
+    setState((current) => ({
+      ...current,
+      shifts: current.shifts.filter((shift) => shift.id !== shiftId),
+    }));
   }
 
-  const value = useMemo(() => {
-    return {
-      shifts,
-      addShift,
-      updateShift,
-      removeShift,
-    };
-  }, [shifts]);
-
-  return <ShiftContext.Provider value={value}>{children}</ShiftContext.Provider>;
+  return (
+    <ShiftContext.Provider
+      value={{
+        shifts,
+        addShift,
+        updateShift,
+        removeShift,
+        isLoadingShifts,
+        shiftsError,
+        reloadShifts,
+      }}
+    >
+      {children}
+    </ShiftContext.Provider>
+  );
 }
 
 export function useShifts() {

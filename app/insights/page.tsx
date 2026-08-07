@@ -70,8 +70,8 @@ function InsightCard({
 
 export default function InsightsPage() {
   const { language, setLanguage } = useLanguage();
-  const { shifts } = useShifts();
-  const { settings } = useSettings();
+  const { shifts, isLoadingShifts } = useShifts();
+  const { settings, isLoadingSettings } = useSettings();
   const isSpanish = language === "es";
   const locale = isSpanish ? "es-US" : "en-US";
 
@@ -95,6 +95,29 @@ export default function InsightsPage() {
 
   const isGoalReached =
     settings.weeklyGoal > 0 && weeklyTotals.net >= settings.weeklyGoal;
+
+  if (isLoadingShifts || isLoadingSettings) {
+    return (
+      <AuthGuard>
+        <WiwiShell
+          language={language}
+          setLanguage={setLanguage}
+          showLanguageControls={false}
+          navActions={<WiwiAppNav language={language} />}
+          mobileNavigation={<WiwiMobileTabs language={language} />}
+        >
+          <Panel>
+            <div className="flex items-center gap-3">
+              <div className="h-3 w-3 animate-pulse rounded-full bg-sky-400" />
+              <p className="text-sm text-slate-300">
+                {isSpanish ? "Cargando tus analisis..." : "Loading your insights..."}
+              </p>
+            </div>
+          </Panel>
+        </WiwiShell>
+      </AuthGuard>
+    );
+  }
 
   return (
     <AuthGuard>
@@ -198,8 +221,8 @@ export default function InsightsPage() {
             value={formatMoney(totals.taxes)}
             hint={
               isSpanish
-                ? "Calculado con tu porcentaje actual."
-                : "Calculated using your current tax percentage."
+                ? "Suma de las reservas guardadas con cada turno."
+                : "Total of the tax reserves saved with each shift."
             }
             accentClasses="border-orange-500/20 bg-orange-500/10"
           />
@@ -286,6 +309,14 @@ export default function InsightsPage() {
               </div>
               <div className="flex items-center justify-between gap-4">
                 <span className="text-slate-400">
+                  {isSpanish ? "Otros gastos" : "Other expenses"}
+                </span>
+                <span className="font-medium text-white">
+                  {formatMoney(totals.otherExpenses)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-4">
+                <span className="text-slate-400">
                   {isSpanish ? "Horas trabajadas" : "Hours worked"}
                 </span>
                 <span className="font-medium text-white">
@@ -294,7 +325,7 @@ export default function InsightsPage() {
               </div>
               <div className="border-t border-slate-800 pt-3">
                 <span className="text-sm text-slate-300">
-                  {isSpanish ? "Tus calculos actuales" : "Current assumptions"}
+                  {isSpanish ? "Ajustes para turnos nuevos" : "New-shift defaults"}
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-3">

@@ -15,6 +15,24 @@ export default function manifest(): MetadataRoute.Manifest {
     categories: ["finance", "productivity", "business"],
     icons: [
       {
+        src: "/wiwi-icon-192.png",
+        sizes: "192x192",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: "/wiwi-icon-512.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: "/wiwi-maskable-512.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "maskable",
+      },
+      {
         src: "/wiwi-icon.svg",
         sizes: "any",
         type: "image/svg+xml",

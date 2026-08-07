@@ -1,9 +1,9 @@
-import type { Shift } from "../components/ShiftProvider";
-import type { AppSettings } from "../components/SettingsProvider";
+import type { AppSettings, Shift } from "./domain";
 
 export type ComputedShift = Shift & {
   fuelCost: number;
   taxAmount: number;
+  otherExpenses: number;
   net: number;
   hourly: number;
 };
@@ -12,6 +12,7 @@ export type ShiftTotals = {
   gross: number;
   fuel: number;
   taxes: number;
+  otherExpenses: number;
   net: number;
   totalHours: number;
   totalMiles: number;
@@ -34,15 +35,17 @@ export function computeShiftMetrics(
   settings: AppSettings
 ): ComputedShift[] {
   return shifts.map((shift) => {
+    const mpg = shift.mpgSnapshot ?? settings.mpg;
+    const gasPrice = shift.gasPriceSnapshot ?? settings.gasPrice;
+    const taxRate = shift.taxRateSnapshot ?? settings.taxRate;
     const fuelCost =
-      settings.mpg > 0
-        ? (shift.milesDriven / settings.mpg) * settings.gasPrice
-        : 0;
-    const taxAmount = shift.grossEarnings * settings.taxRate;
-    const net = shift.grossEarnings - fuelCost - taxAmount;
+      mpg > 0 ? (shift.milesDriven / mpg) * gasPrice : 0;
+    const taxAmount = shift.grossEarnings * taxRate;
+    const otherExpenses = Math.max(shift.otherExpenses, 0);
+    const net = shift.grossEarnings - fuelCost - taxAmount - otherExpenses;
     const hourly = shift.hoursWorked > 0 ? net / shift.hoursWorked : 0;
 
-    return { ...shift, fuelCost, taxAmount, net, hourly };
+    return { ...shift, fuelCost, taxAmount, otherExpenses, net, hourly };
   });
 }
 
@@ -95,12 +98,25 @@ export function getShiftTotals(shifts: ComputedShift[]): ShiftTotals {
   const gross = shifts.reduce((sum, shift) => sum + shift.grossEarnings, 0);
   const fuel = shifts.reduce((sum, shift) => sum + shift.fuelCost, 0);
   const taxes = shifts.reduce((sum, shift) => sum + shift.taxAmount, 0);
+  const otherExpenses = shifts.reduce(
+    (sum, shift) => sum + shift.otherExpenses,
+    0
+  );
   const net = shifts.reduce((sum, shift) => sum + shift.net, 0);
   const totalHours = shifts.reduce((sum, shift) => sum + shift.hoursWorked, 0);
   const totalMiles = shifts.reduce((sum, shift) => sum + shift.milesDriven, 0);
   const hourly = totalHours > 0 ? net / totalHours : 0;
 
-  return { gross, fuel, taxes, net, totalHours, totalMiles, hourly };
+  return {
+    gross,
+    fuel,
+    taxes,
+    otherExpenses,
+    net,
+    totalHours,
+    totalMiles,
+    hourly,
+  };
 }
 
 export function getWeeklyTotals(

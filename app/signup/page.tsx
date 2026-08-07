@@ -43,7 +43,7 @@ export default function SignupPage() {
 
       if (error) {
         setIsSuccess(false);
-        setMessage(getFriendlyAuthError(error.message, language));
+        setMessage(getFriendlyAuthError(error, language));
         return;
       }
 
@@ -53,6 +53,9 @@ export default function SignupPage() {
           ? "Si este correo puede crear una cuenta nueva, te enviaremos un enlace de confirmacion. Si ya tienes cuenta, intenta iniciar sesion o restablecer tu contrasena."
           : "If this email can create a new account, we will send a confirmation link. If you already have an account, try signing in or resetting your password."
       );
+    } catch (error) {
+      setIsSuccess(false);
+      setMessage(getFriendlyAuthError(error, language));
     } finally {
       setIsSubmitting(false);
     }
@@ -153,13 +156,20 @@ export default function SignupPage() {
     >
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-slate-300">
+          <label
+            htmlFor="signup-name"
+            className="block text-sm font-medium text-slate-300"
+          >
             {isSpanish ? "Nombre" : "Name"}
           </label>
           <div className="relative">
             <UserRound className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
             <input
+              id="signup-name"
+              name="name"
               type="text"
+              autoComplete="name"
+              required
               value={name}
               onChange={(e) => setName(e.target.value)}
               disabled={isSubmitting}
@@ -170,11 +180,20 @@ export default function SignupPage() {
         </div>
 
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-slate-300">Email</label>
+          <label
+            htmlFor="signup-email"
+            className="block text-sm font-medium text-slate-300"
+          >
+            Email
+          </label>
           <div className="relative">
             <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
             <input
+              id="signup-email"
+              name="email"
               type="email"
+              autoComplete="email"
+              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isSubmitting}
@@ -185,13 +204,20 @@ export default function SignupPage() {
         </div>
 
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-slate-300">
+          <label
+            htmlFor="signup-password"
+            className="block text-sm font-medium text-slate-300"
+          >
             {isSpanish ? "Contraseña" : "Password"}
           </label>
           <div className="relative">
             <KeyRound className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
             <input
+              id="signup-password"
+              name="password"
               type="password"
+              autoComplete="new-password"
+              required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={isSubmitting}
@@ -220,7 +246,22 @@ export default function SignupPage() {
       </form>
 
       {message ? (
-        <div className="mt-4 rounded-2xl border border-sky-500/20 bg-sky-500/10 px-4 py-4 text-sm text-sky-100">
+        <div
+          role={isSuccess ? "status" : "alert"}
+          aria-live="polite"
+          className={`mt-4 rounded-2xl border px-4 py-4 text-sm ${
+            isSuccess
+              ? "border-sky-500/20 bg-sky-500/10 text-sky-100"
+              : "border-rose-400/30 bg-rose-500/10 text-rose-100"
+          }`}
+        >
+          {!isSuccess ? (
+            <p className="mb-2 font-semibold">
+              {isSpanish
+                ? "No se pudo crear la cuenta"
+                : "Account not created"}
+            </p>
+          ) : null}
           <p>{message}</p>
 
           {isSuccess ? (
@@ -238,7 +279,14 @@ export default function SignupPage() {
                 {isSpanish ? "Restablecer contrasena" : "Reset password"}
               </Link>
             </div>
-          ) : null}
+          ) : (
+            <Link
+              href="/support"
+              className="mt-3 inline-flex font-semibold text-rose-200 underline decoration-rose-300/40 underline-offset-4 transition hover:text-white"
+            >
+              {isSpanish ? "Obtener ayuda" : "Get help"}
+            </Link>
+          )}
         </div>
       ) : null}
     </AuthShell>

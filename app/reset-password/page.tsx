@@ -7,6 +7,7 @@ import { ArrowRight, KeyRound, ShieldCheck } from "lucide-react";
 import { AuthShell } from "../../components/AuthShell";
 import { useLanguage } from "../../components/LanguageProvider";
 import { signOut, updatePassword } from "../../lib/auth";
+import { getFriendlyAuthError } from "../../lib/auth-messages";
 import { supabase } from "../../lib/supabase/client";
 
 export default function ResetPasswordPage() {
@@ -142,7 +143,7 @@ export default function ResetPasswordPage() {
       const { error } = await updatePassword(password);
 
       if (error) {
-        setMessage(error.message);
+        setMessage(getFriendlyAuthError(error, language));
         return;
       }
 
@@ -156,6 +157,8 @@ export default function ResetPasswordPage() {
         void signOut();
         router.push("/login");
       }, 1500);
+    } catch (error) {
+      setMessage(getFriendlyAuthError(error, language));
     } finally {
       setIsUpdating(false);
     }
@@ -269,13 +272,20 @@ export default function ResetPasswordPage() {
         <>
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-slate-300">
+              <label
+                htmlFor="new-password"
+                className="block text-sm font-medium text-slate-300"
+              >
                 {isSpanish ? "Nueva contraseña" : "New password"}
               </label>
               <div className="relative">
                 <KeyRound className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
                 <input
+                  id="new-password"
+                  name="password"
                   type="password"
+                  autoComplete="new-password"
+                  required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isUpdating}
@@ -286,13 +296,20 @@ export default function ResetPasswordPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-slate-300">
+              <label
+                htmlFor="confirm-password"
+                className="block text-sm font-medium text-slate-300"
+              >
                 {isSpanish ? "Confirmar contraseña" : "Confirm password"}
               </label>
               <div className="relative">
                 <ShieldCheck className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
                 <input
+                  id="confirm-password"
+                  name="confirmPassword"
                   type="password"
+                  autoComplete="new-password"
+                  required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   disabled={isUpdating}

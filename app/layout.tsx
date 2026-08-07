@@ -4,6 +4,8 @@ import { LanguageProvider } from "../components/LanguageProvider";
 import { PlanProvider } from "../components/PlanProvider";
 import { ShiftProvider } from "../components/ShiftProvider";
 import { SettingsProvider } from "../components/SettingsProvider";
+import { AuthProvider } from "../components/AuthProvider";
+import { AppDataNotice } from "../components/AppDataNotice";
 
 const appName = "WIWI";
 const appDescription =
@@ -44,7 +46,7 @@ export const metadata: Metadata = {
       { url: "/wiwi-icon.svg", type: "image/svg+xml" },
       { url: "/favicon.ico" },
     ],
-    apple: [{ url: "/wiwi-icon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/wiwi-icon-192.png", type: "image/png", sizes: "192x192" }],
   },
   appleWebApp: {
     capable: true,
@@ -72,13 +74,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <LanguageProvider>
-          <PlanProvider>
-            <SettingsProvider>
-              <ShiftProvider>{children}</ShiftProvider>
-            </SettingsProvider>
-          </PlanProvider>
-        </LanguageProvider>
+        <AuthProvider>
+          <LanguageProvider>
+            <PlanProvider>
+              <SettingsProvider>
+                <ShiftProvider>
+                  <AppDataNotice />
+                  {children}
+                </ShiftProvider>
+              </SettingsProvider>
+            </PlanProvider>
+          </LanguageProvider>
+        </AuthProvider>
       </body>
     </html>
   );

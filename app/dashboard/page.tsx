@@ -91,8 +91,8 @@ function ActionCard({
 
 export default function DashboardPage() {
   const { language, setLanguage } = useLanguage();
-  const { shifts } = useShifts();
-  const { settings } = useSettings();
+  const { shifts, isLoadingShifts } = useShifts();
+  const { settings, isLoadingSettings } = useSettings();
   const isSpanish = language === "es";
   const locale = isSpanish ? "es-US" : "en-US";
 
@@ -165,6 +165,29 @@ export default function DashboardPage() {
       glowClass: "from-orange-500/25 via-sky-500/10 to-transparent",
     };
   })();
+
+  if (isLoadingShifts || isLoadingSettings) {
+    return (
+      <AuthGuard>
+        <WiwiShell
+          language={language}
+          setLanguage={setLanguage}
+          showLanguageControls={false}
+          navActions={<WiwiAppNav language={language} />}
+          mobileNavigation={<WiwiMobileTabs language={language} />}
+        >
+          <Panel>
+            <div className="flex items-center gap-3">
+              <div className="h-3 w-3 animate-pulse rounded-full bg-sky-400" />
+              <p className="text-sm text-slate-300">
+                {isSpanish ? "Cargando tus datos..." : "Loading your WIWI data..."}
+              </p>
+            </div>
+          </Panel>
+        </WiwiShell>
+      </AuthGuard>
+    );
+  }
 
   return (
     <AuthGuard>

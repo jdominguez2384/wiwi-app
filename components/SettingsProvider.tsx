@@ -1,23 +1,21 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { getCurrentUser } from "../lib/auth";
+import { createContext, useContext, useEffect, useState } from "react";
 import { getUserSettings } from "../lib/data/settings";
-import { supabase } from "../lib/supabase/client";
+import type { AppSettings } from "../lib/domain";
+import { useAuth } from "./AuthProvider";
 
-export type AppSettings = {
-  taxRate: number;
-  mpg: number;
-  gasPrice: number;
-  weeklyGoal: number;
-};
+export type { AppSettings } from "../lib/domain";
 
 type SettingsContextType = {
   settings: AppSettings;
   updateSettings: (values: Partial<AppSettings>) => void;
+  isLoadingSettings: boolean;
+  settingsError: string | null;
+  reloadSettings: () => Promise<void>;
 };
 
-const defaultSettings: AppSettings = {
+export const defaultSettings: AppSettings = {
   taxRate: 0.2,
   mpg: 27,
   gasPrice: 3.45,
@@ -27,61 +25,110 @@ const defaultSettings: AppSettings = {
 const SettingsContext = createContext<SettingsContextType | null>(null);
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
-  const [settings, setSettings] = useState<AppSettings>(defaultSettings);
+  const { user, isLoadingUser } = useAuth();
+  const [state, setState] = useState<{
+    ownerId: string | null;
+    settings: AppSettings;
+    error: string | null;
+    isReloading: boolean;
+  }>({
+    ownerId: null,
+    settings: defaultSettings,
+    error: null,
+    isReloading: false,
+  });
 
-  async function loadSettings() {
-    const user = await getCurrentUser();
-
+  async function reloadSettings() {
     if (!user) {
-      setSettings(defaultSettings);
       return;
     }
 
+    setState((current) => ({ ...current, error: null, isReloading: true }));
     const { data, error } = await getUserSettings(user.id);
 
     if (error || !data) {
-      setSettings(defaultSettings);
+      console.error("Failed to load settings", error);
+      setState((current) => ({
+        ...current,
+        ownerId: user.id,
+        error: "We could not load your calculation settings.",
+        isReloading: false,
+      }));
       return;
     }
 
-    setSettings({
-      taxRate: Number(data.tax_rate),
-      mpg: Number(data.mpg),
-      gasPrice: Number(data.gas_price),
-      weeklyGoal: Number(data.weekly_goal),
+    setState({
+      ownerId: user.id,
+      settings: {
+        taxRate: Number(data.tax_rate),
+        mpg: Number(data.mpg),
+        gasPrice: Number(data.gas_price),
+        weeklyGoal: Number(data.weekly_goal),
+      },
+      error: null,
+      isReloading: false,
     });
   }
 
   useEffect(() => {
-    loadSettings();
+    if (!user) return;
+    let isActive = true;
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(() => {
-      loadSettings();
+    void getUserSettings(user.id).then(({ data, error }) => {
+      if (!isActive) return;
+
+      if (error || !data) {
+        console.error("Failed to load settings", error);
+        setState({
+          ownerId: user.id,
+          settings: defaultSettings,
+          error: "We could not load your calculation settings.",
+          isReloading: false,
+        });
+        return;
+      }
+
+      setState({
+        ownerId: user.id,
+        settings: {
+          taxRate: Number(data.tax_rate),
+          mpg: Number(data.mpg),
+          gasPrice: Number(data.gas_price),
+          weeklyGoal: Number(data.weekly_goal),
+        },
+        error: null,
+        isReloading: false,
+      });
     });
 
     return () => {
-      subscription.unsubscribe();
+      isActive = false;
     };
-  }, []);
+  }, [user]);
+
+  const isCurrentUser = Boolean(user && state.ownerId === user.id);
+  const settings = isCurrentUser ? state.settings : defaultSettings;
+  const settingsError = isCurrentUser ? state.error : null;
+  const isLoadingSettings =
+    isLoadingUser || Boolean(user && (!isCurrentUser || state.isReloading));
 
   function updateSettings(values: Partial<AppSettings>) {
-    setSettings((prev) => ({
-      ...prev,
-      ...values,
+    setState((current) => ({
+      ...current,
+      settings: { ...current.settings, ...values },
     }));
   }
 
-  const value = useMemo(() => {
-    return {
-      settings,
-      updateSettings,
-    };
-  }, [settings]);
-
   return (
-    <SettingsContext.Provider value={value}>
+    <SettingsContext.Provider
+      value={{
+        settings,
+        updateSettings,
+        isLoadingSettings,
+        settingsError,
+        reloadSettings,
+      }}
+    >
       {children}
     </SettingsContext.Provider>
   );
