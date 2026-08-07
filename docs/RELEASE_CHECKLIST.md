@@ -3,12 +3,12 @@
 ## Database and Security
 
 - [ ] Back up the production Supabase database.
-- [ ] Apply every migration in `supabase/migrations` to production.
-- [ ] Confirm the migration created calculation snapshot and `other_expenses` columns.
+- [x] Apply every migration in `supabase/migrations` to production.
+- [x] Confirm the migration created calculation snapshot and `other_expenses` columns.
 - [ ] Test two separate accounts and confirm neither can read, update, or delete the other's shifts.
-- [ ] Confirm new accounts receive both a profile and default settings row.
+- [x] Confirm every existing account has both a profile and default settings row.
 - [ ] Delete a test account and verify its auth user, profile, settings, and shifts are removed.
-- [ ] Record the production migration date and operator in the release notes.
+- [x] Record the production migration date and operator in the release notes.
 
 ## Product Verification
 
@@ -22,8 +22,8 @@
 
 ## Operations
 
-- [ ] Run `npm run check`.
-- [ ] Run `npm run build` outside a OneDrive-synced directory if Windows locks `.next`.
+- [x] Run `npm run check`.
+- [x] Run `npm run build` outside the sandbox if Windows blocks Next.js workers.
 - [ ] Confirm the GitHub Quality workflow passes.
 - [ ] Verify `support@getwiwi.com` can receive inbound mail, not only send it.
 - [ ] Add production error monitoring before public store launch.

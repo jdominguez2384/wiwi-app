@@ -1,6 +1,8 @@
 -- WIWI launch baseline: schema, ownership policies, and stable shift calculations.
 -- This migration is safe to run against the existing production project.
 
+begin;
+
 create extension if not exists pgcrypto;
 
 create table if not exists public.profiles (
@@ -386,3 +388,5 @@ comment on column public.shifts.mpg_snapshot is
   'Vehicle efficiency assumption captured when the shift was saved.';
 comment on column public.shifts.gas_price_snapshot is
   'Fuel price assumption captured when the shift was saved.';
+
+commit;
