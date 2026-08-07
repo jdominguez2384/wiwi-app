@@ -52,8 +52,8 @@ export default function DeleteAccountPage() {
         }
         description={
           isSpanish
-            ? "Borra tu cuenta WIWI y los turnos, perfil y ajustes asociados desde la app o solicita ayuda si no puedes entrar."
-            : "Delete your WIWI account and its associated shifts, profile, and settings in the app, or request help if you cannot sign in."
+            ? "Borra tu cuenta WIWI y sus turnos, perfiles de costos y ajustes desde la app o solicita ayuda si no puedes entrar."
+            : "Delete your WIWI account and its shifts, cost profiles, and settings in the app, or request help if you cannot sign in."
         }
         actions={
           <>
@@ -98,8 +98,13 @@ export default function DeleteAccountPage() {
           </h2>
           <p className="mt-3 text-sm leading-7 text-slate-400">
             {isSpanish
-              ? "Tu cuenta de autenticación, perfil WIWI, ajustes guardados y todos los turnos asociados. Después de completar el borrado no podrás recuperar esos datos."
-              : "Your authentication account, WIWI profile, saved settings, and all associated shifts. After deletion completes, this data cannot be recovered."}
+              ? "Tu cuenta de autenticacion, perfil WIWI, ajustes, perfiles de costos, beneficios de WIWI y turnos asociados. Despues del borrado no podras recuperar esos datos."
+              : "Your authentication account, WIWI profile, settings, cost profiles, WIWI entitlement record, and associated shifts. After deletion completes, this data cannot be recovered."}
+          </p>
+          <p className="mt-4 rounded-2xl border border-orange-500/20 bg-orange-500/10 p-4 text-sm leading-6 text-orange-100">
+            {isSpanish
+              ? "Borrar tu cuenta no cancela una suscripcion de Apple o Google. Cancela la renovacion en la tienda primero."
+              : "Deleting your account does not cancel an Apple or Google subscription. Cancel renewal in the store first."}
           </p>
         </Panel>
 

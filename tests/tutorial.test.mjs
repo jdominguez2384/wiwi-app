@@ -14,6 +14,7 @@ const REQUIRED_STEPS = [
   "add",
   "history",
   "insights",
+  "pro",
   "settings",
   "ready",
 ];

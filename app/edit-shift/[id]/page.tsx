@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   Calendar,
+  Car,
   Clock3,
   DollarSign,
   Fuel,
@@ -14,6 +15,8 @@ import {
   Route,
   Settings2,
   Sparkles,
+  StickyNote,
+  Tags,
   TrendingUp,
 } from "lucide-react";
 import { WiwiShell } from "../../../components/WiwiShell";
@@ -29,6 +32,8 @@ import { useShifts } from "../../../components/ShiftProvider";
 import { useSettings } from "../../../components/SettingsProvider";
 import { AuthGuard } from "../../../components/AuthGuard";
 import { useAuth } from "../../../components/AuthProvider";
+import { usePlan } from "../../../components/PlanProvider";
+import { useCostProfiles } from "../../../components/CostProfileProvider";
 import { getUserShift, updateUserShift } from "../../../lib/data/shifts";
 import {
   getNonNegativeNumber,
@@ -57,6 +62,8 @@ export default function EditShiftPage() {
   const { updateShift } = useShifts();
   const { settings } = useSettings();
   const { user } = useAuth();
+  const { isPro } = usePlan();
+  const { costProfiles } = useCostProfiles();
   const router = useRouter();
   const params = useParams();
   const isSpanish = language === "es";
@@ -71,6 +78,11 @@ export default function EditShiftPage() {
   const [taxRateSnapshot, setTaxRateSnapshot] = useState<number | null>(null);
   const [mpgSnapshot, setMpgSnapshot] = useState<number | null>(null);
   const [gasPriceSnapshot, setGasPriceSnapshot] = useState<number | null>(null);
+  const [selectedProfileId, setSelectedProfileId] = useState("");
+  const [profileNameSnapshot, setProfileNameSnapshot] = useState<string | null>(null);
+  const [hasChangedProfile, setHasChangedProfile] = useState(false);
+  const [notes, setNotes] = useState("");
+  const [tags, setTags] = useState("");
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isMissing, setIsMissing] = useState(false);
@@ -118,6 +130,11 @@ export default function EditShiftPage() {
       setTaxRateSnapshot(mappedShift.taxRateSnapshot);
       setMpgSnapshot(mappedShift.mpgSnapshot);
       setGasPriceSnapshot(mappedShift.gasPriceSnapshot);
+      setSelectedProfileId(mappedShift.costProfileId ?? "");
+      setProfileNameSnapshot(mappedShift.costProfileNameSnapshot);
+      setHasChangedProfile(false);
+      setNotes(mappedShift.notes);
+      setTags(mappedShift.tags.join(", "));
       setIsMissing(false);
       setIsLoading(false);
     }
@@ -129,13 +146,20 @@ export default function EditShiftPage() {
     };
   }, [isSpanish, shiftId, user]);
 
+  const selectedProfile =
+    isPro && hasChangedProfile
+      ? costProfiles.find((profile) => profile.id === selectedProfileId) ?? null
+      : null;
   const grossAmount = Number(grossEarnings) || 0;
   const hoursAmount = Number(hoursWorked) || 0;
   const milesAmount = Number(milesDriven) || 0;
   const otherExpensesAmount = Number(otherExpenses) || 0;
-  const calculationMpg = mpgSnapshot ?? settings.mpg;
-  const calculationGasPrice = gasPriceSnapshot ?? settings.gasPrice;
-  const calculationTaxRate = taxRateSnapshot ?? settings.taxRate;
+  const calculationMpg = selectedProfile?.mpg ?? (hasChangedProfile ? settings.mpg : mpgSnapshot ?? settings.mpg);
+  const calculationGasPrice = selectedProfile?.gasPrice ?? (hasChangedProfile ? settings.gasPrice : gasPriceSnapshot ?? settings.gasPrice);
+  const calculationTaxRate = selectedProfile?.taxRate ?? (hasChangedProfile ? settings.taxRate : taxRateSnapshot ?? settings.taxRate);
+  const displayedProfileName = hasChangedProfile
+    ? selectedProfile?.name ?? null
+    : profileNameSnapshot;
   const fuelCost =
     calculationMpg > 0
       ? (milesAmount / calculationMpg) * calculationGasPrice
@@ -200,6 +224,26 @@ export default function EditShiftPage() {
         tax_rate_snapshot: calculationTaxRate,
         mpg_snapshot: calculationMpg,
         gas_price_snapshot: calculationGasPrice,
+        cost_profile_id: hasChangedProfile
+          ? selectedProfile?.id ?? null
+          : selectedProfileId || null,
+        cost_profile_name_snapshot: hasChangedProfile
+          ? selectedProfile?.name ?? null
+          : profileNameSnapshot,
+        notes: isPro ? notes.trim() : notes,
+        tags: isPro
+          ? Array.from(
+              new Set(
+                tags
+                  .split(",")
+                  .map((tag) => tag.trim())
+                  .filter(Boolean)
+              )
+            ).slice(0, 10)
+          : tags
+              .split(",")
+              .map((tag) => tag.trim())
+              .filter(Boolean),
       });
 
       if (error || !data) {
@@ -380,6 +424,36 @@ export default function EditShiftPage() {
                 </div>
               </div>
 
+              {isPro && costProfiles.length > 0 ? (
+                <div className="mt-6 min-w-0 space-y-2">
+                  <InputLabel
+                    htmlFor="shift-cost-profile"
+                    icon={<Car className="h-4 w-4 text-sky-300" />}
+                  >
+                    {isSpanish ? "Perfil de costos" : "Cost profile"}
+                  </InputLabel>
+                  <select
+                    id="shift-cost-profile"
+                    value={selectedProfileId}
+                    onChange={(event) => {
+                      setSelectedProfileId(event.target.value);
+                      setHasChangedProfile(true);
+                    }}
+                    disabled={isSaving}
+                    className="block w-full min-w-0 rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-sky-500 disabled:opacity-60"
+                  >
+                    <option value="">
+                      {isSpanish ? "Usar ajustes principales" : "Use main settings"}
+                    </option>
+                    {costProfiles.map((profile) => (
+                      <option key={profile.id} value={profile.id}>
+                        {profile.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ) : null}
+
               <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
                 <div className="min-w-0 space-y-2">
                   <InputLabel
@@ -478,12 +552,67 @@ export default function EditShiftPage() {
                 </div>
               </div>
 
+              {isPro ? (
+                <div className="mt-8 grid gap-5 md:grid-cols-2">
+                  <div className="min-w-0 space-y-2">
+                    <InputLabel
+                      htmlFor="shift-notes"
+                      icon={<StickyNote className="h-4 w-4 text-sky-300" />}
+                    >
+                      {isSpanish ? "Notas Pro" : "Pro notes"}
+                    </InputLabel>
+                    <textarea
+                      id="shift-notes"
+                      value={notes}
+                      onChange={(event) => setNotes(event.target.value)}
+                      maxLength={1000}
+                      rows={3}
+                      disabled={isSaving}
+                      placeholder={
+                        isSpanish
+                          ? "Zona, clima, demanda o algo que quieras recordar."
+                          : "Area, weather, demand, or anything worth remembering."
+                      }
+                      className="block w-full resize-y rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition placeholder:text-slate-600 focus:border-sky-500 disabled:opacity-60"
+                    />
+                  </div>
+                  <div className="min-w-0 space-y-2">
+                    <InputLabel
+                      htmlFor="shift-tags"
+                      icon={<Tags className="h-4 w-4 text-emerald-300" />}
+                    >
+                      {isSpanish ? "Etiquetas Pro" : "Pro tags"}
+                    </InputLabel>
+                    <input
+                      id="shift-tags"
+                      value={tags}
+                      onChange={(event) => setTags(event.target.value)}
+                      maxLength={500}
+                      disabled={isSaving}
+                      placeholder={isSpanish ? "lluvia, noche, aeropuerto" : "rain, night, airport"}
+                      className="block w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition placeholder:text-slate-600 focus:border-sky-500 disabled:opacity-60"
+                    />
+                    <p className="text-xs leading-5 text-slate-500">
+                      {isSpanish
+                        ? "Separa hasta diez etiquetas con comas."
+                        : "Separate up to ten tags with commas."}
+                    </p>
+                  </div>
+                </div>
+              ) : null}
+
               <div className="mt-8 rounded-3xl border border-slate-800 bg-slate-900/70 p-5">
                 <p className="text-sm font-medium text-slate-300">
                   {isSpanish
                     ? "WIWI usará estos ajustes para volver a calcular el turno"
                     : "WIWI preserves the assumptions saved with this shift"}
                 </p>
+
+                {displayedProfileName ? (
+                  <p className="mt-2 text-sm font-semibold text-sky-300">
+                    {displayedProfileName}
+                  </p>
+                ) : null}
 
                 <div className="mt-4 grid gap-3 sm:grid-cols-3">
                   <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">

@@ -11,6 +11,10 @@ export type ShiftRow = {
   tax_rate_snapshot?: number | string | null;
   mpg_snapshot?: number | string | null;
   gas_price_snapshot?: number | string | null;
+  cost_profile_id?: string | null;
+  cost_profile_name_snapshot?: string | null;
+  notes?: string | null;
+  tags?: string[] | null;
 };
 
 function optionalNumber(value: number | string | null | undefined) {
@@ -32,6 +36,10 @@ export function mapShiftRow(row: ShiftRow): Shift {
     taxRateSnapshot: optionalNumber(row.tax_rate_snapshot),
     mpgSnapshot: optionalNumber(row.mpg_snapshot),
     gasPriceSnapshot: optionalNumber(row.gas_price_snapshot),
+    costProfileId: row.cost_profile_id ?? null,
+    costProfileNameSnapshot: row.cost_profile_name_snapshot ?? null,
+    notes: row.notes ?? "",
+    tags: Array.isArray(row.tags) ? row.tags : [],
   };
 }
 

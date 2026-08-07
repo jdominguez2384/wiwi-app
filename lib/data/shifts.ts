@@ -28,6 +28,10 @@ export type ShiftWriteInput = {
   tax_rate_snapshot: number;
   mpg_snapshot: number;
   gas_price_snapshot: number;
+  cost_profile_id: string | null;
+  cost_profile_name_snapshot: string | null;
+  notes: string;
+  tags: string[];
 };
 
 export async function createUserShift(input: ShiftWriteInput) {

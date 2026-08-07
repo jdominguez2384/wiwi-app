@@ -9,6 +9,10 @@ export type Shift = {
   taxRateSnapshot: number | null;
   mpgSnapshot: number | null;
   gasPriceSnapshot: number | null;
+  costProfileId: string | null;
+  costProfileNameSnapshot: string | null;
+  notes: string;
+  tags: string[];
 };
 
 export type AppSettings = {
@@ -16,4 +20,12 @@ export type AppSettings = {
   mpg: number;
   gasPrice: number;
   weeklyGoal: number;
+};
+
+export type CostProfile = {
+  id: string;
+  name: string;
+  taxRate: number;
+  mpg: number;
+  gasPrice: number;
 };

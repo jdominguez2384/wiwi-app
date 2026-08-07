@@ -87,8 +87,9 @@ const termsCopy: Record<"en" | "es", TermsCopy> = {
       {
         title: "Paid Features",
         paragraphs: [
-          "WIWI is currently available without a paid subscription. If paid features are introduced, pricing, billing period, renewal terms, included features, and cancellation options will be shown before purchase.",
-          "Purchases made through an app store will also be governed by that store's billing and refund rules.",
+          "WIWI Free includes essential shift tracking and real-pay estimates. WIWI Pro may be offered as an automatically renewing monthly or annual subscription and, when available, as a one-time lifetime purchase. The store checkout shows the final local price, billing period, trial eligibility, and renewal terms before you confirm.",
+          "Subscriptions renew through Apple or Google until canceled in your store account. Canceling stops future renewal and normally leaves Pro active through the paid period. Any trial converts to the displayed paid plan unless canceled before the store's deadline. Store purchases, billing, cancellation, and refunds are also governed by the applicable store's rules.",
+          "A lifetime purchase means access to the included WIWI Pro features for as long as WIWI continues to offer and operate the service; it is not a promise that the service will exist forever. Losing Pro access does not delete your shifts, though editing or creating Pro-only data may require Pro.",
         ],
       },
       {
@@ -113,7 +114,7 @@ const termsCopy: Record<"en" | "es", TermsCopy> = {
       },
     ],
     contact: "Questions about these terms",
-    updated: "Last updated: August 6, 2026",
+    updated: "Last updated: August 7, 2026",
   },
   es: {
     eyebrow: "Términos",
@@ -169,8 +170,9 @@ const termsCopy: Record<"en" | "es", TermsCopy> = {
       {
         title: "Funciones pagadas",
         paragraphs: [
-          "WIWI está disponible actualmente sin suscripción pagada. Si añadimos funciones pagadas, mostraremos precio, período, renovación, funciones incluidas y cancelación antes de comprar.",
-          "Las compras realizadas mediante una tienda de apps también estarán sujetas a las reglas de facturación y reembolsos de esa tienda.",
+          "WIWI Free incluye el registro esencial de turnos y estimaciones de pago real. WIWI Pro puede ofrecerse como suscripción mensual o anual con renovación automática y, cuando esté disponible, como compra única de por vida. La tienda muestra el precio local final, período, elegibilidad para pruebas y términos de renovación antes de confirmar.",
+          "Las suscripciones se renuevan mediante Apple o Google hasta que las canceles en tu cuenta de la tienda. Cancelar detiene la próxima renovación y normalmente mantiene Pro durante el período pagado. Una prueba se convierte al plan mostrado si no cancelas antes del plazo indicado por la tienda. Las reglas de la tienda también rigen compras, cobros, cancelaciones y reembolsos.",
+          "Una compra de por vida significa acceso a las funciones incluidas de WIWI Pro mientras WIWI continúe ofreciendo y operando el servicio; no promete que el servicio existirá para siempre. Perder acceso a Pro no borra tus turnos, aunque crear o editar datos exclusivos de Pro puede requerir Pro.",
         ],
       },
       {
@@ -195,7 +197,7 @@ const termsCopy: Record<"en" | "es", TermsCopy> = {
       },
     ],
     contact: "Preguntas sobre estos términos",
-    updated: "Última actualización: 6 de agosto de 2026",
+    updated: "Última actualización: 7 de agosto de 2026",
   },
 };
 

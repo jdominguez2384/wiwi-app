@@ -39,6 +39,8 @@ import { useSettings } from "../../components/SettingsProvider";
 import { AuthGuard } from "../../components/AuthGuard";
 import { useAuth } from "../../components/AuthProvider";
 import { useTutorial } from "../../components/TutorialProvider";
+import { CostProfileManager } from "../../components/CostProfileManager";
+import { useBilling } from "../../components/BillingProvider";
 import { signOut } from "../../lib/auth";
 import { updateUserSettings } from "../../lib/data/settings";
 import {
@@ -58,13 +60,17 @@ import { cx, formatMoney } from "../../lib/ui";
 export default function SettingsPage() {
   const { language, setLanguage } = useLanguage();
   const { plan, isLoadingPlan } = usePlan();
+  const {
+    customerInfo,
+    hasStoreProEntitlement,
+    manageSubscription,
+  } = useBilling();
   const { settings, updateSettings } = useSettings();
   const { user } = useAuth();
   const { openTutorial } = useTutorial();
   const router = useRouter();
   const isSpanish = language === "es";
-  const showProPreview =
-    process.env.NEXT_PUBLIC_PRO_PREVIEW_ENABLED === "true";
+  const hasProAccess = plan === "pro" || hasStoreProEntitlement;
 
   const [taxRatePercent, setTaxRatePercent] = useState("");
   const [mpg, setMpg] = useState("");
@@ -551,7 +557,6 @@ export default function SettingsPage() {
               </div>
             </Panel>
 
-            {showProPreview ? (
             <Panel className="relative overflow-hidden border-sky-500/20">
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(14,165,233,0.16),transparent_45%)]" />
               <div className="relative">
@@ -595,7 +600,6 @@ export default function SettingsPage() {
                 </Link>
               </div>
             </Panel>
-            ) : null}
 
             <Panel className="relative overflow-hidden border-sky-500/20">
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(14,165,233,0.14),transparent_48%)]" />
@@ -741,9 +745,28 @@ export default function SettingsPage() {
 
               <p className="mt-3 text-sm leading-6 text-slate-400">
                 {isSpanish
-                  ? "Esto borra tu cuenta WIWI, turnos guardados, perfil y ajustes. No se puede deshacer."
-                  : "This deletes your WIWI account, saved shifts, profile, and settings. This cannot be undone."}
+                  ? "Esto borra tu cuenta WIWI, turnos, perfiles de costos y ajustes. No se puede deshacer."
+                  : "This deletes your WIWI account, shifts, cost profiles, and settings. This cannot be undone."}
               </p>
+
+              {hasProAccess ? (
+                <div className="mt-5 rounded-2xl border border-orange-400/30 bg-orange-500/10 p-4 text-sm leading-6 text-orange-100">
+                  <p>
+                    {isSpanish
+                      ? "Borrar WIWI no cancela una suscripcion de Apple o Google. Cancela la renovacion en tu cuenta de la tienda antes de borrar tu cuenta."
+                      : "Deleting WIWI does not cancel an Apple or Google subscription. Cancel renewal in your store account before deleting your account."}
+                  </p>
+                  {customerInfo?.managementURL ? (
+                    <button
+                      type="button"
+                      onClick={manageSubscription}
+                      className="mt-3 font-bold text-orange-200 underline decoration-orange-300/50 underline-offset-4 transition hover:text-white"
+                    >
+                      {isSpanish ? "Administrar suscripcion" : "Manage subscription"}
+                    </button>
+                  ) : null}
+                </div>
+              ) : null}
 
               <label className="mt-5 block text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
                 {isSpanish ? "Escribe DELETE" : "Type DELETE"}
@@ -873,6 +896,10 @@ export default function SettingsPage() {
               </div>
             </Panel>
           </div>
+        </div>
+
+        <div className="mt-6">
+          <CostProfileManager />
         </div>
       </WiwiShell>
     </AuthGuard>

@@ -8,6 +8,7 @@ export type TutorialStepId =
   | "add"
   | "history"
   | "insights"
+  | "pro"
   | "settings"
   | "ready";
 
@@ -101,6 +102,18 @@ const tutorialCopy: Record<Language, TutorialCopy> = {
           "Compare gross earnings with estimated net income.",
           "Review miles, fuel, expenses, hours, and tax set-asides.",
           "Use app performance to learn which work is most worthwhile.",
+        ],
+      },
+      {
+        id: "pro",
+        eyebrow: "WIWI Pro",
+        title: "Plan deeper when you are ready.",
+        description:
+          "WIWI Free keeps the essential shift workflow. Pro adds advanced comparisons, forecasts, reports, cost profiles, notes, and tags.",
+        bullets: [
+          "Open WIWI Pro from Settings to compare plans or use your Pro workspace.",
+          "Restore an existing Apple or Google purchase from the Pro page.",
+          "Canceling Pro never deletes your saved shifts.",
         ],
       },
       {
@@ -198,6 +211,18 @@ const tutorialCopy: Record<Language, TutorialCopy> = {
         ],
       },
       {
+        id: "pro",
+        eyebrow: "WIWI Pro",
+        title: "Profundiza cuando estes listo.",
+        description:
+          "WIWI Free mantiene el flujo esencial de turnos. Pro agrega comparaciones, pronosticos, reportes, perfiles de costos, notas y etiquetas.",
+        bullets: [
+          "Abre WIWI Pro desde Ajustes para comparar planes o usar tu centro Pro.",
+          "Restaura una compra anterior de Apple o Google desde la pagina Pro.",
+          "Cancelar Pro nunca borra tus turnos guardados.",
+        ],
+      },
+      {
         id: "settings",
         eyebrow: "Ajustes",
         title: "Haz que cada estimación refleje tu realidad.",
@@ -228,6 +253,11 @@ const tutorialCopy: Record<Language, TutorialCopy> = {
 export const tutorialFaqs: Record<Language, TutorialFaq[]> = {
   en: [
     {
+      question: "What stays available if I do not have WIWI Pro?",
+      answer:
+        "WIWI Free keeps core shift logging, history, real-pay calculations, and basic insights. Canceling Pro does not delete your existing shifts.",
+    },
+    {
       question: "Why is estimated net lower than gross earnings?",
       answer:
         "WIWI subtracts estimated fuel, your tax set-aside, and any other expenses you entered. These are estimates for planning, not tax advice.",
@@ -254,6 +284,11 @@ export const tutorialFaqs: Record<Language, TutorialFaq[]> = {
     },
   ],
   es: [
+    {
+      question: "Que sigue disponible si no tengo WIWI Pro?",
+      answer:
+        "WIWI Free mantiene el registro de turnos, historial, calculos de pago real y analisis basico. Cancelar Pro no borra tus turnos existentes.",
+    },
     {
       question: "¿Por qué el neto estimado es menor que las ganancias brutas?",
       answer:

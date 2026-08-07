@@ -78,6 +78,12 @@ export async function DELETE(request: Request) {
 
   const dataDeletes = [
     adminClient.from("shifts").delete().eq("user_id", user.id),
+    adminClient.from("cost_profiles").delete().eq("user_id", user.id),
+    adminClient.from("billing_entitlements").delete().eq("user_id", user.id),
+    adminClient
+      .from("billing_webhook_events")
+      .delete()
+      .eq("app_user_id", user.id),
     adminClient.from("user_settings").delete().eq("user_id", user.id),
     adminClient.from("profiles").delete().eq("id", user.id),
   ];

@@ -56,7 +56,8 @@ const privacyCopy: Record<
         title: "Information We Collect",
         paragraphs: [
           "When you create an account, WIWI stores your email address, display name, preferred language, and account identifiers. Authentication is handled by Supabase. WIWI does not receive your plain-text password.",
-          "We store the shift information you enter, including app name, date, gross earnings, hours, miles, other shift expenses, and the fuel and tax-reserve assumptions saved with each shift. We also store calculation settings such as MPG, gas price, tax-reserve percentage, and weekly goal.",
+          "We store the shift information you enter, including app name, date, gross earnings, hours, miles, other shift expenses, optional notes and tags, and the fuel and tax-reserve assumptions saved with each shift. We also store calculation settings, weekly goals, and any vehicle or cost profiles you create.",
+          "If you use WIWI Pro, we may receive purchase metadata such as product identifier, entitlement status, purchase platform, original purchase date, and expiration date from RevenueCat, Apple, or Google. WIWI does not receive your complete payment-card information.",
           "Our infrastructure providers may process basic technical information such as IP address, browser or device type, timestamps, and diagnostic logs when needed to secure and operate the service.",
         ],
       },
@@ -70,7 +71,7 @@ const privacyCopy: Record<
       {
         title: "Service Providers and Sharing",
         paragraphs: [
-          "WIWI uses Supabase for authentication and database storage, Vercel for hosting, and Resend for transactional email delivery. These providers process information as needed to operate WIWI under their own contractual and privacy obligations.",
+          "WIWI uses Supabase for authentication and database storage, Vercel for hosting, Resend for transactional email delivery, and RevenueCat for purchase entitlement management. Apple or Google processes mobile-app purchases. These providers process information as needed to operate WIWI under their own contractual and privacy obligations.",
           "WIWI does not sell your personal information. We may disclose information when required by law, to protect users or the service, or as part of a business transfer where appropriate safeguards apply.",
         ],
       },
@@ -78,7 +79,7 @@ const privacyCopy: Record<
         title: "Retention and Account Deletion",
         paragraphs: [
           "We retain account and shift information while your account is active or as reasonably needed to provide WIWI, meet legal obligations, resolve disputes, prevent abuse, and enforce our terms.",
-          "You can delete your account in WIWI under Settings. Account deletion removes your authentication account and associated WIWI profile, settings, and shifts. You can also request deletion from our public account-deletion page if you cannot access the app.",
+          "You can delete your account in WIWI under Settings. Account deletion removes your authentication account and associated WIWI profile, settings, shifts, cost profiles, and WIWI entitlement record. It does not automatically cancel an Apple or Google subscription; cancel that subscription in the store before deleting your account. Stores and payment providers may retain transaction records as required for billing, fraud prevention, accounting, or law. You can also request deletion from our public account-deletion page if you cannot access the app.",
         ],
       },
       {
@@ -102,7 +103,7 @@ const privacyCopy: Record<
       },
     ],
     help: "Questions or privacy requests",
-    updated: "Last updated: August 6, 2026",
+    updated: "Last updated: August 7, 2026",
   },
   es: {
     eyebrow: "Privacidad",
@@ -122,7 +123,8 @@ const privacyCopy: Record<
         title: "Información que recopilamos",
         paragraphs: [
           "Cuando creas una cuenta, WIWI guarda tu correo electrónico, nombre mostrado, idioma preferido e identificadores de cuenta. Supabase administra la autenticación. WIWI no recibe tu contraseña en texto sin formato.",
-          "Guardamos la información de turnos que ingresas, incluyendo app, fecha, ganancias brutas, horas, millas, otros gastos y los supuestos de gasolina y reserva de impuestos guardados con cada turno. También guardamos ajustes como MPG, precio de gasolina, porcentaje de reserva y meta semanal.",
+          "Guardamos la información de turnos que ingresas, incluyendo app, fecha, ganancias brutas, horas, millas, otros gastos, notas y etiquetas opcionales, y los supuestos de gasolina y reserva de impuestos guardados con cada turno. También guardamos ajustes, metas semanales y los perfiles de vehículo o costos que crees.",
+          "Si usas WIWI Pro, podemos recibir de RevenueCat, Apple o Google datos de compra como identificador del producto, estado del beneficio, plataforma, fecha de compra original y vencimiento. WIWI no recibe los datos completos de tu tarjeta de pago.",
           "Nuestros proveedores de infraestructura pueden procesar información técnica básica, como dirección IP, tipo de navegador o dispositivo, fechas y registros de diagnóstico, cuando sea necesario para proteger y operar el servicio.",
         ],
       },
@@ -136,7 +138,7 @@ const privacyCopy: Record<
       {
         title: "Proveedores y divulgación",
         paragraphs: [
-          "WIWI usa Supabase para autenticación y almacenamiento, Vercel para alojamiento y Resend para correos transaccionales. Estos proveedores procesan información según sea necesario para operar WIWI bajo sus propias obligaciones contractuales y de privacidad.",
+          "WIWI usa Supabase para autenticación y almacenamiento, Vercel para alojamiento, Resend para correos transaccionales y RevenueCat para administrar beneficios de compra. Apple o Google procesa las compras móviles. Estos proveedores procesan información según sea necesario para operar WIWI bajo sus propias obligaciones contractuales y de privacidad.",
           "WIWI no vende tu información personal. Podemos divulgar información si la ley lo exige, para proteger a usuarios o al servicio, o como parte de una transferencia comercial con protecciones apropiadas.",
         ],
       },
@@ -144,7 +146,7 @@ const privacyCopy: Record<
         title: "Retención y borrado de cuenta",
         paragraphs: [
           "Conservamos la información mientras tu cuenta esté activa o cuando sea razonablemente necesario para ofrecer WIWI, cumplir obligaciones legales, resolver disputas, prevenir abuso y hacer cumplir nuestros términos.",
-          "Puedes borrar tu cuenta desde Ajustes. El borrado elimina tu cuenta de autenticación y los perfiles, ajustes y turnos asociados. También puedes solicitarlo desde nuestra página pública si no puedes entrar a la app.",
+          "Puedes borrar tu cuenta desde Ajustes. El borrado elimina tu cuenta de autenticación y los perfiles, ajustes, turnos, perfiles de costos y registro de beneficios de WIWI asociados. No cancela automáticamente una suscripción de Apple o Google; cancélala en la tienda antes de borrar tu cuenta. Las tiendas y proveedores de pago pueden conservar registros de transacciones para cobros, fraude, contabilidad o requisitos legales. También puedes solicitar el borrado desde nuestra página pública si no puedes entrar a la app.",
         ],
       },
       {
@@ -168,7 +170,7 @@ const privacyCopy: Record<
       },
     ],
     help: "Preguntas o solicitudes de privacidad",
-    updated: "Última actualización: 6 de agosto de 2026",
+    updated: "Última actualización: 7 de agosto de 2026",
   },
 };
 

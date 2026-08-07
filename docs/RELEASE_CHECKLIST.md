@@ -5,6 +5,7 @@
 - [ ] Back up the production Supabase database.
 - [x] Apply every migration in `supabase/migrations` to production.
 - [x] Confirm the migration created calculation snapshot and `other_expenses` columns.
+- [x] Apply and verify the WIWI Pro foundation migration dated August 7, 2026.
 - [ ] Test two separate accounts and confirm neither can read, update, or delete the other's shifts.
 - [x] Confirm every existing account has both a profile and default settings row.
 - [x] Delete a test account and verify its auth user, profile, settings, and shifts are removed.
@@ -47,8 +48,12 @@
 
 ## Monetization
 
-- [ ] Launch and measure the dependable free experience first.
-- [ ] Define the exact Pro feature boundary and pricing.
-- [ ] Implement store billing through RevenueCat or native StoreKit/Play Billing.
-- [ ] Store entitlement state server-side and validate webhook events.
-- [ ] Add restore-purchases and manage-subscription flows before enabling payment.
+- [x] Preserve unlimited core shift logging, history, and basic insights on WIWI Free.
+- [x] Define the Pro feature boundary and launch pricing.
+- [x] Implement RevenueCat purchase, restore, server sync, and webhook code.
+- [x] Store entitlement state server-side and protect Pro writes in the database.
+- [x] Add restore-purchases and manage-subscription flows before enabling payment.
+- [ ] Create and approve Apple and Google products using `docs/MONETIZATION.md`.
+- [ ] Configure the RevenueCat `pro` entitlement, `default` offering, products, and webhook.
+- [ ] Complete sandbox lifecycle testing on iPhone and Android.
+- [ ] Enable `NEXT_PUBLIC_PRO_BILLING_ENABLED` only after every billing test passes.

@@ -4,6 +4,7 @@ import Link from "next/link";
 import {
   ArrowLeft,
   Calculator,
+  Crown,
   KeyRound,
   LifeBuoy,
   Mail,
@@ -63,7 +64,7 @@ export default function SupportPage() {
         }
       />
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-3">
+      <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
         <Panel>
           <KeyRound className="h-6 w-6 text-sky-300" />
           <h2 className="mt-4 text-xl font-black text-white">
@@ -79,6 +80,24 @@ export default function SupportPage() {
             className="mt-5 inline-flex font-semibold text-sky-300 transition hover:text-sky-200"
           >
             {isSpanish ? "Restablecer contraseña" : "Reset password"}
+          </Link>
+        </Panel>
+
+        <Panel>
+          <Crown className="h-6 w-6 text-amber-300" />
+          <h2 className="mt-4 text-xl font-black text-white">
+            {isSpanish ? "Compras de WIWI Pro" : "WIWI Pro purchases"}
+          </h2>
+          <p className="mt-3 text-sm leading-7 text-slate-400">
+            {isSpanish
+              ? "Restaura una compra o administra una suscripcion desde WIWI Pro. Los reembolsos y cancelaciones se procesan con Apple o Google."
+              : "Restore a purchase or manage a subscription from WIWI Pro. Refunds and cancellations are handled by Apple or Google."}
+          </p>
+          <Link
+            href="/pro"
+            className="mt-5 inline-flex font-semibold text-sky-300 transition hover:text-sky-200"
+          >
+            {isSpanish ? "Abrir WIWI Pro" : "Open WIWI Pro"}
           </Link>
         </Panel>
 

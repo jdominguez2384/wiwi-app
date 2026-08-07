@@ -27,7 +27,8 @@ Identifiers become difficult to change after store records and signed builds exi
 5. Test safe areas, keyboard behavior, date inputs, bottom navigation, external links, and offline/error states on physical devices.
 6. Add monitoring and a version/build-number strategy.
 7. Distribute through TestFlight and Google Play internal testing.
-8. Resolve tester feedback before completing store privacy and data-safety disclosures.
+8. Complete every billing lifecycle test in `docs/MONETIZATION.md` before enabling purchases.
+9. Resolve tester feedback before completing store privacy and data-safety disclosures.
 
 The Capacitor projects, identifiers, launch assets, and sync scripts are already in the repository. Run `npm run native:assets` after artwork changes and `npm run native:sync` after web or Capacitor configuration changes.
 
@@ -37,6 +38,8 @@ The Capacitor projects, identifiers, launch assets, and sync scripts are already
 - Google Play builds require Android Studio, a protected release keystore, Play App Signing, and the required target API level.
 - Never place `SUPABASE_SERVICE_ROLE_KEY` or other server secrets inside an iOS or Android bundle.
 - Account deletion must continue through the authenticated server endpoint, not a privileged key in the app.
+- RevenueCat's public platform SDK keys may be bundled, but its secret API key and webhook secret must remain server-only.
+- The Android activity uses `singleTop` so store purchase verification can return to the existing WIWI activity safely.
 
 Official references:
 

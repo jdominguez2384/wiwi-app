@@ -9,6 +9,8 @@ import {
   History,
   Pencil,
   Plus,
+  Search,
+  Tags,
   Trash2,
 } from "lucide-react";
 import { AuthGuard } from "../../components/AuthGuard";
@@ -39,6 +41,7 @@ export default function HistoryPage() {
   const [message, setMessage] = useState("");
   const [selectedApp, setSelectedApp] = useState("all");
   const [selectedMonth, setSelectedMonth] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
   const [shiftToDelete, setShiftToDelete] = useState<{
     id: string;
     appName: string;
@@ -76,16 +79,23 @@ export default function HistoryPage() {
   }, [computedShifts, locale]);
 
   const filteredShifts = useMemo(() => {
+    const normalizedSearch = searchTerm.trim().toLowerCase();
     return computedShifts.filter((shift) => {
       const matchesApp =
         selectedApp === "all" || shift.appName === selectedApp;
       const matchesMonth =
         selectedMonth === "all" || getMonthKey(shift.date) === selectedMonth;
-      return matchesApp && matchesMonth;
+      const matchesSearch =
+        !normalizedSearch ||
+        shift.appName.toLowerCase().includes(normalizedSearch) ||
+        shift.notes.toLowerCase().includes(normalizedSearch) ||
+        shift.tags.some((tag) => tag.toLowerCase().includes(normalizedSearch));
+      return matchesApp && matchesMonth && matchesSearch;
     });
-  }, [computedShifts, selectedApp, selectedMonth]);
+  }, [computedShifts, searchTerm, selectedApp, selectedMonth]);
 
-  const hasActiveFilters = selectedApp !== "all" || selectedMonth !== "all";
+  const hasActiveFilters =
+    selectedApp !== "all" || selectedMonth !== "all" || searchTerm.trim() !== "";
 
   async function confirmDeleteShift() {
     if (!shiftToDelete || !user) return;
@@ -219,7 +229,7 @@ export default function HistoryPage() {
               </p>
             </div>
 
-            <div className="w-full lg:w-[34rem]">
+            <div className="w-full lg:w-[42rem]">
               <div className="grid gap-3 sm:grid-cols-2">
                 <div>
                   <label className="mb-2 block text-sm font-medium text-slate-300">
@@ -266,6 +276,30 @@ export default function HistoryPage() {
                     <Filter className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
                   </div>
                 </div>
+
+                <div className="sm:col-span-2">
+                  <label
+                    htmlFor="history-search"
+                    className="mb-2 block text-sm font-medium text-slate-300"
+                  >
+                    {isSpanish ? "Buscar turnos" : "Search shifts"}
+                  </label>
+                  <div className="relative">
+                    <input
+                      id="history-search"
+                      type="search"
+                      value={searchTerm}
+                      onChange={(event) => setSearchTerm(event.target.value)}
+                      placeholder={
+                        isSpanish
+                          ? "Busca una app, nota o etiqueta"
+                          : "Search an app, note, or tag"
+                      }
+                      className="block w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 pr-12 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-sky-500"
+                    />
+                    <Search className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                  </div>
+                </div>
               </div>
 
               {hasActiveFilters ? (
@@ -274,6 +308,7 @@ export default function HistoryPage() {
                   onClick={() => {
                     setSelectedMonth("all");
                     setSelectedApp("all");
+                    setSearchTerm("");
                   }}
                   className="mt-3 text-sm font-medium text-sky-300 transition hover:text-sky-200"
                 >
@@ -379,6 +414,32 @@ export default function HistoryPage() {
                       </button>
                     </div>
                   </div>
+
+                  {shift.costProfileNameSnapshot || shift.tags.length > 0 || shift.notes ? (
+                    <div className="mt-4 border-t border-slate-800 pt-4">
+                      <div className="flex flex-wrap items-center gap-2">
+                        {shift.costProfileNameSnapshot ? (
+                          <span className="rounded-full border border-sky-500/20 bg-sky-500/10 px-3 py-1 text-xs font-semibold text-sky-200">
+                            {shift.costProfileNameSnapshot}
+                          </span>
+                        ) : null}
+                        {shift.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-900 px-3 py-1 text-xs text-slate-300"
+                          >
+                            <Tags className="h-3 w-3 text-emerald-300" />
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                      {shift.notes ? (
+                        <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-400">
+                          {shift.notes}
+                        </p>
+                      ) : null}
+                    </div>
+                  ) : null}
                 </div>
               ))}
             </div>
