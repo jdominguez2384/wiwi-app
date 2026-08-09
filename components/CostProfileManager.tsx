@@ -189,7 +189,7 @@ export function CostProfileManager() {
               <span>WIWI Pro</span>
             </div>
             <h2 className="mt-3 text-2xl font-black text-white">
-              {isSpanish ? "Perfiles para cada vehiculo." : "A profile for every vehicle."}
+              {isSpanish ? "Perfiles para cada vehículo." : "A profile for every vehicle."}
             </h2>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-400">
               {isSpanish
@@ -218,7 +218,7 @@ export function CostProfileManager() {
       <div className="mt-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <h2 className="text-2xl font-black text-white">
-            {isSpanish ? "Cambia de vehiculo sin adivinar." : "Switch vehicles without guessing."}
+            {isSpanish ? "Cambia de vehículo sin adivinar." : "Switch vehicles without guessing."}
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
             {isSpanish
@@ -252,7 +252,7 @@ export function CostProfileManager() {
                 type="button"
                 onClick={resetForm}
                 className="rounded-xl p-2 text-slate-500 transition hover:bg-slate-900 hover:text-white"
-                aria-label={isSpanish ? "Cancelar edicion" : "Cancel editing"}
+                aria-label={isSpanish ? "Cancelar edición" : "Cancel editing"}
               >
                 <X className="h-4 w-4" />
               </button>
@@ -347,7 +347,7 @@ export function CostProfileManager() {
           ) : costProfiles.length === 0 ? (
             <div className="rounded-3xl border border-dashed border-slate-800 p-6 text-sm leading-6 text-slate-400">
               {isSpanish
-                ? "Aun no tienes perfiles adicionales. Tus ajustes principales siguen funcionando como siempre."
+                ? "Aún no tienes perfiles adicionales. Tus ajustes principales siguen funcionando como siempre."
                 : "You do not have additional profiles yet. Your main settings still work exactly as before."}
             </div>
           ) : (
@@ -371,7 +371,7 @@ export function CostProfileManager() {
                   {deleteId === profile.id ? (
                     <div className="mt-4 rounded-2xl border border-orange-500/25 bg-orange-500/10 p-3">
                       <p className="text-xs leading-5 text-orange-100">
-                        {isSpanish ? "Los turnos guardados conservaran sus calculos." : "Saved shifts will keep their calculations."}
+                        {isSpanish ? "Los turnos guardados conservarán sus cálculos." : "Saved shifts will keep their calculations."}
                       </p>
                       <div className="mt-3 grid grid-cols-2 gap-2">
                         <button

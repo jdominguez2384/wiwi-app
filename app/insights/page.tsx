@@ -110,7 +110,7 @@ export default function InsightsPage() {
             <div className="flex items-center gap-3">
               <div className="h-3 w-3 animate-pulse rounded-full bg-sky-400" />
               <p className="text-sm text-slate-300">
-                {isSpanish ? "Cargando tus analisis..." : "Loading your insights..."}
+                {isSpanish ? "Cargando tus análisis..." : "Loading your insights..."}
               </p>
             </div>
           </Panel>
@@ -133,14 +133,14 @@ export default function InsightsPage() {
             <>
               <BarChart3 className="h-4 w-4 text-sky-300" />
               <span className="text-xs font-semibold uppercase tracking-[0.24em] text-sky-300">
-                {isSpanish ? "Analisis" : "Insights"}
+                {isSpanish ? "Análisis" : "Insights"}
               </span>
             </>
           }
           title={
             isSpanish ? (
               <>
-                Los numeros profundos,{" "}
+                Los números profundos,{" "}
                 <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
                   fuera del inicio
                 </span>
@@ -158,7 +158,7 @@ export default function InsightsPage() {
           }
           description={
             isSpanish
-              ? "Aqui vive el analisis completo: ganancias de vida, costos, mejor turno, progreso semanal y rendimiento por app."
+              ? "Aquí vive el análisis completo: ganancias de vida, costos, mejor turno, progreso semanal y rendimiento por app."
               : "This is where the full analysis lives: lifetime earnings, costs, best shift, weekly progress, and app performance."
           }
           actions={
@@ -199,7 +199,7 @@ export default function InsightsPage() {
             value={formatMoney(totals.net)}
             hint={
               isSpanish
-                ? "Lo que realmente te queda despues de costos."
+                ? "Lo que realmente te queda después de costos."
                 : "What you actually keep after costs."
             }
             accentClasses="border-sky-500/20 bg-sky-500/10"
@@ -288,7 +288,7 @@ export default function InsightsPage() {
 
           <Panel>
             <p className="text-sm uppercase tracking-[0.24em] text-slate-500">
-              {isSpanish ? "Resumen rapido" : "Quick stats"}
+              {isSpanish ? "Resumen rápido" : "Quick stats"}
             </p>
             <div className="mt-5 space-y-3 text-sm">
               <div className="flex items-center justify-between gap-4">
@@ -382,7 +382,7 @@ export default function InsightsPage() {
                 </p>
                 <p className="mt-5 max-w-xl text-sm leading-6 text-slate-300">
                   {isSpanish
-                    ? "Este fue tu turno con mejor pago real por hora despues de gasolina e impuestos."
+                    ? "Este fue tu turno con mejor pago real por hora después de gasolina e impuestos."
                     : "This was your best real hourly-paying shift after fuel and tax set-asides."}
                 </p>
                 <div className="mt-5 grid gap-3 sm:grid-cols-2">
@@ -407,7 +407,7 @@ export default function InsightsPage() {
             ) : (
               <div className="mt-5 rounded-3xl border border-dashed border-slate-800 bg-slate-950/60 p-6 text-sm leading-6 text-slate-400">
                 {isSpanish
-                  ? "Cuando agregues turnos, aqui veras cual tuvo el mejor pago real por hora."
+                  ? "Cuando agregues turnos, aquí verás cuál tuvo el mejor pago real por hora."
                   : "Once you log shifts, this area will highlight your best real hourly shift."}
               </div>
             )}
@@ -421,7 +421,7 @@ export default function InsightsPage() {
             {appBreakdown.length === 0 ? (
               <div className="mt-5 rounded-3xl border border-dashed border-slate-800 bg-slate-950/60 p-6 text-sm leading-6 text-slate-400">
                 {isSpanish
-                  ? "Agrega turnos para comparar que apps realmente te pagan mejor."
+                  ? "Agrega turnos para comparar qué apps realmente te pagan mejor."
                   : "Add shifts to compare which apps really pay you best."}
               </div>
             ) : (

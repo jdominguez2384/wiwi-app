@@ -121,10 +121,10 @@ export default function DashboardPage() {
   const verdict = (() => {
     if (!hasShifts) {
       return {
-        label: isSpanish ? "Todavia no" : "Not yet",
+        label: isSpanish ? "Todavía no" : "Not yet",
         kicker: isSpanish ? "Agrega un turno" : "Add a shift",
         description: isSpanish
-          ? "Registra tu primer turno para que WIWI te diga si realmente valio la pena."
+          ? "Registra tu primer turno para que WIWI te diga si realmente valió la pena."
           : "Log your first shift so WIWI can tell you whether it was actually worth it.",
         textClass: "text-slate-100",
         glowClass: "from-slate-500/20 via-sky-500/10 to-transparent",
@@ -133,10 +133,10 @@ export default function DashboardPage() {
 
     if (weeklyHourly >= 20) {
       return {
-        label: isSpanish ? "Valio la pena" : "Worth it",
+        label: isSpanish ? "Valió la pena" : "Worth it",
         kicker: isSpanish ? "Buen ritmo" : "Strong pace",
         description: isSpanish
-          ? "Tu pago real por hora esta fuerte esta semana. Si tomas otro turno, estas jugando desde una buena posicion."
+          ? "Tu pago real por hora está fuerte esta semana. Si tomas otro turno, estás jugando desde una buena posición."
           : "Your real hourly pay is strong this week. If you take another shift, you are doing it from a good position.",
         textClass: "text-emerald-300",
         glowClass: "from-emerald-500/25 via-sky-500/10 to-transparent",
@@ -146,9 +146,9 @@ export default function DashboardPage() {
     if (weeklyHourly >= 14) {
       return {
         label: isSpanish ? "Casi" : "Close call",
-        kicker: isSpanish ? "Mira el proximo turno" : "Watch the next shift",
+        kicker: isSpanish ? "Mira el próximo turno" : "Watch the next shift",
         description: isSpanish
-          ? "La semana va decente, pero el siguiente turno todavia puede cambiar si realmente conviene."
+          ? "La semana va decente, pero el siguiente turno todavía puede cambiar si realmente conviene."
           : "The week is decent, but the next shift can still decide whether the work really makes sense.",
         textClass: "text-sky-300",
         glowClass: "from-sky-500/25 via-blue-500/10 to-transparent",
@@ -159,7 +159,7 @@ export default function DashboardPage() {
       label: isSpanish ? "Cuestionable" : "Needs work",
       kicker: isSpanish ? "Protege tu tiempo" : "Protect your time",
       description: isSpanish
-        ? "Tu pago real por hora esta bajo esta semana. Revisa horarios, apps o zonas antes de seguir manejando."
+        ? "Tu pago real por hora está bajo esta semana. Revisa horarios, apps o zonas antes de seguir manejando."
         : "Your real hourly pay is low this week. Check your timing, apps, or zones before stacking more miles.",
       textClass: "text-orange-300",
       glowClass: "from-orange-500/25 via-sky-500/10 to-transparent",
@@ -215,9 +215,9 @@ export default function DashboardPage() {
             title={
               isSpanish ? (
                 <>
-                  Tu respuesta rapida:{" "}
+                  Tu respuesta rápida:{" "}
                   <span className="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
-                    valio la pena?
+                    ¿valió la pena?
                   </span>
                 </>
               ) : (
@@ -232,10 +232,10 @@ export default function DashboardPage() {
             description={
               hasShifts
                 ? isSpanish
-                  ? "Mantuvimos esta pantalla enfocada en lo que importa ahora: tu semana, tu pago real por hora y tu siguiente accion."
+                  ? "Mantuvimos esta pantalla enfocada en lo que importa ahora: tu semana, tu pago real por hora y tu siguiente acción."
                   : "This screen now stays focused on what matters right now: your week, your real hourly pay, and your next move."
                 : isSpanish
-                  ? "Registra tu primer turno y WIWI te dira lo que realmente ganaste despues de gasolina, impuestos y tiempo."
+                  ? "Registra tu primer turno y WIWI te dirá lo que realmente ganaste después de gasolina, impuestos y tiempo."
                   : "Log your first shift and WIWI will show what you really earned after gas, taxes, and time."
             }
             actions={
@@ -311,7 +311,7 @@ export default function DashboardPage() {
                 <span>{isSpanish ? "Veredicto WIWI" : "WIWI verdict"}</span>
               </div>
               <p className="mt-5 text-xs uppercase tracking-[0.24em] text-slate-500">
-                {isSpanish ? "Valio la pena?" : "Was it worth it?"}
+                {isSpanish ? "¿Valió la pena?" : "Was it worth it?"}
               </p>
               <h2 className={cx("mt-3 text-5xl font-black tracking-tight", verdict.textClass)}>
                 {verdict.label}
@@ -364,7 +364,7 @@ export default function DashboardPage() {
           <Panel>
             <div className="flex items-center gap-2 text-sm text-slate-400">
               <Calendar className="h-4 w-4 text-sky-400" />
-              <span>{isSpanish ? "Ultimo turno" : "Latest shift"}</span>
+              <span>{isSpanish ? "Último turno" : "Latest shift"}</span>
             </div>
             {latestShift ? (
               <div className="mt-5">
@@ -408,7 +408,7 @@ export default function DashboardPage() {
             ) : (
               <div className="mt-5 rounded-3xl border border-dashed border-slate-800 bg-slate-950/60 p-6 text-sm leading-6 text-slate-400">
                 {isSpanish
-                  ? "No hay turnos todavia. Agrega uno para llenar esta vista con tus resultados reales."
+                  ? "No hay turnos todavía. Agrega uno para llenar esta vista con tus resultados reales."
                   : "No shifts yet. Add one to fill this view with your real results."}
               </div>
             )}
@@ -441,7 +441,7 @@ export default function DashboardPage() {
               title={isSpanish ? "Analizar" : "Analyze"}
               description={
                 isSpanish
-                  ? "Ve estadisticas, patrones y mejores turnos."
+                  ? "Ve estadísticas, patrones y mejores turnos."
                   : "See deeper stats, patterns, and best shifts."
               }
             />

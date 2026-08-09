@@ -29,6 +29,8 @@
 *.p12
 *.pfx
 *.mobileprovision
+/android/keystore.properties
+/store/review-credentials.local.json
 
 # debug
 npm-debug.log*

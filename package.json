@@ -10,12 +10,16 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit --pretty false",
     "test": "node --test --test-isolation=none tests/*.test.mjs",
-    "check": "npm run lint && npm run typecheck && npm test",
+    "check": "npm run lint && npm run typecheck && npm test && npm run store:validate",
     "native:build": "node scripts/build-native.mjs",
     "native:sync": "npm run native:build && cap sync",
     "native:assets": "node scripts/generate-native-assets.mjs",
+    "native:bundle:android": "node scripts/build-android-release.mjs",
     "native:open:android": "cap open android",
-    "native:open:ios": "cap open ios"
+    "native:open:ios": "cap open ios",
+    "store:assets": "node scripts/generate-store-assets.mjs",
+    "store:screenshots": "node scripts/capture-store-screenshots.mjs",
+    "store:validate": "node scripts/validate-store-metadata.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.0",
@@ -41,6 +45,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "^16.3.0",
+    "playwright-core": "^1.62.1",
     "sharp": "^0.35.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^5"

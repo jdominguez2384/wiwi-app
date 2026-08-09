@@ -229,7 +229,7 @@ export default function SettingsPage() {
       if (sessionError || !session?.access_token) {
         setMessage(
           isSpanish
-            ? "Tu sesion expiro. Inicia sesion otra vez e intentalo de nuevo."
+            ? "Tu sesión expiró. Inicia sesión otra vez e inténtalo de nuevo."
             : "Your session expired. Sign in again and try once more."
         );
         return;
@@ -524,7 +524,7 @@ export default function SettingsPage() {
 
               <p className="mt-4 text-sm leading-6 text-slate-400">
                 {isSpanish
-                  ? "Cambia el idioma de WIWI. Se guarda automaticamente en tu perfil."
+                  ? "Cambia el idioma de WIWI. Se guarda automáticamente en tu perfil."
                   : "Change WIWI's language. This saves automatically to your profile."}
               </p>
 
@@ -674,7 +674,7 @@ export default function SettingsPage() {
 
               <p className="mt-4 text-sm leading-6 text-slate-400">
                 {isSpanish
-                  ? "Cierra sesion desde aqui cuando uses WIWI en un telefono compartido."
+                  ? "Cierra sesión desde aquí cuando uses WIWI en un teléfono compartido."
                   : "Sign out here when you are using WIWI on a shared phone."}
               </p>
 
@@ -691,7 +691,7 @@ export default function SettingsPage() {
                       ? "Saliendo..."
                       : "Signing out..."
                     : isSpanish
-                      ? "Cerrar sesion"
+                      ? "Cerrar sesión"
                       : "Sign out"}
                 </span>
               </button>
@@ -705,7 +705,7 @@ export default function SettingsPage() {
 
               <p className="mt-4 text-sm leading-6 text-slate-400">
                 {isSpanish
-                  ? "Revisa como WIWI maneja tus datos y los terminos basicos del servicio."
+                  ? "Revisa cómo WIWI maneja tus datos y los términos básicos del servicio."
                   : "Review how WIWI handles your data and the basic terms for using the service."}
               </p>
 
@@ -722,14 +722,14 @@ export default function SettingsPage() {
                   className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-950 px-5 py-3 text-sm font-semibold text-slate-200 transition hover:border-sky-500/40 hover:text-white"
                 >
                   <ShieldCheck className="h-4 w-4" />
-                  <span>{isSpanish ? "Politica de privacidad" : "Privacy Policy"}</span>
+                  <span>{isSpanish ? "Política de privacidad" : "Privacy Policy"}</span>
                 </Link>
                 <Link
                   href="/terms"
                   className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-950 px-5 py-3 text-sm font-semibold text-slate-200 transition hover:border-sky-500/40 hover:text-white"
                 >
                   <FileText className="h-4 w-4" />
-                  <span>{isSpanish ? "Terminos" : "Terms"}</span>
+                  <span>{isSpanish ? "Términos" : "Terms"}</span>
                 </Link>
               </div>
             </Panel>
@@ -754,7 +754,7 @@ export default function SettingsPage() {
                 <div className="mt-5 rounded-2xl border border-orange-400/30 bg-orange-500/10 p-4 text-sm leading-6 text-orange-100">
                   <p>
                     {isSpanish
-                      ? "Borrar WIWI no cancela una suscripcion de Apple o Google. Cancela la renovacion en tu cuenta de la tienda antes de borrar tu cuenta."
+                      ? "Borrar WIWI no cancela una suscripción de Apple o Google. Cancela la renovación en tu cuenta de la tienda antes de borrar tu cuenta."
                       : "Deleting WIWI does not cancel an Apple or Google subscription. Cancel renewal in your store account before deleting your account."}
                   </p>
                   {customerInfo?.managementURL ? (
@@ -763,7 +763,7 @@ export default function SettingsPage() {
                       onClick={manageSubscription}
                       className="mt-3 font-bold text-orange-200 underline decoration-orange-300/50 underline-offset-4 transition hover:text-white"
                     >
-                      {isSpanish ? "Administrar suscripcion" : "Manage subscription"}
+                      {isSpanish ? "Administrar suscripción" : "Manage subscription"}
                     </button>
                   ) : null}
                 </div>

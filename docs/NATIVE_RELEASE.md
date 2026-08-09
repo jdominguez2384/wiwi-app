@@ -39,16 +39,52 @@ Keep the existing HTTPS and localhost redirect URLs. Test both confirmation and 
 
 Create an upload keystore outside the repository, enroll in Play App Signing, and build the release bundle from Android Studio or Gradle. Never commit `.jks`, `.keystore`, or signing passwords.
 
+WIWI reads signing credentials from the ignored `android/keystore.properties` file or these environment variables:
+
+```text
+WIWI_ANDROID_KEYSTORE_PATH
+WIWI_ANDROID_KEYSTORE_TYPE
+WIWI_ANDROID_STORE_PASSWORD
+WIWI_ANDROID_KEY_ALIAS
+WIWI_ANDROID_KEY_PASSWORD
+WIWI_ANDROID_VERSION_NAME
+WIWI_ANDROID_VERSION_CODE
+```
+
+Copy `android/keystore.properties.example` for a local build, then run:
+
+```bash
+npm run native:bundle:android
+```
+
+The command refuses to create a release when signing credentials are incomplete. The output is `android/app/build/outputs/bundle/release/app-release.aab`.
+
+The manual **Android Release Bundle** GitHub workflow creates the same signed artifact. Configure its protected `production` environment with:
+
+```text
+ANDROID_UPLOAD_KEYSTORE_BASE64
+ANDROID_UPLOAD_STORE_PASSWORD
+ANDROID_UPLOAD_KEY_ALIAS
+ANDROID_UPLOAD_KEY_PASSWORD
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+```
+
+Increase the workflow's version code for every Play Console upload. Keep the encrypted upload key and its password in a separate recoverable backup even after the GitHub secrets are configured.
+
 GitHub Actions compiles and uploads a debug APK on every pull request and push to `main`. This verifies the JavaScript export, Capacitor sync, plugins, Android resources, and Gradle project without requiring a local Android installation.
 
 ## iOS
 
 - Bundle ID: `com.getwiwi.app`
+- Apple team: `VH8ST3DJ5U`
 - Deployment target: iOS 15
 - URL scheme: `wiwi://`
 - Required submission toolchain: Xcode 26 with the iOS 26 SDK or later
 
-Assign the Apple Developer team in Xcode, register the bundle ID in Apple Developer, enable automatic signing, and create an Archive on a current Mac. Upload the first build to TestFlight before configuring the production release.
+The explicit App ID is registered in Apple Developer and the Xcode project uses automatic signing with the assigned team. Create an Archive on a current Mac and upload the first build to TestFlight before configuring the production release.
+
+Store listing copy, privacy answers, review notes, and asset instructions live under `store/`. Run `npm run store:validate`, `npm run store:assets`, and `npm run store:screenshots` before submitting a new store version.
 
 ## Required Device Tests
 

@@ -114,7 +114,7 @@ export default function HistoryPage() {
       removeShift(shiftToDelete.id);
       setShiftToDelete(null);
       setMessage(
-        isSpanish ? "Turno eliminado con exito." : "Shift deleted successfully."
+        isSpanish ? "Turno eliminado con éxito." : "Shift deleted successfully."
       );
     } finally {
       setIsDeleting(false);
@@ -200,7 +200,7 @@ export default function HistoryPage() {
                 className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-950/80 px-6 py-3 text-sm font-semibold text-slate-200 transition hover:border-sky-500/40 hover:text-white"
               >
                 <BarChart3 className="h-4 w-4" />
-                <span>{isSpanish ? "Ver analisis" : "View insights"}</span>
+                <span>{isSpanish ? "Ver análisis" : "View insights"}</span>
               </Link>
             </>
           }
@@ -326,7 +326,7 @@ export default function HistoryPage() {
                     ? "No encontramos turnos para esos filtros."
                     : "No shifts match those filters."
                   : isSpanish
-                    ? "Todavia no hay turnos. Agrega el primero para medir si valio la pena."
+                    ? "Todavía no hay turnos. Agrega el primero para medir si valió la pena."
                     : "No shifts yet. Add your first one to measure whether it was worth it."}
               </p>
               <Link
@@ -457,7 +457,7 @@ export default function HistoryPage() {
               </h3>
               <p className="mt-3 text-sm leading-6 text-slate-400">
                 {isSpanish
-                  ? "Esta accion no se puede deshacer."
+                  ? "Esta acción no se puede deshacer."
                   : "This action cannot be undone."}
               </p>
               <div className="mt-5 rounded-3xl border border-slate-800 bg-slate-900/70 p-4">

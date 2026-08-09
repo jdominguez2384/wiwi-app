@@ -1,14 +1,63 @@
 apply plugin: 'com.android.application'
 
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('keystore.properties')
+if (keystorePropertiesFile.exists()) {
+    keystorePropertiesFile.withInputStream { keystoreProperties.load(it) }
+}
+
+def signingValue = { String environmentName, String propertyName ->
+    def environmentValue = System.getenv(environmentName)?.trim()
+    if (environmentValue) {
+        return environmentValue
+    }
+
+    def propertyValue = keystoreProperties.getProperty(propertyName)?.trim()
+    return propertyValue ?: null
+}
+
+def releaseStoreFile = signingValue('WIWI_ANDROID_KEYSTORE_PATH', 'storeFile')
+def releaseStorePassword = signingValue('WIWI_ANDROID_STORE_PASSWORD', 'storePassword')
+def releaseKeyAlias = signingValue('WIWI_ANDROID_KEY_ALIAS', 'keyAlias')
+def releaseKeyPassword = signingValue('WIWI_ANDROID_KEY_PASSWORD', 'keyPassword')
+def releaseStoreType = signingValue('WIWI_ANDROID_KEYSTORE_TYPE', 'storeType')
+if (!releaseStoreType && releaseStoreFile?.toLowerCase()?.endsWith('.p12')) {
+    releaseStoreType = 'PKCS12'
+}
+def releaseSigningConfigured = [
+    releaseStoreFile,
+    releaseStorePassword,
+    releaseKeyAlias,
+    releaseKeyPassword,
+].every { it }
+def releaseSigningRequired = (System.getenv('WIWI_REQUIRE_RELEASE_SIGNING') ?: 'false').toBoolean()
+
+if (releaseSigningRequired && !releaseSigningConfigured) {
+    throw new GradleException('WIWI release signing is required. Configure android/keystore.properties or the WIWI_ANDROID_* environment variables.')
+}
+
 android {
     namespace = "com.getwiwi.app"
     compileSdk = rootProject.ext.compileSdkVersion
+    signingConfigs {
+        if (releaseSigningConfigured) {
+            release {
+                storeFile rootProject.file(releaseStoreFile)
+                storePassword releaseStorePassword
+                keyAlias releaseKeyAlias
+                keyPassword releaseKeyPassword
+                if (releaseStoreType) {
+                    storeType releaseStoreType
+                }
+            }
+        }
+    }
     defaultConfig {
         applicationId "com.getwiwi.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode Integer.parseInt(System.getenv('WIWI_ANDROID_VERSION_CODE') ?: '1')
+        versionName System.getenv('WIWI_ANDROID_VERSION_NAME') ?: '1.0.0'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -20,6 +69,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (releaseSigningConfigured) {
+                signingConfig signingConfigs.release
+            }
         }
     }
 }

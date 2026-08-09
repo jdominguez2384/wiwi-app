@@ -46,14 +46,14 @@ export const planFeatures: Record<
     },
     description: {
       en: "Estimate net pay after fuel and tax set-asides.",
-      es: "Estima pago neto despues de gasolina e impuestos.",
+      es: "Estima pago neto después de gasolina e impuestos.",
     },
   },
   basic_insights: {
     includedOnFree: true,
     label: {
       en: "Basic insights",
-      es: "Analisis basico",
+      es: "Análisis básico",
     },
     description: {
       en: "See weekly totals, app breakdowns, and your best shift.",
@@ -68,29 +68,29 @@ export const planFeatures: Record<
     },
     description: {
       en: "Download shift reports for records, taxes, and planning.",
-      es: "Descarga reportes para registros, impuestos y planeacion.",
+      es: "Descarga reportes para registros, impuestos y planeación.",
     },
   },
   advanced_insights: {
     includedOnFree: false,
     label: {
       en: "Advanced insights",
-      es: "Analisis avanzado",
+      es: "Análisis avanzado",
     },
     description: {
       en: "Spot trends by app, month, day, and real hourly performance.",
-      es: "Detecta tendencias por app, mes, dia y pago real por hora.",
+      es: "Detecta tendencias por app, mes, día y pago real por hora.",
     },
   },
   goal_forecasting: {
     includedOnFree: false,
     label: {
       en: "Goal forecasting",
-      es: "Pronostico de metas",
+      es: "Pronóstico de metas",
     },
     description: {
       en: "Estimate how many shifts you need to hit weekly goals.",
-      es: "Estima cuantos turnos necesitas para llegar a tus metas.",
+      es: "Estima cuántos turnos necesitas para llegar a tus metas.",
     },
   },
   custom_cost_profiles: {

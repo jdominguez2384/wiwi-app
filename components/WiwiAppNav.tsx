@@ -33,7 +33,7 @@ const navItems = [
   {
     href: "/insights",
     icon: BarChart3,
-    label: { en: "Insights", es: "Analisis" },
+    label: { en: "Insights", es: "Análisis" },
   },
   {
     href: "/settings",

@@ -43,7 +43,7 @@ export function WiwiShell({
               <div className="leading-tight">
                 <p className="text-2xl font-black tracking-tight text-white">WIWI</p>
                 <p className="text-xs text-slate-400">
-                  {isSpanish ? "Valio la pena?" : "Was It Worth It?"}
+                  {isSpanish ? "¿Valió la pena?" : "Was It Worth It?"}
                 </p>
               </div>
             </Link>

@@ -76,9 +76,9 @@ jobs:
       - name: Sync Android project
         run: npx cap sync android
 
-      - name: Compile Android debug APK
+      - name: Compile Android debug APK and unsigned release bundle
         working-directory: android
-        run: ./gradlew assembleDebug
+        run: ./gradlew assembleDebug bundleRelease
 
       - name: Upload Android debug APK
         uses: actions/upload-artifact@v4
