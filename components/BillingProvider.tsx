@@ -15,6 +15,7 @@ import {
   PRO_ENTITLEMENT_ID,
   type ProPackageKey,
 } from "../lib/billing";
+import { getApiUrl } from "../lib/api";
 import { supabase } from "../lib/supabase/client";
 import { useAuth } from "./AuthProvider";
 import { useLanguage } from "./LanguageProvider";
@@ -73,7 +74,7 @@ export function BillingProvider({ children }: { children: React.ReactNode }) {
     } = await supabase.auth.getSession();
     if (!session?.access_token) return false;
 
-    const response = await fetch("/api/billing/sync", {
+    const response = await fetch(getApiUrl("/api/billing/sync"), {
       method: "POST",
       headers: { Authorization: `Bearer ${session.access_token}` },
     });

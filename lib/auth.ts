@@ -1,11 +1,21 @@
+import { Capacitor } from "@capacitor/core";
 import { supabase } from "./supabase/client";
+import {
+  getNativeAuthRedirectUrl,
+  type NativeAuthPath,
+} from "./nativeLinks";
 
-function getSiteUrl() {
-  if (typeof window !== "undefined" && window.location.origin) {
-    return window.location.origin;
+function getAuthRedirectUrl(path: NativeAuthPath) {
+  if (Capacitor.isNativePlatform()) {
+    return getNativeAuthRedirectUrl(path);
   }
 
-  return process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  if (typeof window !== "undefined" && window.location.origin) {
+    return `${window.location.origin}${path}`;
+  }
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  return `${siteUrl.replace(/\/$/, "")}${path}`;
 }
 
 export async function signUp(
@@ -18,7 +28,7 @@ export async function signUp(
     password,
     options: {
       data: metadata || {},
-      emailRedirectTo: `${getSiteUrl()}/auth/confirmed`,
+      emailRedirectTo: getAuthRedirectUrl("/auth/confirmed"),
     },
   });
 }
@@ -41,7 +51,7 @@ export async function getCurrentUser() {
 
 export async function sendPasswordResetEmail(email: string) {
   return supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${getSiteUrl()}/reset-password`,
+    redirectTo: getAuthRedirectUrl("/reset-password"),
   });
 }
 

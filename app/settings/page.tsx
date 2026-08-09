@@ -42,6 +42,7 @@ import { useTutorial } from "../../components/TutorialProvider";
 import { CostProfileManager } from "../../components/CostProfileManager";
 import { useBilling } from "../../components/BillingProvider";
 import { signOut } from "../../lib/auth";
+import { getApiUrl } from "../../lib/api";
 import { updateUserSettings } from "../../lib/data/settings";
 import {
   getNonNegativeNumber,
@@ -234,7 +235,7 @@ export default function SettingsPage() {
         return;
       }
 
-      const response = await fetch("/api/account/delete", {
+      const response = await fetch(getApiUrl("/api/account/delete"), {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${session.access_token}`,

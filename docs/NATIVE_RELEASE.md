@@ -1,49 +1,66 @@
-# Native Release Plan
+# WIWI Native Release Guide
 
-WIWI is currently a responsive web app and PWA with generated Capacitor iOS and Android projects. App-store distribution still requires device testing, signing, deep-link configuration, and store-specific account and billing behavior.
+WIWI's iOS and Android projects package a local static build of the user interface. The app connects directly to Supabase with the public client key and calls `https://getwiwi.com/api` only for privileged server operations such as account deletion and billing synchronization. No service-role or RevenueCat secret is included in the native bundle.
 
-## Recommended Architecture
+## Build and Sync
 
-The current Capacitor container points internal-test builds at `https://getwiwi.com` while keeping Supabase as the shared backend. Before App Store review, bundle the web experience or add meaningful native capabilities. A wrapper that only displays a website carries review risk under Apple's minimum-functionality rules.
+Run the complete native build whenever web code or native dependencies change:
 
-Meaningful native additions can include secure deep-link handling, native share/export, biometric re-entry, offline draft capture, haptics, and platform-standard subscription management. These should support the core shift workflow rather than exist only for review.
+```bash
+npm run native:sync
+```
 
-## Proposed Identifiers
+This command:
 
-- App name: `WIWI`
-- Apple bundle ID: `com.getwiwi.app`
-- Android application ID: `com.getwiwi.app`
-- Production domain: `getwiwi.com`
-- Authentication callback host: `getwiwi.com`
+1. Exports every user-facing Next.js route into `.next-native`.
+2. Excludes Vercel-only API and legacy dynamic routes from the device bundle.
+3. Copies the result and Capacitor plugins into both native projects.
 
-Identifiers become difficult to change after store records and signed builds exist. Confirm them before creating the production listings.
+The normal `npm run build` command remains the Vercel build and still includes all API routes.
 
-## Implementation Order
+## Supabase Redirect URLs
 
-1. Stabilize and deploy the web/database hardening release.
-2. Confirm the proposed bundle and application identifiers before creating store records.
-3. Configure universal links and Android App Links for authentication callbacks.
-4. Test the generated icon and splash sets on real devices.
-5. Test safe areas, keyboard behavior, date inputs, bottom navigation, external links, and offline/error states on physical devices.
-6. Add monitoring and a version/build-number strategy.
-7. Distribute through TestFlight and Google Play internal testing.
-8. Complete every billing lifecycle test in `docs/MONETIZATION.md` before enabling purchases.
-9. Resolve tester feedback before completing store privacy and data-safety disclosures.
+Add both exact URLs under Authentication > URL Configuration > Redirect URLs:
 
-The Capacitor projects, identifiers, launch assets, and sync scripts are already in the repository. Run `npm run native:assets` after artwork changes and `npm run native:sync` after web or Capacitor configuration changes.
+```text
+wiwi://auth/confirmed
+wiwi://reset-password
+```
 
-## Native Build Requirements
+Keep the existing HTTPS and localhost redirect URLs. Test both confirmation and password recovery from a fully closed app and an already-open app before submission.
 
-- Apple builds require macOS, Xcode, an Apple Developer membership, signing certificates, and provisioning profiles.
-- Google Play builds require Android Studio, a protected release keystore, Play App Signing, and the required target API level.
-- Never place `SUPABASE_SERVICE_ROLE_KEY` or other server secrets inside an iOS or Android bundle.
-- Account deletion must continue through the authenticated server endpoint, not a privileged key in the app.
-- RevenueCat's public platform SDK keys may be bundled, but its secret API key and webhook secret must remain server-only.
-- The Android activity uses `singleTop` so store purchase verification can return to the existing WIWI activity safely.
+## Android
 
-Official references:
+- Package ID: `com.getwiwi.app`
+- Minimum SDK: 24
+- Target SDK: 36
+- URL scheme: `wiwi://`
+- Release artifact: signed Android App Bundle (`.aab`)
 
-- Apple review guidelines: https://developer.apple.com/app-store/review/guidelines/
-- Apple submission requirements: https://developer.apple.com/news/upcoming-requirements/
-- Android target API requirements: https://developer.android.com/google/play/requirements/target-sdk
-- Google account deletion requirements: https://support.google.com/googleplay/android-developer/answer/13327111
+Create an upload keystore outside the repository, enroll in Play App Signing, and build the release bundle from Android Studio or Gradle. Never commit `.jks`, `.keystore`, or signing passwords.
+
+GitHub Actions compiles and uploads a debug APK on every pull request and push to `main`. This verifies the JavaScript export, Capacitor sync, plugins, Android resources, and Gradle project without requiring a local Android installation.
+
+## iOS
+
+- Bundle ID: `com.getwiwi.app`
+- Deployment target: iOS 15
+- URL scheme: `wiwi://`
+- Required submission toolchain: Xcode 26 with the iOS 26 SDK or later
+
+Assign the Apple Developer team in Xcode, register the bundle ID in Apple Developer, enable automatic signing, and create an Archive on a current Mac. Upload the first build to TestFlight before configuring the production release.
+
+## Required Device Tests
+
+- Fresh install, upgrade, background, force-close, and relaunch.
+- Account signup and confirmation from Gmail, Outlook, and iCloud when available.
+- Password recovery from a closed app and an already-open app.
+- Sign in, sign out, session restoration, and account deletion.
+- Add, edit, and delete shifts, including a shift shorter than one hour.
+- English and Spanish tutorial, settings, legal pages, and error states.
+- Offline launch, interrupted network requests, and recovery after reconnecting.
+- Purchase, restore, cancellation, expiration, and refund after store products are configured.
+
+## Public Native Environment
+
+`NEXT_PUBLIC_NATIVE_API_ORIGIN` is optional and defaults to `https://getwiwi.com`. Set it only when intentionally building a native client against another trusted WIWI environment.

@@ -11,13 +11,15 @@
     "typecheck": "tsc --noEmit --pretty false",
     "test": "node --test --test-isolation=none tests/*.test.mjs",
     "check": "npm run lint && npm run typecheck && npm test",
-    "native:sync": "cap sync",
+    "native:build": "node scripts/build-native.mjs",
+    "native:sync": "npm run native:build && cap sync",
     "native:assets": "node scripts/generate-native-assets.mjs",
     "native:open:android": "cap open android",
     "native:open:ios": "cap open ios"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.0",
+    "@capacitor/app": "^8.0.0",
     "@capacitor/browser": "^8.0.0",
     "@capacitor/core": "^8.5.0",
     "@capacitor/filesystem": "^8.0.0",

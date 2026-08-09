@@ -41,6 +41,16 @@ export default function ResetPasswordPage() {
       setIsCheckingRecovery(true);
 
       const url = new URL(window.location.href);
+      if (url.searchParams.get("native_error")) {
+        finishChecking(
+          false,
+          isSpanish
+            ? "No pudimos verificar este enlace. Solicita uno nuevo."
+            : "We could not verify this link. Request a new one."
+        );
+        return;
+      }
+
       const code = url.searchParams.get("code");
 
       if (code) {

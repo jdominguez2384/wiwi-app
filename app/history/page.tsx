@@ -391,7 +391,7 @@ export default function HistoryPage() {
 
                     <div className="flex shrink-0 gap-2">
                       <Link
-                        href={`/edit-shift/${shift.id}`}
+                        href={`/edit-shift?id=${encodeURIComponent(shift.id)}`}
                         className="inline-flex items-center gap-2 rounded-2xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm font-medium text-slate-200 transition hover:border-sky-500/40 hover:text-white"
                       >
                         <Pencil className="h-4 w-4" />

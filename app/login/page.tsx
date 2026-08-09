@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRight, KeyRound, Mail } from "lucide-react";
 import { AuthShell } from "../../components/AuthShell";
 import { useLanguage } from "../../components/LanguageProvider";
 import { signIn } from "../../lib/auth";
 import { getFriendlyAuthError } from "../../lib/auth-messages";
+import { consumeNativeAuthError } from "../../components/NativeLinkProvider";
 
 export default function LoginPage() {
   const { language, setLanguage } = useLanguage();
@@ -18,6 +19,16 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (consumeNativeAuthError() !== "confirmation") return;
+
+    setMessage(
+      isSpanish
+        ? "No pudimos confirmar ese enlace. Solicita un correo nuevo e intentalo otra vez."
+        : "We could not confirm that link. Request a new email and try again."
+    );
+  }, [isSpanish]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

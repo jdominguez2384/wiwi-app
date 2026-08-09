@@ -25,7 +25,7 @@ function isAppRoute(pathname: string) {
     pathname === "/history" ||
     pathname === "/insights" ||
     pathname === "/settings" ||
-    pathname.startsWith("/edit-shift/")
+    pathname.startsWith("/edit-shift")
   );
 }
 

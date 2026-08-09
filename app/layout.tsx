@@ -9,6 +9,7 @@ import { AppDataNotice } from "../components/AppDataNotice";
 import { TutorialProvider } from "../components/TutorialProvider";
 import { CostProfileProvider } from "../components/CostProfileProvider";
 import { BillingProvider } from "../components/BillingProvider";
+import { NativeLinkProvider } from "../components/NativeLinkProvider";
 
 const appName = "WIWI";
 const appDescription =
@@ -79,20 +80,22 @@ export default function RootLayout({
       <body>
         <AuthProvider>
           <LanguageProvider>
-            <TutorialProvider>
-              <PlanProvider>
-                <BillingProvider>
-                  <CostProfileProvider>
-                    <SettingsProvider>
-                      <ShiftProvider>
-                        <AppDataNotice />
-                        {children}
-                      </ShiftProvider>
-                    </SettingsProvider>
-                  </CostProfileProvider>
-                </BillingProvider>
-              </PlanProvider>
-            </TutorialProvider>
+            <NativeLinkProvider>
+              <TutorialProvider>
+                <PlanProvider>
+                  <BillingProvider>
+                    <CostProfileProvider>
+                      <SettingsProvider>
+                        <ShiftProvider>
+                          <AppDataNotice />
+                          {children}
+                        </ShiftProvider>
+                      </SettingsProvider>
+                    </CostProfileProvider>
+                  </BillingProvider>
+                </PlanProvider>
+              </TutorialProvider>
+            </NativeLinkProvider>
           </LanguageProvider>
         </AuthProvider>
       </body>

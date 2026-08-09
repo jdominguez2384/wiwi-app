@@ -1,7 +1,13 @@
-import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { nativeJson, nativePreflight } from "../../../../lib/server/native-cors";
 
 export const dynamic = "force-dynamic";
+
+const allowedMethods = ["DELETE"];
+
+export function OPTIONS(request: Request) {
+  return nativePreflight(request, allowedMethods);
+}
 
 function getSupabaseConfig() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -32,21 +38,23 @@ export async function DELETE(request: Request) {
   const { url, publishableKey, serviceRoleKey } = getSupabaseConfig();
 
   if (!url || !publishableKey || !serviceRoleKey) {
-    return NextResponse.json(
+    return nativeJson(
+      request,
       {
         error:
           "Account deletion is not configured yet. Please contact WIWI support.",
       },
-      { status: 500 }
+      { status: 500, methods: allowedMethods }
     );
   }
 
   const token = getBearerToken(request);
 
   if (!token) {
-    return NextResponse.json(
+    return nativeJson(
+      request,
       { error: "You must be signed in to delete your account." },
-      { status: 401 }
+      { status: 401, methods: allowedMethods }
     );
   }
 
@@ -63,9 +71,10 @@ export async function DELETE(request: Request) {
   } = await userClient.auth.getUser(token);
 
   if (userError || !user) {
-    return NextResponse.json(
+    return nativeJson(
+      request,
       { error: "Your session expired. Please sign in again." },
-      { status: 401 }
+      { status: 401, methods: allowedMethods }
     );
   }
 
@@ -92,9 +101,10 @@ export async function DELETE(request: Request) {
   const dataError = deleteResults.find((result) => result.error)?.error;
 
   if (dataError) {
-    return NextResponse.json(
+    return nativeJson(
+      request,
       { error: "We could not delete your WIWI data. Please try again." },
-      { status: 500 }
+      { status: 500, methods: allowedMethods }
     );
   }
 
@@ -102,11 +112,12 @@ export async function DELETE(request: Request) {
     await adminClient.auth.admin.deleteUser(user.id);
 
   if (authDeleteError) {
-    return NextResponse.json(
+    return nativeJson(
+      request,
       { error: "We could not delete your account. Please try again." },
-      { status: 500 }
+      { status: 500, methods: allowedMethods }
     );
   }
 
-  return NextResponse.json({ ok: true });
+  return nativeJson(request, { ok: true }, { methods: allowedMethods });
 }
