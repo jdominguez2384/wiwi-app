@@ -62,7 +62,7 @@
 - [x] Build, signature-verify, and retain the Android 1.0.0 (1) App Bundle in protected GitHub Actions.
 - [x] Generate and separately store the encrypted Android upload key and public certificate.
 - [x] Accept the App Store Connect Terms of Service as the account owner.
-- [ ] Enter the App Review contact phone number in international format and save the 1.0 version metadata.
+- [x] Enter the App Review contact phone number in international format and save the 1.0 version metadata.
 - [ ] Complete Digital Services Act trader-status verification in App Store Connect.
 - [ ] Upload an iOS build and the purchase-review screenshots, then attach the first subscriptions and lifetime purchase to version 1.0.
 
