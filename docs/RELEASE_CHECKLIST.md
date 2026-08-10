@@ -43,10 +43,10 @@
 - [x] Configure both native projects with `com.getwiwi.app` and the `wiwi://` authentication scheme.
 - [x] Add `wiwi://auth/confirmed` and `wiwi://reset-password` to Supabase Redirect URLs.
 - [ ] Use Xcode 26 or later and the iOS 26 SDK for Apple submissions.
-- [ ] Target Android API level 36 or later for submissions on or after August 31, 2026.
+- [x] Target Android API level 36 or later for submissions on or after August 31, 2026.
 - [x] Create and visually verify production icons and splash assets.
 - [x] Prepare validated English and Spanish descriptions, keywords, feature graphics, privacy answers, and review notes.
-- [ ] Capture and visually verify the localized Apple and Google screenshot sets.
+- [x] Capture and visually verify the localized Apple and Google screenshot sets.
 - [ ] Complete store age/content ratings.
 - [ ] Complete Apple App Privacy and Google Play Data safety disclosures from the actual production behavior.
 - [ ] Provide `https://getwiwi.com/support` as the support URL.
@@ -55,6 +55,7 @@
 - [x] Create a dedicated review account with representative June-August shift data and private local credentials.
 - [ ] Test account creation, confirmation links, recovery links, and deletion inside native builds.
 - [ ] Create signed builds and complete the real-device checks in `docs/NATIVE_RELEASE.md`.
+- [x] Build, signature-verify, and retain the Android 1.0.0 (1) App Bundle in protected GitHub Actions.
 - [x] Generate and separately store the encrypted Android upload key and public certificate.
 - [ ] Accept the App Store Connect Terms of Service as the account owner.
 

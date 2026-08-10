@@ -8,6 +8,8 @@ Run `npm run store:screenshots` after production has representative review data.
 - Google Play phone: 1080 x 1920 PNG, five screenshots per locale.
 - Locales: English (`en-US`) and Spanish (`es-US`).
 
+The production capture was completed and visually verified on August 9, 2026. All 20 PNG files use the exact dimensions above and show the dedicated fictional review dataset.
+
 ## Screenshot Order and Alt Text
 
 | File | English alt text | Spanish alt text |

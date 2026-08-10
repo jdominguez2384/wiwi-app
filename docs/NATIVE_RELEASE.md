@@ -72,6 +72,8 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 
 Increase the workflow's version code for every Play Console upload. Keep the encrypted upload key and its password in a separate recoverable backup even after the GitHub secrets are configured.
 
+The first protected release run completed successfully on August 9, 2026. GitHub Actions built and verified `wiwi-android-1.0.0-1` as a signed 7.2 MB App Bundle. The artifact is retained for 14 days; rerun the workflow with the same version values if a fresh download is needed before the first Play Console upload.
+
 GitHub Actions compiles and uploads a debug APK on every pull request and push to `main`. This verifies the JavaScript export, Capacitor sync, plugins, Android resources, and Gradle project without requiring a local Android installation.
 
 ## iOS
