@@ -74,6 +74,7 @@
 - [x] Store entitlement state server-side and protect Pro writes in the database.
 - [x] Add restore-purchases and manage-subscription flows before enabling payment.
 - [x] Create the Apple subscription group, monthly and annual subscriptions, lifetime purchase, prices, localizations, and annual trial from `docs/MONETIZATION.md`.
+- [ ] Place the monthly and annual Apple subscriptions at the same service level before review.
 - [ ] Create the matching Google Play products and approve products in both stores.
 - [ ] Configure the RevenueCat `pro` entitlement, `default` offering, products, and webhook.
 - [ ] Complete sandbox lifecycle testing on iPhone and Android.
