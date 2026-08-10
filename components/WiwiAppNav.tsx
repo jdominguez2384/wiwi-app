@@ -119,16 +119,11 @@ export function WiwiMobileTabs({ language }: { language: Language }) {
                 href={item.href}
                 className={cx(
                   "flex min-w-0 flex-col items-center justify-center gap-1 rounded-2xl px-2 py-2 text-[0.68rem] font-medium transition",
-                  isActive
-                    ? "text-sky-200"
-                    : "text-slate-500 hover:text-slate-200",
                   isAdd
-                    ? isActive
-                      ? "bg-sky-500 text-black shadow-lg shadow-sky-500/20"
-                      : "bg-sky-500 text-black shadow-lg shadow-sky-500/20 hover:bg-sky-400 hover:text-black"
+                    ? "bg-sky-500 text-slate-950 shadow-lg shadow-sky-500/20 hover:bg-sky-400"
                     : isActive
-                      ? "bg-slate-900"
-                      : ""
+                      ? "bg-slate-900 text-sky-200"
+                      : "text-slate-500 hover:text-slate-200"
                 )}
               >
                 <Icon className={cx("h-5 w-5", isAdd ? "h-6 w-6" : "")} />

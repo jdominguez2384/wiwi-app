@@ -43,10 +43,26 @@ if (!executablePath) {
 
 const capturePages = [
   { id: "01-dashboard", route: "/dashboard" },
-  { id: "02-history", route: "/history" },
-  { id: "03-insights", route: "/insights" },
-  { id: "04-add-shift", route: "/add-shift" },
-  { id: "05-settings", route: "/settings" },
+  {
+    id: "02-history",
+    route: "/history",
+    focusSelector: 'label[for="history-search"]',
+  },
+  {
+    id: "03-insights",
+    route: "/insights",
+    focusText: { "en-US": "Gross earnings", "es-US": "Ganancias brutas" },
+  },
+  {
+    id: "04-add-shift",
+    route: "/add-shift",
+    focusSelector: 'label[for="shift-date"]',
+  },
+  {
+    id: "05-settings",
+    route: "/settings",
+    focusSelector: 'label[for="settings-tax-rate"]',
+  },
 ];
 
 const targets = [
@@ -69,12 +85,31 @@ const browser = await chromium.launch({
 
 async function signIn(page) {
   await page.goto(`${baseUrl}/login`, { waitUntil: "domcontentloaded" });
+  await page.waitForLoadState("networkidle", { timeout: 30000 });
   await page.getByRole("textbox", { name: "Email" }).fill(credentials.email);
   await page.getByRole("textbox", { name: "Password" }).fill(credentials.password);
-  await Promise.all([
-    page.waitForURL("**/dashboard", { timeout: 15000 }),
-    page.getByRole("button", { name: "Sign in" }).click(),
-  ]);
+
+  const authResponsePromise = page.waitForResponse(
+    (response) =>
+      response.url().includes("/auth/v1/token") &&
+      response.request().method() === "POST",
+    { timeout: 30000 }
+  );
+
+  await page.getByRole("button", { name: "Sign in to WIWI", exact: true }).click();
+  const authResponse = await authResponsePromise;
+
+  if (!authResponse.ok()) {
+    throw new Error(`Review account sign-in failed with HTTP ${authResponse.status()}.`);
+  }
+
+  try {
+    await page.waitForURL(/\/dashboard(?:[/?#]|$)/, { timeout: 30000 });
+  } catch {
+    // Supabase has already stored the verified session, so recover from a slow
+    // client-side router transition without weakening the authentication check.
+    await page.goto(`${baseUrl}/dashboard`, { waitUntil: "domcontentloaded" });
+  }
 }
 
 async function setLanguage(page, language) {
@@ -94,6 +129,26 @@ async function waitForApp(page) {
     { timeout: 15000 }
   );
   await page.waitForTimeout(500);
+}
+
+async function positionCapture(page, capture, locale) {
+  const focus = capture.focusSelector
+    ? page.locator(capture.focusSelector)
+    : capture.focusText
+      ? page.getByText(capture.focusText[locale], { exact: true }).first()
+      : null;
+
+  if (!focus) {
+    await page.evaluate(() => window.scrollTo(0, 0));
+    return;
+  }
+
+  await focus.waitFor({ state: "visible", timeout: 15000 });
+  await focus.evaluate((element) => {
+    const top = element.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo(0, Math.max(0, top - 24));
+  });
+  await page.waitForTimeout(400);
 }
 
 try {
@@ -125,6 +180,7 @@ try {
           waitUntil: "domcontentloaded",
         });
         await waitForApp(page);
+        await positionCapture(page, capture, locale);
         await page.screenshot({
           path: path.join(outputDirectory, `${capture.id}.png`),
         });
