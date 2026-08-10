@@ -38,6 +38,7 @@
 ## App Store Submission
 
 - [x] Register the explicit Apple App ID `com.getwiwi.app` under team `VH8ST3DJ5U`.
+- [x] Create App Store Connect app `6800010884` for `com.getwiwi.app`.
 - [ ] Complete Google Play physical Android-device and contact-phone verification.
 - [ ] Create the Google Play app record for `com.getwiwi.app` and enroll it in Play App Signing.
 - [x] Configure both native projects with `com.getwiwi.app` and the `wiwi://` authentication scheme.
@@ -47,17 +48,23 @@
 - [x] Create and visually verify production icons and splash assets.
 - [x] Prepare validated English and Spanish descriptions, keywords, feature graphics, privacy answers, and review notes.
 - [x] Capture and visually verify the localized Apple and Google screenshot sets.
-- [ ] Complete store age/content ratings.
-- [ ] Complete Apple App Privacy and Google Play Data safety disclosures from the actual production behavior.
-- [ ] Provide `https://getwiwi.com/support` as the support URL.
-- [ ] Provide `https://getwiwi.com/privacy` as the privacy URL.
+- [x] Complete the Apple age rating questionnaire with a calculated `4+` rating.
+- [ ] Complete the Google Play content rating questionnaire.
+- [x] Publish Apple App Privacy disclosures from the actual production behavior.
+- [ ] Complete Google Play Data safety disclosures from the actual production behavior.
+- [x] Provide `https://getwiwi.com/support` as the Apple support URL.
+- [x] Provide `https://getwiwi.com/privacy` as the Apple privacy URL.
 - [ ] Provide `https://getwiwi.com/delete-account` as the external deletion URL.
+- [x] Upload the English and Spanish iPhone 6.9-inch screenshot sets to App Store Connect.
 - [x] Create a dedicated review account with representative June-August shift data and private local credentials.
 - [ ] Test account creation, confirmation links, recovery links, and deletion inside native builds.
 - [ ] Create signed builds and complete the real-device checks in `docs/NATIVE_RELEASE.md`.
 - [x] Build, signature-verify, and retain the Android 1.0.0 (1) App Bundle in protected GitHub Actions.
 - [x] Generate and separately store the encrypted Android upload key and public certificate.
-- [ ] Accept the App Store Connect Terms of Service as the account owner.
+- [x] Accept the App Store Connect Terms of Service as the account owner.
+- [ ] Enter the App Review contact phone number in international format and save the 1.0 version metadata.
+- [ ] Complete Digital Services Act trader-status verification in App Store Connect.
+- [ ] Upload an iOS build and the purchase-review screenshots, then attach the first subscriptions and lifetime purchase to version 1.0.
 
 ## Monetization
 
@@ -66,7 +73,8 @@
 - [x] Implement RevenueCat purchase, restore, server sync, and webhook code.
 - [x] Store entitlement state server-side and protect Pro writes in the database.
 - [x] Add restore-purchases and manage-subscription flows before enabling payment.
-- [ ] Create and approve Apple and Google products using `docs/MONETIZATION.md`.
+- [x] Create the Apple subscription group, monthly and annual subscriptions, lifetime purchase, prices, localizations, and annual trial from `docs/MONETIZATION.md`.
+- [ ] Create the matching Google Play products and approve products in both stores.
 - [ ] Configure the RevenueCat `pro` entitlement, `default` offering, products, and webhook.
 - [ ] Complete sandbox lifecycle testing on iPhone and Android.
 - [ ] Enable `NEXT_PUBLIC_PRO_BILLING_ENABLED` only after every billing test passes.

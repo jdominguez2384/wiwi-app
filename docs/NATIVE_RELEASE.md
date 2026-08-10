@@ -79,12 +79,13 @@ GitHub Actions compiles and uploads a debug APK on every pull request and push t
 ## iOS
 
 - Bundle ID: `com.getwiwi.app`
+- App Store app ID: `6800010884`
 - Apple team: `VH8ST3DJ5U`
 - Deployment target: iOS 15
 - URL scheme: `wiwi://`
 - Required submission toolchain: Xcode 26 with the iOS 26 SDK or later
 
-The explicit App ID is registered in Apple Developer and the Xcode project uses automatic signing with the assigned team. Create an Archive on a current Mac and upload the first build to TestFlight before configuring the production release.
+The explicit App ID and App Store Connect app record are registered, and the Xcode project uses automatic signing with the assigned team. `ITSAppUsesNonExemptEncryption` is set to `false` because WIWI only uses standard encryption supplied by the operating system and HTTPS services. Create an Archive on a current Mac and upload the first build to TestFlight before configuring the production release.
 
 Store listing copy, privacy answers, review notes, and asset instructions live under `store/`. Run `npm run store:validate`, `npm run store:assets`, and `npm run store:screenshots` before submitting a new store version.
 

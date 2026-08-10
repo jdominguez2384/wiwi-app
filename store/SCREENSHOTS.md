@@ -10,6 +10,8 @@ Run `npm run store:screenshots` after production has representative review data.
 
 The production capture was completed and visually verified on August 9, 2026. All 20 PNG files use the exact dimensions above and show the dedicated fictional review dataset.
 
+The five English and five Spanish iPhone 6.9-inch screenshots were uploaded to App Store Connect on August 10, 2026 in the order listed below. Google Play uploads remain pending account verification.
+
 ## Screenshot Order and Alt Text
 
 | File | English alt text | Spanish alt text |

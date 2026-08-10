@@ -12,6 +12,17 @@ WIWI keeps unlimited core shift logging, history, and basic insights free. Pro i
 
 Configure a 14-day introductory trial on the annual subscription if store eligibility and economics allow it. Apple and Google determine eligibility and always show the final localized price and trial terms before confirmation.
 
+## Apple Product Records
+
+- App Store app ID: `6800010884`
+- Subscription group: `WIWI Pro` (`22300184`)
+- Pro Monthly: `wiwi_pro_monthly` (Apple ID `6800016560`)
+- Pro Annual: `wiwi_pro_annual` (Apple ID `6800017560`)
+- Pro Lifetime: `wiwi_pro_lifetime` (Apple ID `6800019783`)
+- Annual introductory offer: two weeks free, available worldwide beginning August 10, 2026 with no end date
+
+The Apple records are configured and remain in Prepare for Submission. Attach their required review screenshots and the first iOS build before adding them to the 1.0 review submission.
+
 The lifetime product should be a non-consumable/one-time product. It means Pro access while WIWI continues to operate, not a guarantee that the service will exist forever. Remove the product from sale after the founding offer; existing purchasers retain their entitlement.
 
 ## RevenueCat Contract
