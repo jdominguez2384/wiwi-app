@@ -85,7 +85,9 @@ GitHub Actions compiles and uploads a debug APK on every pull request and push t
 - URL scheme: `wiwi://`
 - Required submission toolchain: Xcode 26 with the iOS 26 SDK or later
 
-The explicit App ID and App Store Connect app record are registered, and the Xcode project uses automatic signing with the assigned team. `ITSAppUsesNonExemptEncryption` is set to `false` because WIWI only uses standard encryption supplied by the operating system and HTTPS services. Create an Archive on a current Mac and upload the first build to TestFlight before configuring the production release.
+The explicit App ID and App Store Connect app record are registered, and the Xcode project uses automatic signing for local development with the assigned team. `ITSAppUsesNonExemptEncryption` is set to `false` because WIWI only uses standard encryption supplied by the operating system and HTTPS services.
+
+The manual **iOS TestFlight Release** GitHub workflow creates the App Store archive on a GitHub-hosted Mac, exports a signed IPA, retains the IPA and dSYMs for 14 days, and optionally uploads the build to TestFlight. It uses manual distribution signing in CI without changing the project's local automatic-signing configuration. Follow [IOS_TESTFLIGHT.md](IOS_TESTFLIGHT.md) to create and install the protected `production` environment secrets from Windows.
 
 Store listing copy, privacy answers, review notes, and asset instructions live under `store/`. Run `npm run store:validate`, `npm run store:assets`, and `npm run store:screenshots` before submitting a new store version.
 

@@ -43,7 +43,8 @@
 - [ ] Create the Google Play app record for `com.getwiwi.app` and enroll it in Play App Signing.
 - [x] Configure both native projects with `com.getwiwi.app` and the `wiwi://` authentication scheme.
 - [x] Add `wiwi://auth/confirmed` and `wiwi://reset-password` to Supabase Redirect URLs.
-- [ ] Use Xcode 26 or later and the iOS 26 SDK for Apple submissions.
+- [x] Add a protected Xcode 26 GitHub workflow for signed TestFlight builds without a local Mac.
+- [ ] Configure the Apple distribution, provisioning-profile, and App Store Connect API secrets from `docs/IOS_TESTFLIGHT.md`.
 - [x] Target Android API level 36 or later for submissions on or after August 31, 2026.
 - [x] Create and visually verify production icons and splash assets.
 - [x] Prepare validated English and Spanish descriptions, keywords, feature graphics, privacy answers, and review notes.
@@ -64,7 +65,8 @@
 - [x] Accept the App Store Connect Terms of Service as the account owner.
 - [x] Enter the App Review contact phone number in international format and save the 1.0 version metadata.
 - [ ] Complete Digital Services Act trader-status verification in App Store Connect.
-- [ ] Upload an iOS build and the purchase-review screenshots, then attach the first subscriptions and lifetime purchase to version 1.0.
+- [ ] Run the iOS release workflow, upload build 1 to TestFlight, and complete first-device verification.
+- [ ] Upload the purchase-review screenshots, then attach the first subscriptions and lifetime purchase to version 1.0.
 
 ## Monetization
 

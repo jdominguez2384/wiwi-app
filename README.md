@@ -52,6 +52,7 @@ Apply database changes before deploying client code that depends on them. For th
 
 - [Release checklist](docs/RELEASE_CHECKLIST.md)
 - [Native app plan](docs/NATIVE_RELEASE.md)
+- [iOS TestFlight setup](docs/IOS_TESTFLIGHT.md)
 - [Privacy Policy](https://getwiwi.com/privacy)
 - [Terms](https://getwiwi.com/terms)
 - [Support](https://getwiwi.com/support)
