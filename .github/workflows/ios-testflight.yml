@@ -41,9 +41,6 @@ jobs:
       IOS_BUNDLE_ID: com.getwiwi.app
       IOS_PROJECT_PATH: ios/App/App.xcodeproj
       IOS_SCHEME: App
-      IOS_ARCHIVE_PATH: ${{ runner.temp }}/WIWI.xcarchive
-      IOS_EXPORT_PATH: ${{ runner.temp }}/wiwi-export
-      IOS_KEYCHAIN_PATH: ${{ runner.temp }}/wiwi-signing.keychain-db
       WIWI_VERSION_NAME: ${{ inputs.version_name }}
       WIWI_BUILD_NUMBER: ${{ inputs.build_number }}
       WIWI_ENABLE_PRO_BILLING: ${{ inputs.enable_pro_billing }}
@@ -58,6 +55,14 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
+      - name: Configure temporary release paths
+        run: |
+          {
+            echo "IOS_ARCHIVE_PATH=$RUNNER_TEMP/WIWI.xcarchive"
+            echo "IOS_EXPORT_PATH=$RUNNER_TEMP/wiwi-export"
+            echo "IOS_KEYCHAIN_PATH=$RUNNER_TEMP/wiwi-signing.keychain-db"
+          } >> "$GITHUB_ENV"
 
       - name: Validate release inputs and secrets
         env:
