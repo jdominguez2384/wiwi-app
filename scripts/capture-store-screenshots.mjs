@@ -72,11 +72,28 @@ const targets = [
     deviceScaleFactor: 3,
   },
   {
+    directory: "apple-ipad-13",
+    viewport: { width: 1032, height: 1376 },
+    deviceScaleFactor: 2,
+  },
+  {
     directory: "google-play-phone",
     viewport: { width: 360, height: 640 },
     deviceScaleFactor: 3,
   },
 ];
+
+const targetArgumentIndex = process.argv.indexOf("--target");
+const requestedTarget = targetArgumentIndex >= 0
+  ? process.argv[targetArgumentIndex + 1]
+  : null;
+const selectedTargets = requestedTarget
+  ? targets.filter((target) => target.directory === requestedTarget)
+  : targets;
+
+if (requestedTarget && selectedTargets.length === 0) {
+  throw new Error(`Unknown screenshot target: ${requestedTarget}`);
+}
 
 const browser = await chromium.launch({
   executablePath,
@@ -152,7 +169,7 @@ async function positionCapture(page, capture, locale) {
 }
 
 try {
-  for (const target of targets) {
+  for (const target of selectedTargets) {
     const context = await browser.newContext({
       viewport: target.viewport,
       deviceScaleFactor: target.deviceScaleFactor,
@@ -194,4 +211,8 @@ try {
   await browser.close();
 }
 
-console.log("Captured localized WIWI screenshots for Apple and Google Play.");
+const capturedTargets = selectedTargets
+  .map((target) => target.directory)
+  .join(", ");
+
+console.log(`Captured localized WIWI screenshots for: ${capturedTargets}.`);

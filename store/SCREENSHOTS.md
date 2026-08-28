@@ -2,15 +2,18 @@
 
 Run `npm run store:screenshots` after production has representative review data. The script signs in with the ignored `store/review-credentials.local.json` file and captures the live app with installed Chrome.
 
+To refresh one device family without replacing the others, pass its directory name, for example `npm run store:screenshots -- --target apple-ipad-13`.
+
 ## Required Outputs
 
 - Apple iPhone 6.9-inch: 1290 x 2796 PNG, five screenshots per locale.
+- Apple iPad 13-inch: 2064 x 2752 PNG, five screenshots per locale.
 - Google Play phone: 1080 x 1920 PNG, five screenshots per locale.
 - Locales: English (`en-US`) and Spanish (`es-US`).
 
-The production capture was completed and visually verified on August 9, 2026. All 20 PNG files use the exact dimensions above and show the dedicated fictional review dataset.
+The production phone capture was completed and visually verified on August 9, 2026. The iPad capture was completed on August 28, 2026. All PNG files use the exact dimensions above and show the dedicated fictional review dataset.
 
-The five English and five Spanish iPhone 6.9-inch screenshots were uploaded to App Store Connect on August 10, 2026 in the order listed below. Google Play uploads remain pending account verification.
+The five English and five Spanish iPhone 6.9-inch screenshots were uploaded to App Store Connect on August 10, 2026. On August 28, 2026, the Add Shift, History, and Insights screenshots were uploaded for both 13-inch iPad localizations. Google Play uploads remain pending account verification.
 
 ## Screenshot Order and Alt Text
 
