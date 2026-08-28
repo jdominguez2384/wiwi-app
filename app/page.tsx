@@ -10,6 +10,7 @@ import {
   X,
 } from "lucide-react";
 import { useLanguage } from "../components/LanguageProvider";
+import { WiwiMark } from "../components/WiwiMark";
 import { useState } from "react";
 
 export default function HomePage() {
@@ -26,7 +27,7 @@ export default function HomePage() {
           <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-sky-400 to-sky-600 shadow-lg shadow-sky-500/20">
-                <span className="text-sm font-black text-white">W</span>
+                <WiwiMark className="h-6 w-6 text-white" />
               </div>
               <div className="leading-tight">
                 <p className="text-3xl font-black tracking-tight text-white">

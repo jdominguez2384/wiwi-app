@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { Globe } from "lucide-react";
 import type { Language } from "../lib/translations";
 import { cx } from "../lib/ui";
+import { WiwiMark } from "./WiwiMark";
 
 export function WiwiShell({
   language,
@@ -38,7 +39,7 @@ export function WiwiShell({
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-4 sm:gap-4 sm:px-6 lg:px-8">
             <Link href="/" className="flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400 to-sky-600 shadow-lg shadow-sky-500/20">
-                <span className="text-base font-black text-white">W</span>
+                <WiwiMark className="h-7 w-7 text-white" />
               </div>
               <div className="leading-tight">
                 <p className="text-2xl font-black tracking-tight text-white">WIWI</p>

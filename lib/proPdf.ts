@@ -22,8 +22,9 @@ async function buildShiftPdf(
     document.roundedRect(margin, 30, 42, 42, 12, 12, "F");
     document.setTextColor(255, 255, 255);
     document.setFont("helvetica", "bold");
-    document.setFontSize(17);
-    document.text("W", margin + 14, 57);
+    document.setFontSize(10);
+    document.text("WI", margin + 21, 47, { align: "center" });
+    document.text("WI", margin + 21, 60, { align: "center" });
     document.setFontSize(20);
     document.text("WIWI", margin + 56, 48);
     document.setFont("helvetica", "normal");

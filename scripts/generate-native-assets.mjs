@@ -1,4 +1,4 @@
-import { mkdir, readFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
 
@@ -20,6 +20,32 @@ async function writeOpaqueIcon(source, size, outputPath) {
     .flatten({ background })
     .png()
     .toFile(outputPath);
+}
+
+async function writeFavicon(source, outputPath) {
+  await ensureParent(outputPath);
+  const size = 32;
+  const png = await sharp(source)
+    .resize(size, size)
+    .flatten({ background })
+    .ensureAlpha()
+    .png()
+    .toBuffer();
+  const header = Buffer.alloc(22);
+
+  header.writeUInt16LE(0, 0);
+  header.writeUInt16LE(1, 2);
+  header.writeUInt16LE(1, 4);
+  header.writeUInt8(size, 6);
+  header.writeUInt8(size, 7);
+  header.writeUInt8(0, 8);
+  header.writeUInt8(0, 9);
+  header.writeUInt16LE(1, 10);
+  header.writeUInt16LE(32, 12);
+  header.writeUInt32LE(png.length, 14);
+  header.writeUInt32LE(header.length, 18);
+
+  await writeFile(outputPath, Buffer.concat([header, png]));
 }
 
 async function writeForeground(size, outputPath) {
@@ -177,5 +203,6 @@ await writeOpaqueIcon(
   512,
   path.join(root, "public", "wiwi-maskable-512.png")
 );
+await writeFavicon(iconSource, path.join(root, "app", "favicon.ico"));
 
 console.log("Generated WIWI native and PWA assets.");
