@@ -72,8 +72,9 @@
 - [x] Submit iOS version 1.0 build 2 for App Review after the TestFlight smoke test.
 - [x] Record Apple's August 29 Guideline 2.1 information request for submission `7c84d94f-4cf5-452b-95d9-06481e28ac71`.
 - [x] Confirm TestFlight records pre-submission testing on iPhone 17 Pro Max running iOS 26.6 with no crashes.
+- [x] Upload billing-disabled iOS build 3 from commit `56fa14d` and confirm it is Ready to Submit in TestFlight.
 - [ ] Update that iPhone to the latest public iOS release, retest WIWI, and capture Apple's requested walkthrough.
-- [ ] Upload and select billing-disabled iOS build 3, add the complete review notes, attach the recording, reply to Apple, and resubmit.
+- [ ] Select build 3 for version 1.0, add the complete review notes, attach the recording, reply to Apple, and resubmit.
 - [ ] Upload purchase-review screenshots and submit the first subscriptions and lifetime purchase with the future billing-enabled app version.
 
 ## Monetization
