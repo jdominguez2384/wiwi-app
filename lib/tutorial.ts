@@ -1,5 +1,8 @@
 import type { Language } from "./translations";
 
+const PRO_TUTORIAL_ENABLED =
+  process.env.NEXT_PUBLIC_PRO_BILLING_ENABLED === "true";
+
 export const TUTORIAL_VERSION = 1;
 
 export type TutorialStepId =
@@ -318,7 +321,18 @@ export const tutorialFaqs: Record<Language, TutorialFaq[]> = {
 };
 
 export function getTutorialCopy(language: Language) {
-  return tutorialCopy[language];
+  const copy = tutorialCopy[language];
+  if (PRO_TUTORIAL_ENABLED) return copy;
+
+  return {
+    ...copy,
+    steps: copy.steps.filter((step) => step.id !== "pro"),
+  };
+}
+
+export function getTutorialFaqs(language: Language) {
+  const faqs = tutorialFaqs[language];
+  return PRO_TUTORIAL_ENABLED ? faqs : faqs.slice(1);
 }
 
 export function getTutorialCompletionVersion(value: unknown) {

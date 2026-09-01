@@ -31,6 +31,7 @@ import {
   getPositiveNumber,
   isNonNegativeDecimalInput,
 } from "../lib/shiftForm";
+import { PRO_BILLING_ENABLED } from "../lib/billing";
 import { formatMoney } from "../lib/ui";
 
 const EMPTY_FORM = {
@@ -177,6 +178,8 @@ export function CostProfileManager() {
       setIsSaving(false);
     }
   }
+
+  if (!isPro && !PRO_BILLING_ENABLED) return null;
 
   if (!isPro) {
     return (

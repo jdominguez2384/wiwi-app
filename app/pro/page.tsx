@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import {
   ArrowRight,
   BadgeCheck,
@@ -26,6 +28,7 @@ import { WiwiShell } from "../../components/WiwiShell";
 import { MessageBanner, PageHero, Panel } from "../../components/WiwiSurface";
 import {
   fallbackProPrices,
+  PRO_BILLING_ENABLED,
   type ProPackageKey,
 } from "../../lib/billing";
 import { getPlanName, getPlanSummary } from "../../lib/plans";
@@ -33,6 +36,7 @@ import { getPlanName, getPlanSummary } from "../../lib/plans";
 const FEATURE_ICONS = [BarChart3, Target, FileDown, CarFront, Tags];
 
 export default function ProPage() {
+  const router = useRouter();
   const { language, setLanguage } = useLanguage();
   const { plan, isPro, isLoadingPlan } = usePlan();
   const {
@@ -50,6 +54,13 @@ export default function ProPage() {
   const isSpanish = language === "es";
   const hasProAccess = isPro || hasStoreProEntitlement;
   const billingReady = availability === "ready";
+  const hideProSurface = !PRO_BILLING_ENABLED && !hasProAccess;
+
+  useEffect(() => {
+    if (hideProSurface) router.replace("/settings");
+  }, [hideProSurface, router]);
+
+  if (hideProSurface) return null;
 
   const features = [
     {

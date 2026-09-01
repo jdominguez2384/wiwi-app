@@ -2,6 +2,8 @@ import type { Language } from "./translations";
 
 export const PRO_ENTITLEMENT_ID = "pro";
 export const PRO_OFFERING_ID = "default";
+export const PRO_BILLING_ENABLED =
+  process.env.NEXT_PUBLIC_PRO_BILLING_ENABLED === "true";
 
 export type ProPackageKey = "monthly" | "annual" | "lifetime";
 

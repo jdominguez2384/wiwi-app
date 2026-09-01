@@ -3,8 +3,8 @@ import assert from "node:assert/strict";
 import {
   getTutorialCompletionVersion,
   getTutorialCopy,
+  getTutorialFaqs,
   getTutorialStorageKey,
-  tutorialFaqs,
   TUTORIAL_VERSION,
 } from "../lib/tutorial.ts";
 
@@ -14,7 +14,6 @@ const REQUIRED_STEPS = [
   "add",
   "history",
   "insights",
-  "pro",
   "settings",
   "ready",
 ];
@@ -35,7 +34,9 @@ test("every tutorial step has useful bilingual content", () => {
       assert.equal(step.bullets.length, 3);
     }
 
-    assert.ok(tutorialFaqs[language].length >= 5);
+    const faqs = getTutorialFaqs(language);
+    assert.ok(faqs.length >= 5);
+    assert.ok(faqs.every((faq) => !faq.question.includes("Pro")));
   }
 });
 

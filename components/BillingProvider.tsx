@@ -12,6 +12,7 @@ import {
 import { createContext, useContext, useEffect, useState } from "react";
 import {
   getBillingErrorMessage,
+  PRO_BILLING_ENABLED,
   PRO_ENTITLEMENT_ID,
   type ProPackageKey,
 } from "../lib/billing";
@@ -65,8 +66,7 @@ export function BillingProvider({ children }: { children: React.ReactNode }) {
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo | null>(null);
   const [billingError, setBillingError] = useState<string | null>(null);
   const [isProcessingPurchase, setIsProcessingPurchase] = useState(false);
-  const billingEnabled =
-    process.env.NEXT_PUBLIC_PRO_BILLING_ENABLED === "true";
+  const billingEnabled = PRO_BILLING_ENABLED;
 
   async function syncServerPlan() {
     const {

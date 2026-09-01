@@ -68,9 +68,13 @@
 - [ ] Complete Digital Services Act trader-status verification in App Store Connect.
 - [x] Run the iOS release workflow and upload build 1 to TestFlight.
 - [x] Add iOS version 1.0 and build 1 to the draft App Review submission.
-- [ ] Complete first-device TestFlight verification on an iPhone or iPad.
-- [ ] Submit iOS version 1.0 for App Review after the TestFlight smoke test.
-- [ ] Upload the purchase-review screenshots, then attach the first subscriptions and lifetime purchase to version 1.0.
+- [x] Complete first-device TestFlight verification on an iPhone.
+- [x] Submit iOS version 1.0 build 2 for App Review after the TestFlight smoke test.
+- [x] Record Apple's August 29 Guideline 2.1 information request for submission `7c84d94f-4cf5-452b-95d9-06481e28ac71`.
+- [x] Confirm TestFlight records pre-submission testing on iPhone 17 Pro Max running iOS 26.6 with no crashes.
+- [ ] Update that iPhone to the latest public iOS release, retest WIWI, and capture Apple's requested walkthrough.
+- [ ] Upload and select billing-disabled iOS build 3, add the complete review notes, attach the recording, reply to Apple, and resubmit.
+- [ ] Upload purchase-review screenshots and submit the first subscriptions and lifetime purchase with the future billing-enabled app version.
 
 ## Monetization
 
