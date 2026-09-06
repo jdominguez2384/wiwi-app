@@ -21,7 +21,9 @@ REVIEW ACCESS AND MAIN FLOW
 - Delete an account at Settings > Danger zone: type DELETE, then tap Delete my account. The public deletion instructions are at https://getwiwi.com/delete-account.
 
 PAID FEATURES
-This replacement 1.0.0 (3) build does not enable purchases or subscriptions and contains no paid content. WIWI Pro and purchase surfaces are hidden in this release. RevenueCat billing will only be enabled in a later build after its products pass store review and sandbox testing. There is no external purchase link or alternative payment method.
+This replacement 1.0.0 (4) build does not enable purchases or subscriptions and contains no paid content. WIWI Pro and purchase surfaces are hidden in this release. RevenueCat billing will only be enabled in a later build after its products pass store review and sandbox testing. There is no external purchase link or alternative payment method.
+
+Signup confirmation emails open https://getwiwi.com/auth/confirmed, including when opened on a different device. After confirming, return to WIWI and sign in with the same email and password. The signup and login screens offer a resend-confirmation option.
 
 EXTERNAL SERVICES
 - Supabase: authentication, account data, and synchronized shift/settings storage.

@@ -13,7 +13,7 @@ Hello App Review,
 
 Thank you for the opportunity to provide the requested information for WIWI 1.0. We have attached a physical-device screen recording that begins with app launch and demonstrates the app's typical flow and core features.
 
-1. Recording: The attached recording shows account access, the bilingual tutorial, dashboard, adding and editing a shift, History filters, Insights, Settings/help, and account-deletion controls. The replacement 1.0.0 (3) build does not enable purchases or subscriptions, does not contain public user-generated content, and does not request sensitive device permissions.
+1. Recording: The attached recording shows account access, the bilingual tutorial, dashboard, adding and editing a shift, History filters, Insights, Settings/help, and account-deletion controls. The replacement 1.0.0 (4) build does not enable purchases or subscriptions, does not contain public user-generated content, and does not request sensitive device permissions.
 
 2. Devices tested: iPhone 17 Pro Max running iOS 26.6 before submission, then retested on the same physical device after updating to iOS [RECORDING IOS VERSION] for the attached recording.
 
@@ -27,7 +27,7 @@ Thank you for the opportunity to provide the requested information for WIWI 1.0.
 
 7. Authorization: WIWI is not a regulated financial/tax service and contains no protected third-party material, so no authorization documents apply.
 
-We have also expanded the App Review Notes with these details. Please continue the review of build 1.0.0 (3).
+We have also expanded the App Review Notes with these details. Please continue the review of build 1.0.0 (4).
 
 Thank you.
 ```
@@ -37,16 +37,16 @@ Thank you.
 Update the iPhone 17 Pro Max from iOS 26.6 to the latest public iOS version before testing and recording. Apple released iOS 26.6.1 after the original TestFlight session. Keep notifications, personal email, and unrelated account information out of the recording.
 
 1. Start on the iPhone Home Screen and tap WIWI so the recording includes app launch.
-2. Show Create account and its required fields, then return without creating a new review account.
-3. Sign in with the dedicated review account.
+2. Use a disposable test account to demonstrate Create account and email confirmation. The email opens the WIWI website; return to the phone app afterward. Do not recreate or delete the persistent account reserved for Apple's reviewers.
+3. Sign in with that disposable test account.
 4. Briefly advance through the English tutorial and show the Spanish language toggle.
 5. Show Dashboard totals and recent activity.
 6. Add a small fictional shift, including gross earnings, minutes or decimal hours, miles, and an expense.
 7. Open that shift from History, edit one value, save it, and demonstrate month/app/search filters.
 8. Open Insights and show the available comparisons.
 9. Open Settings, show cost assumptions, language, Help and tutorial, and Replay WIWI tutorial.
-10. In Danger zone, type `DELETE` so the deletion button becomes available, but do not press the final deletion button for the persistent review account.
-11. Confirm that Settings and Help contain no purchase controls or WIWI Pro links in this billing-disabled release.
+10. Confirm that Settings and Help contain no purchase controls or WIWI Pro links in this billing-disabled release.
+11. In Danger zone, type `DELETE` and finish deleting only the disposable test account to demonstrate the complete flow. Never delete the persistent account reserved for Apple's reviewers.
 12. End the recording and verify that text is readable, taps are visible, and no personal notifications appeared.
 
 ## Before Sending
@@ -55,4 +55,4 @@ Update the iPhone 17 Pro Max from iOS 26.6 to the latest public iOS version befo
 - Attach the video to the App Review Information section or the reviewer reply.
 - Paste the updated text from `store/REVIEW_NOTES.md` into App Review Information > Notes.
 - Replace the English and Spanish descriptions with `store/metadata.json` so 1.0 does not advertise disabled purchases.
-- Select build 3 for version 1.0, reply to Apple with the completed Reply Text, then update and resubmit the review.
+- Install and test build 4, then select it for version 1.0, reply to Apple with the completed Reply Text, and resubmit the review.
