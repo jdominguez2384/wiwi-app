@@ -1,21 +1,26 @@
 import { Capacitor } from "@capacitor/core";
 import { supabase } from "./supabase/client";
+import { getEmailConfirmationRedirectUrl } from "./emailConfirmation";
 import {
   getNativeAuthRedirectUrl,
   type NativeAuthPath,
 } from "./nativeLinks";
 
+function getWebOrigin() {
+  if (!Capacitor.isNativePlatform() && typeof window !== "undefined") {
+    return window.location.origin;
+  }
+
+  return process.env.NEXT_PUBLIC_SITE_URL || "https://getwiwi.com";
+}
+
 function getAuthRedirectUrl(path: NativeAuthPath) {
-  if (Capacitor.isNativePlatform()) {
-    return getNativeAuthRedirectUrl(path);
+  // Signup email may be opened on a different device from the app.
+  if (path === "/auth/confirmed") {
+    return getEmailConfirmationRedirectUrl(getWebOrigin());
   }
-
-  if (typeof window !== "undefined" && window.location.origin) {
-    return `${window.location.origin}${path}`;
-  }
-
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  return `${siteUrl.replace(/\/$/, "")}${path}`;
+  if (Capacitor.isNativePlatform()) return getNativeAuthRedirectUrl(path);
+  return new URL(path, getWebOrigin()).href;
 }
 
 export async function signUp(
@@ -30,6 +35,14 @@ export async function signUp(
       data: metadata || {},
       emailRedirectTo: getAuthRedirectUrl("/auth/confirmed"),
     },
+  });
+}
+
+export async function resendConfirmationEmail(email: string) {
+  return supabase.auth.resend({
+    type: "signup",
+    email: email.trim(),
+    options: { emailRedirectTo: getAuthRedirectUrl("/auth/confirmed") },
   });
 }
 

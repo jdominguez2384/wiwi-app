@@ -80,6 +80,12 @@ export function getFriendlyAuthError(error: unknown, language: Language) {
       : "El correo o la contraseña son incorrectos. Revisa ambos campos o restablece tu contraseña.";
   }
 
+  if (includesAny(normalized, ["otp_expired", "token has expired", "invalid token", "bad_code_verifier", "flow_state_expired", "flow_state_not_found"])) {
+    return language === "en"
+      ? "This confirmation link is invalid, expired, or already used. Try signing in first. If your email is still unconfirmed, request a new confirmation email and open only the newest message."
+      : "Este enlace de confirmación no es válido, venció o ya se usó. Primero intenta iniciar sesión. Si tu correo sigue sin confirmar, solicita otro correo de confirmación y abre solo el mensaje más reciente.";
+  }
+
   if (includesAny(normalized, ["email not confirmed", "email_not_confirmed"])) {
     return language === "en"
       ? "Your email has not been confirmed yet. Open the confirmation message we sent before signing in, and check your spam folder if needed."

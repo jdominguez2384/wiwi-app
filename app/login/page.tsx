@@ -121,6 +121,11 @@ export default function LoginPage() {
       footer={
         <div className="space-y-3">
           <p>
+            <Link href="/auth/confirmed" className="font-semibold text-sky-300 transition hover:text-sky-200">
+              {isSpanish ? "Reenviar correo de confirmación" : "Resend confirmation email"}
+            </Link>
+          </p>
+          <p>
             {isSpanish ? "¿Necesitas una cuenta?" : "Need an account?"}{" "}
             <Link
               href="/signup"

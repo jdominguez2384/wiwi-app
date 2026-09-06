@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { ArrowRight, KeyRound, Mail, UserRound } from "lucide-react";
 import { AuthShell } from "../../components/AuthShell";
+import { ResendConfirmationForm } from "../../components/ResendConfirmationForm";
 import { useLanguage } from "../../components/LanguageProvider";
 import { signUp } from "../../lib/auth";
 import { getFriendlyAuthError } from "../../lib/auth-messages";
@@ -18,6 +19,7 @@ export default function SignupPage() {
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submittedEmail, setSubmittedEmail] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -48,6 +50,7 @@ export default function SignupPage() {
       }
 
       setIsSuccess(true);
+      setSubmittedEmail(email.trim());
       setMessage(
         isSpanish
           ? "Si este correo puede crear una cuenta nueva, te enviaremos un enlace de confirmacion. Si ya tienes cuenta, intenta iniciar sesion o restablecer tu contrasena."
@@ -289,6 +292,7 @@ export default function SignupPage() {
           )}
         </div>
       ) : null}
+      {isSuccess && <ResendConfirmationForm key={submittedEmail} initialEmail={submittedEmail} />}
     </AuthShell>
   );
 }

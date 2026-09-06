@@ -33,3 +33,8 @@ test("turns rate limits into an actionable wait message", () => {
 
   assert.match(message, /Wait a few minutes/);
 });
+
+test("expired confirmation links offer sign-in and a fresh email in both languages", () => {
+  assert.match(getFriendlyAuthError({ code: "otp_expired" }, "en"), /Try signing in first/);
+  assert.match(getFriendlyAuthError({ code: "otp_expired" }, "es"), /mensaje más reciente/);
+});
